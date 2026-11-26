@@ -3,6 +3,8 @@
  *
  *   tsx scripts/blind.ts export <単元id>
  *       正答・解説・選択肢メモを除いた問題だけを JSON で出力する。
+ *   tsx scripts/blind.ts text <単元id> [<単元id> ...]
+ *       同じ内容を、読みやすく短いテキストで出力する（複数の単元をまとめて指定できる）。
  *   tsx scripts/blind.ts check <単元id> <解答ファイル.json>
  *       解答ファイル { "<問題id>": <選んだ添字>, ... } を正答と突き合わせ、不一致を出力する。
  */
@@ -16,7 +18,22 @@ if (!mode || !unitId) {
   console.error('usage: tsx scripts/blind.ts export <unitId> | check <unitId> <answers.json>');
   process.exit(2);
 }
-const content = JSON.parse(readFileSync(join(contentRoot, 'units', `${unitId}.json`), 'utf8')) as UnitContent;
+const load = (id: string) => JSON.parse(readFileSync(join(contentRoot, 'units', `${id}.json`), 'utf8')) as UnitContent;
+
+if (mode === 'text') {
+  for (const id of process.argv.slice(3)) {
+    for (const q of load(id).questions) {
+      console.log(`### ${q.id}`);
+      console.log(q.stem);
+      if (q.figure) console.log(`図表: ${JSON.stringify(q.figure)}`);
+      q.choices.forEach((c, i) => console.log(`[${i}] ${c}`));
+      console.log('');
+    }
+  }
+  process.exit(0);
+}
+
+const content = load(unitId);
 
 if (mode === 'export') {
   const blind = content.questions.map((q) => ({
