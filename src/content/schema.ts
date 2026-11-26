@@ -252,6 +252,7 @@ const resourceLink = z.strictObject({
   focus: text,
   note: text.optional(),
   search: text.optional(),
+  checkedOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   verifiedOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
 });
 

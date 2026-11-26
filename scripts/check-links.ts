@@ -57,7 +57,16 @@ async function check(t: Target): Promise<Result> {
       });
       let pageTitle = '';
       if ((r.headers.get('content-type') ?? '').includes('html')) {
-        const html = (await r.text()).slice(0, 200_000);
+        // 公的機関のサイトには Shift_JIS のページがある。文字コードを見てから読む
+        const bytes = new Uint8Array(await r.arrayBuffer()).slice(0, 200_000);
+        const head = new TextDecoder('latin1').decode(bytes.slice(0, 4000));
+        const charset = (/charset=["']?([\w-]+)/i.exec(r.headers.get('content-type') ?? '') ?? /charset=["']?([\w-]+)/i.exec(head))?.[1] ?? 'utf-8';
+        let html: string;
+        try {
+          html = new TextDecoder(charset).decode(bytes);
+        } catch {
+          html = new TextDecoder('utf-8').decode(bytes);
+        }
         pageTitle = (/<title[^>]*>([\s\S]*?)<\/title>/i.exec(html)?.[1] ?? '').replace(/\s+/g, ' ').trim().slice(0, 120);
       }
       // 403 / 429 は、自動アクセスを断っているだけでページは存在することが多い。失敗ではなく要目視とする

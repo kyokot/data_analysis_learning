@@ -1,4 +1,18 @@
 {
   "note": "正答を隠した別担当による解き直し（scripts/blind.ts）を終えた単元と、その日付。ここに無い単元は、作成時の数値の再計算と機械検証のみ。",
-  "blindVerified": {}
+  "blindVerified": {
+    "ppdac": "2026-11-26",
+    "data-types": "2026-11-26",
+    "sampling-basic": "2026-11-26",
+    "graphs-basic": "2026-11-26",
+    "math-ratio": "2026-11-26",
+    "freq-hist": "2026-11-26",
+    "central": "2026-11-26",
+    "quartile-box": "2026-11-26",
+    "math-sqrt": "2026-11-26",
+    "crosstab": "2026-11-26",
+    "timeseries-index": "2026-11-26",
+    "prob-basic": "2026-11-26",
+    "math-counting": "2026-11-26"
+  }
 }

@@ -41,7 +41,12 @@ function ResourceCard({ link, unit, visited, primary }: { link: ResourceLink; un
       </p>
       {link.note ? <p className="small muted">{link.note}</p> : null}
       <p className="small muted">
-        {link.verifiedOn ? `${link.verifiedOn}に内容を確認` : 'リンク先の内容は未確認（検索結果で所在のみ確認）'}・ 開けないときは
+        {link.verifiedOn
+          ? `${link.verifiedOn}に内容を確認`
+          : link.checkedOn
+            ? `${link.checkedOn}にページの存在とタイトルを確認（本文との照合は未了）`
+            : 'リンク先は未確認'}
+        ・開けないときは
         <Ext href={searchUrl(link, unit)}>サイト内を検索</Ext>・<Ext href={reportUrl('リンク', link.id)}>報告</Ext>
       </p>
     </li>

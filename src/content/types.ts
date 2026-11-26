@@ -344,7 +344,9 @@ export interface ResourceLink {
   note?: string;
   /** リンク切れのときにサイト内検索で探すためのキーワード */
   search?: string;
-  /** 内容を実際に取得して確認した日（YYYY-MM-DD）。未確認なら省略 */
+  /** リンク先のページが存在し、タイトルが登録名と合うことを確認した日（npm run check:links の結果による） */
+  checkedOn?: string;
+  /** 人がリンク先の本文を読み、読みどころの記述と合うことを確認した日。未確認なら省略 */
   verifiedOn?: string;
 }
 
