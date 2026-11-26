@@ -46,7 +46,11 @@ function describe(step: Step, p: ReturnType<typeof useProgress>): StepView {
         : {
             eyebrow: '学習中の単元',
             title: u.title,
-            body: up.attempts > 0 ? `確認テストは${up.lastCheck?.correct ?? 0}/${up.lastCheck?.total ?? 5}問でした。解説と教材を見直して、もう一度挑戦しましょう。` : '教材を読み終えたら、確認テストへ進みましょう。',
+            body: up.passedOn
+              ? '定着チェックに届かなかったので、学習中に戻しました。教材と要点を見直して、確認テストからやり直しましょう。'
+              : up.attempts > 0
+                ? `確認テストは${up.lastCheck?.correct ?? 0}/${up.lastCheck?.total ?? 5}問でした。解説と教材を見直して、もう一度挑戦しましょう。`
+                : '教材を読み終えたら、確認テストへ進みましょう。',
             cta: '続きから',
             to: { name: 'unit', id: u.id },
           };

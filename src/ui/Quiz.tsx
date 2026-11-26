@@ -25,7 +25,7 @@ export function QuestionView({
   reveal?: boolean;
 }) {
   return (
-    <div className="question">
+    <div className="question" data-qid={q.id}>
       <Rich text={q.stem} className="question__stem" />
       {q.figure ? <FigureView figure={q.figure} /> : null}
       <ol className="choices">
