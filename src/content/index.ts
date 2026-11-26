@@ -2,6 +2,7 @@
 import curriculumJson from '../../content/curriculum.json';
 import examGuideJson from '../../content/exam-guide.json';
 import resourcesJson from '../../content/resources.json';
+import verificationJson from '../../content/verification.json';
 import { buildCourse } from '../engine/model.ts';
 import type { Curriculum, ResourceCatalog, UnitContent } from './types.ts';
 
@@ -31,3 +32,6 @@ export interface ExamGuide {
 }
 
 export const examGuide = examGuideJson as ExamGuide;
+
+/** 正答を隠した解き直し検証を終えた単元（単元 id → 日付） */
+export const blindVerified: Record<string, string> = verificationJson.blindVerified;

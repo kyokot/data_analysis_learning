@@ -1,7 +1,7 @@
 /** 資料室: 教材リスト・受験ガイド・設定とバックアップ・このサイトについて・図表ギャラリー */
 import { useState } from 'react';
 import { APP_NAME, REPO_URL } from '../config.ts';
-import { course, examGuide } from '../content/index.ts';
+import { blindVerified, course, examGuide } from '../content/index.ts';
 import type { Grade, Provider } from '../content/types.ts';
 import { isValidDateStr, toDateStr } from '../engine/dates.ts';
 import { emptyProgress } from '../engine/model.ts';
@@ -356,6 +356,7 @@ export function DataPage() {
 export function AboutPage() {
   const units = course.content.size;
   const questions = course.questions.size;
+  const verified = [...course.content.keys()].filter((id) => blindVerified[id]).length;
   return (
     <div className="stack stack--lg">
       <div className="stack">
@@ -385,7 +386,7 @@ export function AboutPage() {
           現在 <b className="num">{units}</b> 単元・<b className="num">{questions}</b> 問を収録しています。問題と要点はすべてこのサイトのオリジナルで、公式問題・市販の問題集・他サイトの問題を写したものではありません（題材とデータは架空です）。
         </p>
         <p>
-          作成にはAIを使い、数値の再計算と、正答を隠した別のAIによる解き直しで検証しています。ただし統計の専門家による監修は受けていません。誤りが残っている可能性があるので、疑問に思ったら公式テキストで確かめ、各問題の「誤りを報告」から知らせてください。
+          作成にはAIを使い、数値が絡む問題は作成時にプログラムで再計算しています。正答を隠した別のAIによる解き直し検証は、{units}単元のうち <b className="num">{verified}</b> 単元で完了しています。統計の専門家による監修は受けていません。誤りが残っている可能性があるので、疑問に思ったら公式テキストで確かめ、各問題の「誤りを報告」から知らせてください。
         </p>
         <p className="small muted">定義の統一: 分散・標準偏差は n で割る定義、四分位数は高校数学Iの方式を使っています。外部教材の中には定義が異なるものがあります。</p>
       </section>
