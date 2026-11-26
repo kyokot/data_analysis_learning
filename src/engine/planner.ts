@@ -191,3 +191,10 @@ export function pendingRefreshers(course: Course, p: Progress, unit: Unit): Unit
     .map((id) => course.units.get(id))
     .filter((u): u is Unit => !!u && course.content.has(u.id) && !isDone(p, u.id));
 }
+
+/** 合格済みの単元の id（学習順）。補強ドリルの出題範囲に使う */
+export function doneUnitIds(course: Course, p: Progress): string[] {
+  return routeUnits(course, p.settings.goal)
+    .filter((u) => isDone(p, u.id))
+    .map((u) => u.id);
+}

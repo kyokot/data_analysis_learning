@@ -1,0 +1,28 @@
+name: 外部リンクの確認
+
+# 外部教材のリンク切れに早く気づくための定期実行。失敗しても本体の CI は止めない。
+on:
+  schedule:
+    - cron: '17 21 * * 0' # 毎週月曜 6:17 (JST)
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - content/resources.json
+      - content/exam-guide.json
+      - scripts/check-links.ts
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: リンクの確認（ステータスとページタイトル）
+        run: npm run check:links

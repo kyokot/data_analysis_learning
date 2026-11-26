@@ -125,13 +125,13 @@ function CategoryLabels({ labels, x, y, rotate }: { labels: string[]; x: (i: num
 
 /* ---------- 棒グラフ ---------- */
 
-function Bar({ f, compact }: { f: BarFigure; compact: boolean }) {
+function Bar({ f, compact, short }: { f: BarFigure; compact: boolean; short?: boolean }) {
   const w = compact ? 200 : 340;
   const n = f.categories.length;
   const plotW = w - 40 - 10;
   const band = plotW / n;
   const lay = categoryLayout(f.categories, band);
-  const box: Box = { w, h: (compact ? 150 : 200) + lay.extra + (f.xLabel ? 14 : 0), l: 40, r: 10, t: f.yLabel ? 22 : 12, b: 22 + lay.extra + (f.xLabel ? 14 : 0) };
+  const box: Box = { w, h: (compact || short ? 150 : 200) + lay.extra + (f.xLabel ? 14 : 0), l: 40, r: 10, t: f.yLabel ? 22 : 12, b: 22 + lay.extra + (f.xLabel ? 14 : 0) };
   const totals = f.categories.map((_, i) => f.series.reduce((a, s) => a + (s.values[i] ?? 0), 0));
   const maxV = f.stacked ? Math.max(...totals) : Math.max(...f.series.flatMap((s) => s.values));
   const axis = makeAxis(0, maxV * (f.showValues ? 1.08 : 1), { includeZero: true, target: compact ? 4 : 5 });
@@ -309,12 +309,12 @@ function marker(shape: number, x: number, y: number, fill: string): ReactNode {
   }
 }
 
-function Line({ f, compact }: { f: LineFigure; compact: boolean }) {
+function Line({ f, compact, short }: { f: LineFigure; compact: boolean; short?: boolean }) {
   const w = compact ? 200 : 340;
   const n = f.x.length;
   const plotW = w - 40 - 14;
   const lay = categoryLayout(f.x, plotW / Math.max(1, n - 1));
-  const box: Box = { w, h: (compact ? 150 : 200) + lay.extra + (f.xLabel ? 14 : 0), l: 40, r: 14, t: f.yLabel ? 22 : 12, b: 22 + lay.extra + (f.xLabel ? 14 : 0) };
+  const box: Box = { w, h: (compact || short ? 150 : 200) + lay.extra + (f.xLabel ? 14 : 0), l: 40, r: 14, t: f.yLabel ? 22 : 12, b: 22 + lay.extra + (f.xLabel ? 14 : 0) };
   const all = f.series.flatMap((s) => s.values);
   const lo = Math.min(...all);
   const hi = Math.max(...all);
@@ -371,9 +371,9 @@ function Line({ f, compact }: { f: LineFigure; compact: boolean }) {
 
 /* ---------- ヒストグラム ---------- */
 
-function Histogram({ f, compact }: { f: HistogramFigure; compact: boolean }) {
+function Histogram({ f, compact, short }: { f: HistogramFigure; compact: boolean; short?: boolean }) {
   const w = compact ? 200 : 340;
-  const box: Box = { w, h: (compact ? 150 : 200) + (f.xLabel ? 14 : 0), l: 40, r: 12, t: f.yLabel ? 22 : 12, b: 22 + (f.xLabel ? 14 : 0) };
+  const box: Box = { w, h: (compact || short ? 150 : 200) + (f.xLabel ? 14 : 0), l: 40, r: 12, t: f.yLabel ? 22 : 12, b: 22 + (f.xLabel ? 14 : 0) };
   const maxC = Math.max(...f.counts);
   const axis = makeAxis(0, maxC * (f.showCounts ? 1.1 : 1), { includeZero: true, target: compact ? 4 : 5 });
   const y = scaleLinear(axis, box.h - box.b, box.t);
@@ -684,20 +684,20 @@ function StemLeaf({ f }: { f: StemLeafFigure }) {
 
 /* ---------- 入口 ---------- */
 
-function Single({ f, compact }: { f: SingleFigure; compact: boolean }) {
+function Single({ f, compact, short }: { f: SingleFigure; compact: boolean; short?: boolean }) {
   switch (f.type) {
     case 'table':
       return <Table f={f} />;
     case 'bar':
-      return <Bar f={f} compact={compact} />;
+      return <Bar f={f} compact={compact} short={short} />;
     case 'band':
       return <Band f={f} />;
     case 'pie':
       return <Pie f={f} compact={compact} />;
     case 'line':
-      return <Line f={f} compact={compact} />;
+      return <Line f={f} compact={compact} short={short} />;
     case 'histogram':
-      return <Histogram f={f} compact={compact} />;
+      return <Histogram f={f} compact={compact} short={short} />;
     case 'boxplot':
       return <Boxplot f={f} compact={compact} />;
     case 'scatter':
@@ -716,14 +716,22 @@ const WIDE = new Set(['table', 'band', 'boxplot', 'stemleaf']);
 
 export function FigureView({ figure }: { figure: Figure }) {
   if (figure.type !== 'panels') return <Single f={figure} compact={false} />;
-  const wide = figure.panels.some((p) => WIDE.has(p.figure.type) || (p.figure.type === 'bar' && p.figure.categories.length > 5));
+  // 値のラベルを出す図・項目の多い図は、2 列だと文字が重なるので 1 列にする
+  const wide = figure.panels.some((p) => {
+    const g = p.figure;
+    if (WIDE.has(g.type)) return true;
+    if (g.type === 'bar') return g.categories.length * (g.stacked ? 1 : g.series.length) > 5 || !!g.showValues;
+    if (g.type === 'line') return g.x.length > 5 || !!g.showValues;
+    if (g.type === 'histogram') return g.counts.length > 7 || !!g.showCounts;
+    return false;
+  });
   return (
     <Frame title={figure.title}>
       <div className={`panels${wide ? ' panels--wide' : ''}`}>
         {figure.panels.map((p) => (
           <div className="panel" key={p.label}>
             <span className="panel__label">{p.label}</span>
-            <Single f={p.figure} compact={!wide} />
+            <Single f={p.figure} compact={!wide} short />
           </div>
         ))}
       </div>

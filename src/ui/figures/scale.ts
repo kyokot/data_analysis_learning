@@ -18,7 +18,8 @@ function niceStep(span: number, target: number): number {
   return nice * pow;
 }
 
-const round = (v: number) => Math.round(v * 1e9) / 1e9;
+/** 丸め誤差を落とす（-0 は 0 にする） */
+const round = (v: number) => Math.round(v * 1e9) / 1e9 + 0;
 
 /**
  * データの範囲を含む、きりのよい軸を作る。

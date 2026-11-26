@@ -302,7 +302,8 @@ export function validateResources(
   }
   for (const u of curriculum.units) {
     const n = primary.get(u.id) ?? 0;
-    if (n === 0) {
+    // 数学の補習は、当サイトの要点と確認テストだけで完結する（外部教材は補助）
+    if (n === 0 && u.domain !== 'math') {
       issues.push({
         level: opts.requirePrimary ? 'error' : 'warning',
         where: `resources.json › ${u.id}`,

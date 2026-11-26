@@ -1,1 +1,1816 @@
-{"providers":[],"links":[]}
+{
+ "providers": [
+  {
+   "id": "toukei-web",
+   "name": "統計WEB「統計学の時間」",
+   "operator": "BellCurve（株式会社社会情報サービス）",
+   "url": "https://bellcurve.jp/statistics/course/",
+   "kind": "textbook",
+   "tier": "S",
+   "description": "統計学をゼロから学べる無料のWeb教科書。Step0 初級編は身近な例で学ぶ入門（4級レベル）、Step1 基礎編は統計検定2級の範囲までをカバーし、多くの章に解答つきの練習問題ページがある。",
+   "free": "free",
+   "loginRequired": "no",
+   "linkPolicy": "統計WEBのサイトポリシー（https://bellcurve.jp/statistics/sitepolicy/）では、リンクは営利・非営利を問わず原則自由。ただし誹謗中傷・違法情報・公序良俗に反するページや、フレームリンク・イメージリンクなど出所が不明確になる形でのリンクは不可。コンテンツの転載・翻案・公衆送信には許諾が必要。なお bellcurve.jp 全体のサイトポリシー（https://bellcurve.jp/policy.html）にはトップページへのリンクを推奨し、トップ以外へリンクする場合は社会情報サービスのサイトであることを明記するよう求める記載がある。（いずれも調査時に"
+  },
+  {
+   "id": "naruhodo",
+   "name": "なるほど統計学園",
+   "operator": "総務省統計局（統計研究研修所と共同運営）",
+   "url": "https://www.stat.go.jp/naruhodo/",
+   "kind": "public",
+   "tier": "S",
+   "description": "小学校高学年〜高校生向けの統計学習サイト。初級編（グラフの作り方・代表値・散らばり）と上級編（分散・相関・推測統計・PPDAC）に分かれ、1ページ5〜10分で読める短い解説が並ぶ。",
+   "free": "free",
+   "loginRequired": "no",
+   "linkPolicy": "統計局ホームページ「サイトの利用について」（https://www.stat.go.jp/info/riyou.html）に、当サイトへのリンクは自由にできる旨の記載あり。コンテンツは特記がない限り公共データ利用規約（PDL1.0）準拠で、利用時は出典記載が必要。※検索結果の要約で確認（ページ本文は未取得）。"
+  },
+  {
+   "id": "dss",
+   "name": "データサイエンス・スクール",
+   "operator": "総務省統計局",
+   "url": "https://www.stat.go.jp/dss/",
+   "kind": "public",
+   "tier": "A",
+   "description": "社会人・学生向けの統計力向上サイト。統計検定4級/3級/2級相当の「あなたの統計力」テキストPDF（初級・中級・上級）と過去問ベースの問題、マンガ形式の「ビジネスに役立つ統計講座」、グラフ作成のポイントなどを掲載。",
+   "free": "free",
+   "loginRequired": "no",
+   "linkPolicy": "統計局ホームページ内のコンテンツ。「サイトの利用について」（https://www.stat.go.jp/info/riyou.html）に、当サイトへのリンクは自由にできる旨の記載あり（PDL1.0準拠・出典記載）。※検索結果の要約で確認。"
+  },
+  {
+   "id": "stat-dashboard",
+   "name": "統計ダッシュボード",
+   "operator": "総務省統計局",
+   "url": "https://dashboard.e-stat.go.jp/",
+   "kind": "data",
+   "tier": "B",
+   "description": "国や民間の主要な統計データをグラフに加工して一覧表示するサイト。時系列グラフや人口ピラミッドを実データで眺められ、数値のダウンロードやAPI利用もできる。",
+   "free": "free",
+   "loginRequired": "no",
+   "linkPolicy": "リンクポリシーのページ（https://dashboard.e-stat.go.jp/static/linkPolicy）あり。リンクを設定する際は「統計ダッシュボード」へのリンクである旨を明示するよう求めている。コンテンツはコピーライトポリシーにより原則PDL1.0準拠。※検索結果の要約で確認。"
+  },
+  {
+   "id": "e-stat",
+   "name": "e-Stat 政府統計の総合窓口",
+   "operator": "総務省統計局（運用管理: 独立行政法人統計センター）",
+   "url": "https://www.e-stat.go.jp/",
+   "kind": "data",
+   "tier": "B",
+   "description": "日本の政府統計を府省横断で検索・閲覧・ダウンロードできる公式ポータル。練習用の実データ（統計表）の入手先。",
+   "free": "free",
+   "loginRequired": "optional",
+   "linkPolicy": "利用規約では、出典記載などの条件を守ればコンテンツを自由に利用できるとしている。リンクそのものを定めた条文は確認できなかった（ロゴは e-Stat へのリンクや出典表示の目的なら使用可とする案内あり）。※検索結果の要約で確認。"
+  },
+  {
+   "id": "ssdse",
+   "name": "SSDSE（教育用標準データセット）",
+   "operator": "独立行政法人統計センター",
+   "url": "https://www.nstac.go.jp/use/literacy/ssdse/",
+   "kind": "data",
+   "tier": "B",
+   "description": "主要な公的統計の地域別データを、欠測なしの表形式に整えた教育用データセット（市区町村・県別推移・家計消費・社会生活・基本素材の5種）。ダウンロードしてすぐ分析に使える。",
+   "free": "free",
+   "loginRequired": "no"
+  },
+  {
+   "id": "gakugei-tools",
+   "name": "データの分析や活用の学習ツール",
+   "operator": "東京学芸大学 西村圭一研究室",
+   "url": "https://www2.u-gakugei.ac.jp/~knishi/DS/",
+   "kind": "interactive",
+   "tier": "A",
+   "description": "中学・高校の統計学習向けのWebツール集。CSVを読み込んで直感的に可視化できるデータ分析ツール、コイン投げのシミュレーション、確率分布のアプリなど4種類が紹介されている。",
+   "free": "free",
+   "loginRequired": "no"
+  },
+  {
+   "id": "data-start",
+   "name": "Data StaRt（データ・スタート）ゼミナール編",
+   "operator": "総務省統計局 統計データ利活用センター",
+   "url": "https://www.stat.go.jp/dstart/point/",
+   "kind": "public",
+   "tier": "A",
+   "description": "自治体職員・社会人向けのデータ利活用サイト。ゼミナール編に尺度水準・クロス集計・標本抽出法・相関と回帰の短い解説ページがあり、なるほど統計学園に専用ページがない単元を補える。※指定の8提供元には含まれないが、同じ総務省統計局（stat.go.jp）のため追加。",
+   "free": "free",
+   "loginRequired": "no",
+   "linkPolicy": "統計局ホームページ内のコンテンツ。「サイトの利用について」（https://www.stat.go.jp/info/riyou.html）に、当サイトへのリンクは自由にできる旨の記載あり（PDL1.0準拠・出典記載）。※検索結果の要約で確認。"
+  },
+  {
+   "id": "seeing-theory",
+   "name": "Seeing Theory",
+   "operator": "Daniel Kunin ほか（Brown University がホスティング）",
+   "url": "https://seeing-theory.brown.edu/",
+   "kind": "interactive",
+   "tier": "A",
+   "description": "確率と統計の基本概念を、ブラウザ上で自分の手で動かせるアニメーションで体験できる英語の可視化教材。基礎確率・複合確率・確率分布・頻度論的推測・ベイズ推測・回帰分析の6章構成で、日本語版は用意されていない（言語切替は中文とEspañolのみ）。",
+   "free": "free",
+   "loginRequired": "no",
+   "linkPolicy": "リンクに関する記載は見つからず。公式GitHubリポジトリのREADMEに「教育目的の利用は自由、可視化の商用利用は不可」「2019年以降は保守終了だがBrown大学がホスティングを継続」「新しい言語への翻訳は受け付けていない」との記載あり。"
+  },
+  {
+   "id": "phet",
+   "name": "PhET Interactive Simulations",
+   "operator": "PhET Interactive Simulations（コロラド大学ボルダー校）",
+   "url": "https://phet.colorado.edu/",
+   "kind": "interactive",
+   "tier": "B",
+   "description": "理数系の無料シミュレーション集。統計分野では、玉を落として分布を作る Plinko Probability と、代表値と散らばりを扱う Center and Variability を掲載。どちらも日本語の翻訳ファイルが存在することを確認したが、日本語版のURLは未確認。",
+   "free": "free",
+   "loginRequired": "no"
+  },
+  {
+   "id": "toukei-kentei",
+   "name": "統計検定 公式サイト",
+   "operator": "一般財団法人 統計質保証推進協会",
+   "url": "https://www.toukei-kentei.jp/",
+   "kind": "official",
+   "tier": "S",
+   "description": "試験の公式サイト。出題範囲表・受験案内・公式テキストの情報はここが基準です。",
+   "free": "free",
+   "loginRequired": "no"
+  },
+  {
+   "id": "try-it",
+   "name": "Try IT（トライイット）",
+   "operator": "株式会社トライグループ",
+   "url": "https://www.try-it.jp/",
+   "kind": "math",
+   "tier": "A",
+   "description": "中学・高校の全単元を短い映像授業で学び直せる無料サイト。割合・平方根・場合の数・データの分析の復習に。",
+   "free": "free",
+   "loginRequired": "optional"
+  },
+  {
+   "id": "manabitimes",
+   "name": "高校数学の美しい物語",
+   "operator": "マナビタイムズ",
+   "url": "https://manabitimes.jp/math",
+   "kind": "math",
+   "tier": "A",
+   "description": "高校数学の公式や考え方を、理由から丁寧に解説する記事集。順列・組合せ、平方根、Σ記号の確認に。",
+   "free": "free",
+   "loginRequired": "no"
+  },
+  {
+   "id": "toukei-roadmap",
+   "name": "統計ロードマップ",
+   "operator": "個人運営（公開情報による）",
+   "url": "https://toukei-app.com/",
+   "kind": "practice",
+   "tier": "B",
+   "description": "4級・3級の演習問題と3級の本番形式の模試を無料で公開しているとされる学習サイト。",
+   "free": "free",
+   "loginRequired": "no"
+  },
+  {
+   "id": "ao-toukei",
+   "name": "青の統計学 DS Playground",
+   "operator": "青の統計学",
+   "url": "https://app.statisticsschool.com/",
+   "kind": "practice",
+   "tier": "B",
+   "description": "3級レベルの分野別演習と模試、確率分布の可視化ツールを備えた学習サービス。解説の一部は会員登録・有料とされています。",
+   "free": "freemium",
+   "loginRequired": "optional"
+  },
+  {
+   "id": "transparently",
+   "name": "Transparently 統計検定3級 学習講座",
+   "operator": "Transparently",
+   "url": "https://www.transparently.jp/stats3/",
+   "kind": "practice",
+   "tier": "B",
+   "description": "3級の範囲を章立ての読み物と確認問題、模擬試験で学べるとされる無料のWeb講座。",
+   "free": "free",
+   "loginRequired": "no"
+  },
+  {
+   "id": "kentei-lab",
+   "name": "ケンテイラボ",
+   "operator": "個人運営（公開情報による）",
+   "url": "https://kentei-lab.com/",
+   "kind": "practice",
+   "tier": "B",
+   "description": "3級の4択問題を分野別・全問解説つきで無料公開しているとされる問題集サイト。",
+   "free": "free",
+   "loginRequired": "no"
+  },
+  {
+   "id": "statistical-jp",
+   "name": "statistical.jp",
+   "operator": "個人運営（公開情報による）",
+   "url": "https://statistical.jp/",
+   "kind": "practice",
+   "tier": "B",
+   "description": "4級の一問一答やテーマ別のまとめを公開している、4級を扱う数少ないサイト。",
+   "free": "free",
+   "loginRequired": "no"
+  }
+ ],
+ "links": [
+  {
+   "id": "toukei-web-001",
+   "providerId": "toukei-web",
+   "title": "練習問題（27. 回帰分析）",
+   "url": "https://bellcurve.jp/statistics/course/10116.html",
+   "type": "practice",
+   "unitIds": [
+    "regression"
+   ],
+   "role": "practice",
+   "focus": "単回帰直線の傾きと切片を求める問題を優先して解く。決定係数で当てはまりを判断する問題は余力があれば。",
+   "minutes": 20,
+   "note": "3級の範囲を超える内容を含みます。読みどころの部分だけで十分です。",
+   "search": "回帰直線"
+  },
+  {
+   "id": "toukei-web-002",
+   "providerId": "toukei-web",
+   "title": "練習問題（16. 標本と抽出法）",
+   "url": "https://bellcurve.jp/statistics/course/10886.html",
+   "type": "practice",
+   "unitIds": [
+    "sampling-basic",
+    "survey-experiment"
+   ],
+   "role": "practice",
+   "focus": "母集団と標本、全数調査と標本調査、抽出法の区別を問題で確認する。",
+   "minutes": 15,
+   "search": "標本調査の基礎"
+  },
+  {
+   "id": "toukei-web-003",
+   "providerId": "toukei-web",
+   "title": "練習問題（26. 相関分析）",
+   "url": "https://bellcurve.jp/statistics/course/10918.html",
+   "type": "practice",
+   "unitIds": [
+    "scatter-corr",
+    "causation"
+   ],
+   "role": "practice",
+   "focus": "散布図と相関係数の読み取り、相関係数の性質の正誤（相関が高くても因果関係を示すわけではない、など）を問う問題で確認する。",
+   "minutes": 20,
+   "search": "散布図と相関係数"
+  },
+  {
+   "id": "toukei-web-004",
+   "providerId": "toukei-web",
+   "title": "練習問題（17. 大数の法則と中心極限定理）",
+   "url": "https://bellcurve.jp/statistics/course/11049.html",
+   "type": "practice",
+   "unitIds": [
+    "sampling-dist"
+   ],
+   "role": "practice",
+   "focus": "試行回数を増やすと割合が安定することや、標本平均の分散・標準化を問う3問で、標本分布の考え方を確認する。",
+   "minutes": 15,
+   "note": "3級の範囲を超える内容を含みます。読みどころの部分だけで十分です。",
+   "search": "標本分布"
+  },
+  {
+   "id": "toukei-web-005",
+   "providerId": "toukei-web",
+   "title": "32-3. 時系列データと移動平均",
+   "url": "https://bellcurve.jp/statistics/course/12933.html",
+   "type": "text",
+   "unitIds": [
+    "ts-moving-avg"
+   ],
+   "role": "primary",
+   "focus": "一定の区間の平均を1時点ずつずらしながら計算する移動平均で、細かな変動をならして傾向を読む方法を確認する。区間の両端では値が計算できない点に注意。",
+   "minutes": 12,
+   "search": "時系列データと移動平均"
+  },
+  {
+   "id": "toukei-web-006",
+   "providerId": "toukei-web",
+   "title": "練習問題（3. さまざまな代表値）",
+   "url": "https://bellcurve.jp/statistics/course/146.html",
+   "type": "practice",
+   "unitIds": [
+    "central",
+    "ts-moving-avg"
+   ],
+   "role": "practice",
+   "focus": "代表値の計算問題。3級受験者は平均・中央値・最頻値の設問を優先し、成長率の平均を幾何平均で求める問題は余力があれば取り組む。",
+   "minutes": 20,
+   "note": "3級の範囲を超える内容を含みます。読みどころの部分だけで十分です。",
+   "search": "代表値（平均値・中央値・最頻値）"
+  },
+  {
+   "id": "toukei-web-007",
+   "providerId": "toukei-web",
+   "title": "1-4. 変数の尺度",
+   "url": "https://bellcurve.jp/statistics/course/1562.html",
+   "type": "text",
+   "unitIds": [
+    "scales"
+   ],
+   "role": "primary",
+   "focus": "名義・順序・間隔・比例の4つの尺度水準と、それぞれで使える統計量の違いを整理する。間隔尺度と比例尺度は「0に意味があるか・比がとれるか」で見分ける。",
+   "minutes": 12,
+   "search": "尺度水準"
+  },
+  {
+   "id": "toukei-web-008",
+   "providerId": "toukei-web",
+   "title": "練習問題（1. 統計ことはじめ）",
+   "url": "https://bellcurve.jp/statistics/course/1719.html",
+   "type": "practice",
+   "unitIds": [
+    "scales"
+   ],
+   "role": "practice",
+   "focus": "背番号・血圧・成績などの変数を4つの尺度に分類する問題で、尺度水準の理解を確かめる。",
+   "minutes": 10,
+   "search": "尺度水準"
+  },
+  {
+   "id": "toukei-web-009",
+   "providerId": "toukei-web",
+   "title": "1-1. データをとってみよう",
+   "url": "https://bellcurve.jp/statistics/course/18575.html",
+   "type": "text",
+   "unitIds": [
+    "data-types"
+   ],
+   "role": "supplement",
+   "focus": "データを集めるときに、性質を表すデータ（質的）と数量を表すデータ（量的）を区別する感覚を身近な例でつかむ。集めたデータに抜けやおかしな値がないか確かめる視点も確認する。",
+   "minutes": 8,
+   "search": "データの種類（質的・量的）"
+  },
+  {
+   "id": "toukei-web-010",
+   "providerId": "toukei-web",
+   "title": "1-2. データからグラフを作ってみよう１",
+   "url": "https://bellcurve.jp/statistics/course/18766.html",
+   "type": "text",
+   "unitIds": [
+    "graphs-basic"
+   ],
+   "role": "supplement",
+   "focus": "集計表を作ってから棒グラフ・円グラフ・帯グラフに表すまでの流れを追う。項目の並べ方で見やすさが変わる点にも注目する。",
+   "minutes": 8,
+   "search": "基本のグラフ"
+  },
+  {
+   "id": "toukei-web-011",
+   "providerId": "toukei-web",
+   "title": "1-3. データからグラフを作ってみよう２",
+   "url": "https://bellcurve.jp/statistics/course/18769.html",
+   "type": "text",
+   "unitIds": [
+    "freq-hist"
+   ],
+   "role": "supplement",
+   "focus": "数量データを階級に区切って度数分布表を作り、ヒストグラムに描くまでの手順を入門レベルで確認する。",
+   "minutes": 10,
+   "search": "度数分布表とヒストグラム"
+  },
+  {
+   "id": "toukei-web-012",
+   "providerId": "toukei-web",
+   "title": "2-1. クロス集計表を作ってみよう",
+   "url": "https://bellcurve.jp/statistics/course/18788.html",
+   "type": "text",
+   "unitIds": [
+    "crosstab"
+   ],
+   "role": "supplement",
+   "focus": "2つの項目を同時に数えてクロス集計表にまとめる手順を学ぶ。行と列がそれぞれ何を表しているかを意識して表を読む。",
+   "minutes": 10,
+   "search": "クロス集計表"
+  },
+  {
+   "id": "toukei-web-013",
+   "providerId": "toukei-web",
+   "title": "3-2. 時系列データをグラフにしてみよう",
+   "url": "https://bellcurve.jp/statistics/course/18946.html",
+   "type": "text",
+   "unitIds": [
+    "timeseries-index"
+   ],
+   "role": "supplement",
+   "focus": "時系列データをグラフにして、増えている・減っているといった変化の様子を読み取る。",
+   "minutes": 8,
+   "search": "時系列グラフ・指数・増減率"
+  },
+  {
+   "id": "toukei-web-014",
+   "providerId": "toukei-web",
+   "title": "3-3. 時系列データの変化を見てみよう",
+   "url": "https://bellcurve.jp/statistics/course/18948.html",
+   "type": "text",
+   "unitIds": [
+    "timeseries-index"
+   ],
+   "role": "primary",
+   "focus": "前の時点との差・比・変化率と、基準時点を100とする指数の計算を例で確認する。増減率や指数の問題の土台になるので、どの時点の値で割っているかに注意して読む。",
+   "minutes": 12,
+   "search": "時系列グラフ・指数・増減率"
+  },
+  {
+   "id": "toukei-web-015",
+   "providerId": "toukei-web",
+   "title": "3-3. 時系列データの変化を見てみよう",
+   "url": "https://bellcurve.jp/statistics/course/18948.html",
+   "type": "text",
+   "unitIds": [
+    "ts-moving-avg"
+   ],
+   "role": "supplement",
+   "focus": "前の時点との差・比・変化率と、基準時点を100とする指数の計算を例で確認する。増減率や指数の問題の土台になるので、どの時点の値で割っているかに注意して読む。",
+   "minutes": 12,
+   "search": "時系列データと移動平均"
+  },
+  {
+   "id": "toukei-web-016",
+   "providerId": "toukei-web",
+   "title": "4-1. 平均、中央値、最頻値を求めてみよう",
+   "url": "https://bellcurve.jp/statistics/course/19014.html",
+   "type": "text",
+   "unitIds": [
+    "central"
+   ],
+   "role": "supplement",
+   "focus": "平均値・中央値・最頻値を実際のデータから求める。データが偶数個のときの中央値の出し方を重点的に確認する。",
+   "minutes": 10,
+   "search": "代表値（平均値・中央値・最頻値）"
+  },
+  {
+   "id": "toukei-web-017",
+   "providerId": "toukei-web",
+   "title": "4-2. 四分位数を見てみよう",
+   "url": "https://bellcurve.jp/statistics/course/19277.html",
+   "type": "text",
+   "unitIds": [
+    "quartile-box"
+   ],
+   "role": "primary",
+   "focus": "データを小さい順に並べて4等分する区切りの値（四分位数）と、第3四分位数から第1四分位数を引いた四分位範囲を確認する。",
+   "minutes": 10,
+   "search": "範囲・四分位数・箱ひげ図"
+  },
+  {
+   "id": "toukei-web-018",
+   "providerId": "toukei-web",
+   "title": "4-3. 箱ひげ図を描いてみよう",
+   "url": "https://bellcurve.jp/statistics/course/19279.html",
+   "type": "text",
+   "unitIds": [
+    "quartile-box"
+   ],
+   "role": "supplement",
+   "focus": "四分位数から箱ひげ図を描く。箱とひげが何を表すか、箱の長さの1.5倍より外にある値を外れ値として印を付ける描き方を確認する。",
+   "minutes": 10,
+   "search": "範囲・四分位数・箱ひげ図"
+  },
+  {
+   "id": "toukei-web-019",
+   "providerId": "toukei-web",
+   "title": "6-1. レーダーチャートを作ってみよう",
+   "url": "https://bellcurve.jp/statistics/course/19607.html",
+   "type": "text",
+   "unitIds": [
+    "graphs-advanced"
+   ],
+   "role": "supplement",
+   "focus": "複数の項目の大小を1枚の図で見せるレーダーチャートの作り方と読み方を確認する。",
+   "minutes": 8,
+   "search": "目的に応じたグラフ"
+  },
+  {
+   "id": "toukei-web-020",
+   "providerId": "toukei-web",
+   "title": "8-1. 確率を求めてみよう",
+   "url": "https://bellcurve.jp/statistics/course/20171.html",
+   "type": "text",
+   "unitIds": [
+    "prob-basic"
+   ],
+   "role": "primary",
+   "focus": "「同様に確からしい」とき、起こりうる全ての場合の数に対する当てはまる場合の数の比で確率を求める。組み合わせを表に書き出して数える例に注目する。",
+   "minutes": 10,
+   "search": "確率の基礎"
+  },
+  {
+   "id": "toukei-web-021",
+   "providerId": "toukei-web",
+   "title": "8-2. いろいろな確率を求めよう",
+   "url": "https://bellcurve.jp/statistics/course/20184.html",
+   "type": "text",
+   "unitIds": [
+    "prob-basic"
+   ],
+   "role": "supplement",
+   "focus": "「少なくとも〜」を余事象から求める考え方や、互いに影響しない試行の確率を掛け合わせる計算を扱う。",
+   "minutes": 10,
+   "search": "確率の基礎"
+  },
+  {
+   "id": "toukei-web-022",
+   "providerId": "toukei-web",
+   "title": "8-3. 条件付き確率を求めてみよう",
+   "url": "https://bellcurve.jp/statistics/course/20203.html",
+   "type": "text",
+   "unitIds": [
+    "cond-prob"
+   ],
+   "role": "supplement",
+   "focus": "アンケート結果の表を使い、「Aという条件のもとでBが起こる確率」を P(A∩B)÷P(A) で求める手順を確認する。",
+   "minutes": 10,
+   "search": "条件付き確率と独立"
+  },
+  {
+   "id": "toukei-web-023",
+   "providerId": "toukei-web",
+   "title": "9-1. 研究の流れを確認しよう",
+   "url": "https://bellcurve.jp/statistics/course/20218.html",
+   "type": "text",
+   "unitIds": [
+    "ppdac"
+   ],
+   "role": "supplement",
+   "focus": "調べたいことを決める→計画を立てる→データを集める→表やグラフにまとめる、という調査研究の流れを確認する。PPDACサイクルの各段階に当てはめながら読むとよい。",
+   "minutes": 8,
+   "search": "統計的問題解決（PPDAC）"
+  },
+  {
+   "id": "toukei-web-024",
+   "providerId": "toukei-web",
+   "title": "9-2. 研究計画を立ててみよう",
+   "url": "https://bellcurve.jp/statistics/course/20235.html",
+   "type": "text",
+   "unitIds": [
+    "sampling-basic"
+   ],
+   "role": "supplement",
+   "focus": "母集団・標本・全数調査（代表例は国勢調査）・標本調査・無作為抽出の意味を具体例で押さえる。",
+   "minutes": 10,
+   "search": "標本調査の基礎"
+  },
+  {
+   "id": "toukei-web-025",
+   "providerId": "toukei-web",
+   "title": "5-4. クロス集計表2",
+   "url": "https://bellcurve.jp/statistics/course/23708.html",
+   "type": "text",
+   "unitIds": [
+    "crosstab"
+   ],
+   "role": "primary",
+   "focus": "行の合計を分母にする行パーセントと、列の合計を分母にする列パーセントを同じ表で計算して比べ、何を100%としているかを読み分ける。",
+   "minutes": 10,
+   "search": "クロス集計表"
+  },
+  {
+   "id": "toukei-web-026",
+   "providerId": "toukei-web",
+   "title": "9-6. 加法定理",
+   "url": "https://bellcurve.jp/statistics/course/23780.html",
+   "type": "text",
+   "unitIds": [
+    "cond-prob"
+   ],
+   "role": "supplement",
+   "focus": "同時に起こらない（排反な）事象なら確率をそのまま足し、重なりがある場合は重なり部分の確率を引く、という加法定理を確認する。",
+   "minutes": 10,
+   "search": "条件付き確率と独立"
+  },
+  {
+   "id": "toukei-web-027",
+   "providerId": "toukei-web",
+   "title": "練習問題（2. 度数分布とヒストグラム）",
+   "url": "https://bellcurve.jp/statistics/course/387.html",
+   "type": "practice",
+   "unitIds": [
+    "freq-hist"
+   ],
+   "role": "practice",
+   "focus": "度数分布表の階級値・相対度数・累積相対度数を求める問題で計算手順を定着させる。",
+   "minutes": 15,
+   "search": "度数分布表とヒストグラム"
+  },
+  {
+   "id": "toukei-web-028",
+   "providerId": "toukei-web",
+   "title": "3-2. 平均・中央値・モードの関係",
+   "url": "https://bellcurve.jp/statistics/course/4320.html",
+   "type": "text",
+   "unitIds": [
+    "box-outlier"
+   ],
+   "role": "supplement",
+   "focus": "分布が左右対称か、片側に裾を引いているかで、平均・中央値・最頻値の位置関係がどう変わるかを見る。ヒストグラムの形から代表値の大小を判断する問題の基礎になる。",
+   "minutes": 10,
+   "search": "箱ひげ図の比較と外れ値"
+  },
+  {
+   "id": "toukei-web-029",
+   "providerId": "toukei-web",
+   "title": "4-3. 外れ値検出のある箱ひげ図",
+   "url": "https://bellcurve.jp/statistics/course/5222.html",
+   "type": "text",
+   "unitIds": [
+    "box-outlier"
+   ],
+   "role": "primary",
+   "focus": "第1四分位数−1.5×IQR と 第3四分位数＋1.5×IQR を境界として外れ値を判定し、ひげは境界の内側で最も端にあるデータまで伸ばす、という描き方を学ぶ。",
+   "minutes": 10,
+   "search": "箱ひげ図の比較と外れ値"
+  },
+  {
+   "id": "toukei-web-030",
+   "providerId": "toukei-web",
+   "title": "5-5. 帯グラフ・モザイク図",
+   "url": "https://bellcurve.jp/statistics/course/5416.html",
+   "type": "text",
+   "unitIds": [
+    "graphs-advanced"
+   ],
+   "role": "primary",
+   "focus": "構成比を並べて比べる帯グラフと、クロス集計表の内訳を面積で表すモザイク図の読み方を確認する。",
+   "minutes": 10,
+   "search": "目的に応じたグラフ"
+  },
+  {
+   "id": "toukei-web-031",
+   "providerId": "toukei-web",
+   "title": "練習問題（4. 箱ひげ図と幹葉表示）",
+   "url": "https://bellcurve.jp/statistics/course/5592.html",
+   "type": "practice",
+   "unitIds": [
+    "quartile-box",
+    "box-outlier"
+   ],
+   "role": "practice",
+   "focus": "四分位数を求めて箱ひげ図を作る・読み取る問題と、幹葉表示を作る問題で手を動かして確認する。",
+   "minutes": 20,
+   "search": "範囲・四分位数・箱ひげ図"
+  },
+  {
+   "id": "toukei-web-032",
+   "providerId": "toukei-web",
+   "title": "7-2. Pの使い方",
+   "url": "https://bellcurve.jp/statistics/course/5760.html",
+   "type": "text",
+   "unitIds": [
+    "math-counting"
+   ],
+   "role": "primary",
+   "focus": "異なるn個からr個を選んで1列に並べる順列 nPr の意味と計算方法を確認する。",
+   "minutes": 10,
+   "search": "場合の数（順列・組合せ）"
+  },
+  {
+   "id": "toukei-web-033",
+   "providerId": "toukei-web",
+   "title": "7-3. Cの使い方",
+   "url": "https://bellcurve.jp/statistics/course/5762.html",
+   "type": "text",
+   "unitIds": [
+    "math-counting"
+   ],
+   "role": "supplement",
+   "focus": "並べる順番を区別しない組み合わせ nCr の意味と計算方法を確認する。二項分布の確率計算で必ず使う。",
+   "minutes": 10,
+   "search": "場合の数（順列・組合せ）"
+  },
+  {
+   "id": "toukei-web-034",
+   "providerId": "toukei-web",
+   "title": "練習問題（5. データの集計と表現）",
+   "url": "https://bellcurve.jp/statistics/course/5840.html",
+   "type": "practice",
+   "unitIds": [
+    "graphs-basic",
+    "crosstab",
+    "graphs-advanced"
+   ],
+   "role": "practice",
+   "focus": "目的に合うグラフを選ぶ問題、クロス集計表の空欄を埋める・作る問題で、グラフの選択と表の読み取りを練習する。",
+   "minutes": 20,
+   "note": "3級の範囲を超える内容を含みます。読みどころの部分だけで十分です。",
+   "search": "基本のグラフ"
+  },
+  {
+   "id": "toukei-web-035",
+   "providerId": "toukei-web",
+   "title": "練習問題（7. 場合の数）",
+   "url": "https://bellcurve.jp/statistics/course/5916.html",
+   "type": "practice",
+   "unitIds": [
+    "math-counting"
+   ],
+   "role": "practice",
+   "focus": "階乗・順列・組み合わせの基本計算（4!、5P2、5C2 など）をまず確実にし、並べ方や経路の数え上げは余力があれば取り組む。",
+   "minutes": 20,
+   "note": "3級の範囲を超える内容を含みます。読みどころの部分だけで十分です。",
+   "search": "場合の数（順列・組合せ）"
+  },
+  {
+   "id": "toukei-web-036",
+   "providerId": "toukei-web",
+   "title": "6-1. 分散",
+   "url": "https://bellcurve.jp/statistics/course/5919.html",
+   "type": "text",
+   "unitIds": [
+    "variance-sd"
+   ],
+   "role": "supplement",
+   "focus": "各値と平均の差（偏差）を2乗して平均したものが分散、という定義と計算手順を確認する。読みながら、偏差をすべて足すと0になることを自分の計算で確かめてみるとよい。",
+   "minutes": 12,
+   "search": "分散・標準偏差"
+  },
+  {
+   "id": "toukei-web-037",
+   "providerId": "toukei-web",
+   "title": "6-2. 標準偏差",
+   "url": "https://bellcurve.jp/statistics/course/5924.html",
+   "type": "text",
+   "unitIds": [
+    "variance-sd"
+   ],
+   "role": "primary",
+   "focus": "分散の正の平方根をとって単位を元のデータにそろえたものが標準偏差であることと、記号σや略記SDの読み方を確認する。",
+   "minutes": 8,
+   "search": "分散・標準偏差"
+  },
+  {
+   "id": "toukei-web-038",
+   "providerId": "toukei-web",
+   "title": "6-4. 変動係数",
+   "url": "https://bellcurve.jp/statistics/course/5929.html",
+   "type": "text",
+   "unitIds": [
+    "cv-standardize"
+   ],
+   "role": "primary",
+   "focus": "標準偏差÷平均で求める変動係数を使って、平均が大きく離れたデータどうしのばらつきを比べる考え方を確認する。単位のない数値になる点も重要。",
+   "minutes": 8,
+   "search": "変動係数・標準化"
+  },
+  {
+   "id": "toukei-web-039",
+   "providerId": "toukei-web",
+   "title": "9-7. 期待値",
+   "url": "https://bellcurve.jp/statistics/course/6349.html",
+   "type": "text",
+   "unitIds": [
+    "rv-expectation"
+   ],
+   "role": "supplement",
+   "focus": "「値×その値が出る確率」をすべて足し合わせる期待値の計算を、さいころの例（3.5）で確認する。",
+   "minutes": 8,
+   "search": "確率変数と期待値"
+  },
+  {
+   "id": "toukei-web-040",
+   "providerId": "toukei-web",
+   "title": "10-1. 条件付き確率とは",
+   "url": "https://bellcurve.jp/statistics/course/6438.html",
+   "type": "text",
+   "unitIds": [
+    "cond-prob"
+   ],
+   "role": "primary",
+   "focus": "条件付き確率 P(A|B)＝P(A∩B)÷P(B) の定義を例題で確認する。分母が「条件となる事象の確率」になる点を意識する。",
+   "minutes": 12,
+   "search": "条件付き確率と独立"
+  },
+  {
+   "id": "toukei-web-041",
+   "providerId": "toukei-web",
+   "title": "10-2. 条件付き確率と独立",
+   "url": "https://bellcurve.jp/statistics/course/6440.html",
+   "type": "text",
+   "unitIds": [
+    "cond-prob"
+   ],
+   "role": "supplement",
+   "focus": "2つの事象が「独立」であるとはどういうことかを、条件付き確率との関係から理解する。",
+   "minutes": 10,
+   "search": "条件付き確率と独立"
+  },
+  {
+   "id": "toukei-web-042",
+   "providerId": "toukei-web",
+   "title": "11-1. 確率変数と確率分布",
+   "url": "https://bellcurve.jp/statistics/course/6596.html",
+   "type": "text",
+   "unitIds": [
+    "rv-expectation"
+   ],
+   "role": "primary",
+   "focus": "結果に数値を対応させた「確率変数」と、値と確率の対応関係である「確率分布」を、さいころやコインの例で理解する。",
+   "minutes": 8,
+   "search": "確率変数と期待値"
+  },
+  {
+   "id": "toukei-web-043",
+   "providerId": "toukei-web",
+   "title": "12-5. 確率変数の分散",
+   "url": "https://bellcurve.jp/statistics/course/6716.html",
+   "type": "text",
+   "unitIds": [
+    "rv-expectation"
+   ],
+   "role": "supplement",
+   "focus": "確率変数の分散を「（値−期待値）の2乗×確率」の合計で求める。分散が小さいほど値が期待値の近くに集まることを確認する。",
+   "minutes": 10,
+   "note": "3級の範囲を超える内容を含みます。読みどころの部分だけで十分です。",
+   "search": "確率変数と期待値"
+  },
+  {
+   "id": "toukei-web-044",
+   "providerId": "toukei-web",
+   "title": "13-1. 二項分布",
+   "url": "https://bellcurve.jp/statistics/course/6979.html",
+   "type": "text",
+   "unitIds": [
+    "binomial"
+   ],
+   "role": "primary",
+   "focus": "成功か失敗かの試行をn回繰り返したときの成功回数が従う二項分布 B(n,p) と、ちょうどk回成功する確率の式を、コイン投げの例で確認する。",
+   "minutes": 12,
+   "search": "二項分布"
+  },
+  {
+   "id": "toukei-web-045",
+   "providerId": "toukei-web",
+   "title": "14-1. 正規分布",
+   "url": "https://bellcurve.jp/statistics/course/7797.html",
+   "type": "text",
+   "unitIds": [
+    "normal"
+   ],
+   "role": "primary",
+   "focus": "正規分布の形と、平均を変えると山の位置が、標準偏差を変えると山の広がりが変わることを図で確認する。",
+   "minutes": 10,
+   "search": "正規分布"
+  },
+  {
+   "id": "toukei-web-046",
+   "providerId": "toukei-web",
+   "title": "14-3. 標準化したデータの使い方",
+   "url": "https://bellcurve.jp/statistics/course/7801.html",
+   "type": "text",
+   "unitIds": [
+    "cv-standardize"
+   ],
+   "role": "supplement",
+   "focus": "平均を引いて標準偏差で割る標準化によって、平均や単位が違うデータを同じ物差しで比べられることを確認する。",
+   "minutes": 10,
+   "search": "変動係数・標準化"
+  },
+  {
+   "id": "toukei-web-047",
+   "providerId": "toukei-web",
+   "title": "14-5. 標準正規分布表の使い方1",
+   "url": "https://bellcurve.jp/statistics/course/7805.html",
+   "type": "text",
+   "unitIds": [
+    "normal"
+   ],
+   "role": "supplement",
+   "focus": "テストの得点を例に、値を標準化してから標準正規分布表（上側確率）を引いて「○点以上の割合」を求める手順を身につける。",
+   "minutes": 12,
+   "search": "正規分布"
+  },
+  {
+   "id": "toukei-web-048",
+   "providerId": "toukei-web",
+   "title": "練習問題（6. 分散と標準偏差）",
+   "url": "https://bellcurve.jp/statistics/course/7825.html",
+   "type": "practice",
+   "unitIds": [
+    "variance-sd",
+    "cv-standardize"
+   ],
+   "role": "practice",
+   "focus": "偏差・分散・標準偏差・変動係数を手計算で求める問題。電卓で途中の値を書き出しながら解く。",
+   "minutes": 20,
+   "search": "分散・標準偏差"
+  },
+  {
+   "id": "toukei-web-049",
+   "providerId": "toukei-web",
+   "title": "練習問題（9. 確率と期待値）",
+   "url": "https://bellcurve.jp/statistics/course/7870.html",
+   "type": "practice",
+   "unitIds": [
+    "prob-basic",
+    "cond-prob",
+    "rv-expectation"
+   ],
+   "role": "practice",
+   "focus": "場合の数の数え上げや余事象を使う確率計算と、ゲームの期待値を求める問題で、確率の基本計算を確認する。",
+   "minutes": 20,
+   "search": "確率の基礎"
+  },
+  {
+   "id": "toukei-web-050",
+   "providerId": "toukei-web",
+   "title": "練習問題（13. いろいろな確率分布1）",
+   "url": "https://bellcurve.jp/statistics/course/7882.html",
+   "type": "practice",
+   "unitIds": [
+    "binomial"
+   ],
+   "role": "practice",
+   "focus": "二項分布の確率・期待値・分散に関する設問を選んで解く。",
+   "minutes": 20,
+   "note": "3級の範囲を超える内容を含みます。読みどころの部分だけで十分です。",
+   "search": "二項分布"
+  },
+  {
+   "id": "toukei-web-051",
+   "providerId": "toukei-web",
+   "title": "練習問題（14. いろいろな確率分布2）",
+   "url": "https://bellcurve.jp/statistics/course/7885.html",
+   "type": "practice",
+   "unitIds": [
+    "normal"
+   ],
+   "role": "practice",
+   "focus": "標準正規分布表から確率を読む問題、確率から逆に値を求める問題、平均±1標準偏差に入る割合や順位を求める問題で表の使い方を固める。",
+   "minutes": 25,
+   "search": "正規分布"
+  },
+  {
+   "id": "toukei-web-052",
+   "providerId": "toukei-web",
+   "title": "16-2. 全数調査と標本調査",
+   "url": "https://bellcurve.jp/statistics/course/8005.html",
+   "type": "text",
+   "unitIds": [
+    "survey-experiment"
+   ],
+   "role": "primary",
+   "focus": "全数調査と標本調査の違い、誰もが同じ確率で選ばれる無作為抽出の考え方、「標本の大きさ」と「標本数」という紛らわしい用語の違いを確認する。",
+   "minutes": 10,
+   "search": "標本調査と実験"
+  },
+  {
+   "id": "toukei-web-053",
+   "providerId": "toukei-web",
+   "title": "16-3. 標本の抽出方法",
+   "url": "https://bellcurve.jp/statistics/course/8007.html",
+   "type": "text",
+   "unitIds": [
+    "survey-experiment"
+   ],
+   "role": "supplement",
+   "focus": "標本の選び方（抽出法）にはどんな種類があり、それぞれどんな場面で使われるかを整理する。",
+   "minutes": 12,
+   "search": "標本調査と実験"
+  },
+  {
+   "id": "toukei-web-054",
+   "providerId": "toukei-web",
+   "title": "17-3. 中心極限定理1",
+   "url": "https://bellcurve.jp/statistics/course/8543.html",
+   "type": "text",
+   "unitIds": [
+    "sampling-dist"
+   ],
+   "role": "primary",
+   "focus": "さいころの例で、標本を大きくするほど標本平均の分布が正規分布の形に近づいていく様子をヒストグラムで確認する。",
+   "minutes": 10,
+   "search": "標本分布"
+  },
+  {
+   "id": "toukei-web-055",
+   "providerId": "toukei-web",
+   "title": "17-4. 中心極限定理2",
+   "url": "https://bellcurve.jp/statistics/course/8545.html",
+   "type": "text",
+   "unitIds": [
+    "sampling-dist"
+   ],
+   "role": "supplement",
+   "focus": "母平均μ・母分散σ²の母集団から大きさnの標本をとると、標本平均の分布は平均μ・分散σ²/nの正規分布に近づくことを押さえる。nが大きいほど標本平均のばらつきが小さくなる点が要所。",
+   "minutes": 10,
+   "search": "標本分布"
+  },
+  {
+   "id": "toukei-web-056",
+   "providerId": "toukei-web",
+   "title": "19-1. 区間推定とは",
+   "url": "https://bellcurve.jp/statistics/course/8885.html",
+   "type": "text",
+   "unitIds": [
+    "interval-est"
+   ],
+   "role": "primary",
+   "focus": "1つの値ではなく幅で母数を推定する区間推定の考え方と、信頼区間・信頼係数（95%など）という用語を確認する。",
+   "minutes": 8,
+   "search": "区間推定"
+  },
+  {
+   "id": "toukei-web-057",
+   "providerId": "toukei-web",
+   "title": "19-2. 母平均の信頼区間の求め方（母分散既知）",
+   "url": "https://bellcurve.jp/statistics/course/8888.html",
+   "type": "text",
+   "unitIds": [
+    "interval-est"
+   ],
+   "role": "supplement",
+   "focus": "母分散が分かっている場合に、標本平均を標準化し、標準正規分布の1.96を使って母平均の95%信頼区間を求める手順を追う。",
+   "minutes": 15,
+   "search": "区間推定"
+  },
+  {
+   "id": "toukei-web-058",
+   "providerId": "toukei-web",
+   "title": "21-1. 母比率の信頼区間の求め方1",
+   "url": "https://bellcurve.jp/statistics/course/9122.html",
+   "type": "text",
+   "unitIds": [
+    "binomial-normal-approx"
+   ],
+   "role": "supplement",
+   "focus": "二項分布に従う成功回数から標本比率を作り、nが大きいとき正規分布で近似できることを使って母比率の95%信頼区間の式を導く流れを追う。",
+   "minutes": 15,
+   "search": "二項分布の正規近似"
+  },
+  {
+   "id": "toukei-web-059",
+   "providerId": "toukei-web",
+   "title": "23-1. 検定とは",
+   "url": "https://bellcurve.jp/statistics/course/9309.html",
+   "type": "text",
+   "unitIds": [
+    "hypothesis-test"
+   ],
+   "role": "primary",
+   "focus": "先に仮説を立て、その仮説のもとで観測結果がどれくらい起こりにくいかを確率で判断する、という検定の考え方（背理法に似た論理）をつかむ。",
+   "minutes": 10,
+   "search": "仮説検定の考え方"
+  },
+  {
+   "id": "toukei-web-060",
+   "providerId": "toukei-web",
+   "title": "23-2. 検定で使う用語",
+   "url": "https://bellcurve.jp/statistics/course/9311.html",
+   "type": "text",
+   "unitIds": [
+    "hypothesis-test"
+   ],
+   "role": "supplement",
+   "focus": "帰無仮説・対立仮説・有意水準・P値の意味を整理し、P値が有意水準より小さければ帰無仮説を棄却する、という判断のルールを確認する。",
+   "minutes": 12,
+   "search": "仮説検定の考え方"
+  },
+  {
+   "id": "toukei-web-061",
+   "providerId": "toukei-web",
+   "title": "25-2. 二項分布を用いた検定",
+   "url": "https://bellcurve.jp/statistics/course/9490.html",
+   "type": "text",
+   "unitIds": [
+    "binomial-normal-approx"
+   ],
+   "role": "primary",
+   "focus": "nが大きいとき二項分布 B(n,p) を平均np・分散np(1−p)の正規分布で近似して確率を求める、という説明の部分を読む。とびとびの分布と連続な分布のずれを0.5で補う連続修正にも触れている。",
+   "minutes": 15,
+   "note": "3級の範囲を超える内容を含みます。読みどころの部分だけで十分です。",
+   "search": "二項分布の正規近似"
+  },
+  {
+   "id": "toukei-web-062",
+   "providerId": "toukei-web",
+   "title": "26-1. 散布図",
+   "url": "https://bellcurve.jp/statistics/course/9587.html",
+   "type": "text",
+   "unitIds": [
+    "scatter-corr"
+   ],
+   "role": "primary",
+   "focus": "2つの変数を横軸と縦軸にとって点を打つ散布図の描き方と、点の並び方から2変数の関係を読み取る基本を確認する。",
+   "minutes": 8,
+   "search": "散布図と相関係数"
+  },
+  {
+   "id": "toukei-web-063",
+   "providerId": "toukei-web",
+   "title": "26-2. 正の相関と負の相関",
+   "url": "https://bellcurve.jp/statistics/course/9589.html",
+   "type": "text",
+   "unitIds": [
+    "causation"
+   ],
+   "role": "primary",
+   "focus": "正の相関・負の相関・無相関と相関の強弱を散布図で見分ける。相関があっても一方がもう一方の原因とは限らない（相関関係と因果関係は別）ことを例で確認する。",
+   "minutes": 10,
+   "search": "相関と因果・擬相関"
+  },
+  {
+   "id": "toukei-web-064",
+   "providerId": "toukei-web",
+   "title": "26-3. 相関係数",
+   "url": "https://bellcurve.jp/statistics/course/9591.html",
+   "type": "text",
+   "unitIds": [
+    "scatter-corr"
+   ],
+   "role": "supplement",
+   "focus": "相関係数＝共分散÷（2変数の標準偏差の積）という式と、値が-1から1に収まる・単位がない・直線的な関係の強さしか測れない、という性質を確認する。",
+   "minutes": 15,
+   "search": "散布図と相関係数"
+  },
+  {
+   "id": "toukei-web-065",
+   "providerId": "toukei-web",
+   "title": "26-4. 偏相関係数",
+   "url": "https://bellcurve.jp/statistics/course/9593.html",
+   "type": "text",
+   "unitIds": [
+    "causation"
+   ],
+   "role": "supplement",
+   "focus": "第3の変数（例では人口密度）が両方に影響しているために見かけ上の相関（擬似相関）が生じる例を読み、相関が高くても直接の関係とは限らないことを理解する。",
+   "minutes": 10,
+   "note": "3級の範囲を超える内容を含みます。読みどころの部分だけで十分です。",
+   "search": "相関と因果・擬相関"
+  },
+  {
+   "id": "toukei-web-066",
+   "providerId": "toukei-web",
+   "title": "練習問題（19. 母平均の区間推定（母分散既知））",
+   "url": "https://bellcurve.jp/statistics/course/9664.html",
+   "type": "practice",
+   "unitIds": [
+    "interval-est"
+   ],
+   "role": "practice",
+   "focus": "信頼区間の正しい解釈を選ぶ問題などで、母平均の区間推定の理解を確認する。",
+   "minutes": 20,
+   "search": "区間推定"
+  },
+  {
+   "id": "toukei-web-067",
+   "providerId": "toukei-web",
+   "title": "27-1. 単回帰分析",
+   "url": "https://bellcurve.jp/statistics/course/9700.html",
+   "type": "text",
+   "unitIds": [
+    "regression"
+   ],
+   "role": "primary",
+   "focus": "直線の式（切片と傾き）でxからyを予測する単回帰分析の考え方と、誤差の2乗の合計が最小になるように直線を決める最小二乗法の発想を確認する。",
+   "minutes": 12,
+   "search": "回帰直線"
+  },
+  {
+   "id": "toukei-web-068",
+   "providerId": "toukei-web",
+   "title": "27-4. 予測値と残差",
+   "url": "https://bellcurve.jp/statistics/course/9704.html",
+   "type": "text",
+   "unitIds": [
+    "regression"
+   ],
+   "role": "supplement",
+   "focus": "回帰式から求めた予測値と実際の観測値との差が残差であること、最小二乗法で求めた回帰直線では残差の合計が0になることを確認する。",
+   "minutes": 10,
+   "search": "回帰直線"
+  },
+  {
+   "id": "toukei-web-069",
+   "providerId": "toukei-web",
+   "title": "練習問題（23. 検定の前に）",
+   "url": "https://bellcurve.jp/statistics/course/9948.html",
+   "type": "practice",
+   "unitIds": [
+    "hypothesis-test"
+   ],
+   "role": "practice",
+   "focus": "検定の用語とP値の解釈を問う問題。P値は「帰無仮説が正しい確率」ではないことを解説で確認する。",
+   "minutes": 15,
+   "search": "仮説検定の考え方"
+  },
+  {
+   "id": "phet-001",
+   "providerId": "phet",
+   "title": "Plinko Probability（日本語訳タイトル: 確率分布を作る）",
+   "url": "https://phet.colorado.edu/sims/html/plinko-probability/latest/plinko-probability_en.html",
+   "type": "interactive",
+   "unitIds": [
+    "binomial",
+    "binomial-normal-approx"
+   ],
+   "role": "supplement",
+   "focus": "ピンの並んだ板に玉を落とし、左右どちらかに跳ねた結果が下の容器にたまっていく様子を見る。Lab画面でピンの列数（試行回数n）と右に落ちる確率pを変え、平均npと標準偏差√(np(1−p))の理論値と実測値を見比べる。列数を増やすと山の形が左右対称の釣鐘型に近づくことにも注目。",
+   "minutes": 15,
+   "note": "英語のサイトです（図を動かして確かめる用途なら、英語が読めなくても使えます）。",
+   "search": "二項分布"
+  },
+  {
+   "id": "seeing-theory-001",
+   "providerId": "seeing-theory",
+   "title": "Basic Probability – Expectation",
+   "url": "https://seeing-theory.brown.edu/basic-probability/index.html#section2",
+   "type": "interactive",
+   "unitIds": [
+    "rv-expectation"
+   ],
+   "role": "supplement",
+   "focus": "サイコロを繰り返し振り、出た目の平均が期待値（公正なサイコロなら3.5）に落ち着いていく様子を見る。各面の出やすさを変えると期待値がどちらへ動くかも確かめる。",
+   "minutes": 10,
+   "note": "英語のサイトです（図を動かして確かめる用途なら、英語が読めなくても使えます）。",
+   "search": "確率変数と期待値"
+  },
+  {
+   "id": "seeing-theory-002",
+   "providerId": "seeing-theory",
+   "title": "Compound Probability – Counting",
+   "url": "https://seeing-theory.brown.edu/compound-probability/index.html#section2",
+   "type": "interactive",
+   "unitIds": [
+    "math-counting"
+   ],
+   "role": "supplement",
+   "focus": "順列と組合せを切り替え、1〜4個の玉について並べ方・選び方を実際に列挙して数える。順序を区別するかどうかで通り数がどう変わるかに注目する。",
+   "minutes": 10,
+   "note": "英語のサイトです（図を動かして確かめる用途なら、英語が読めなくても使えます）。",
+   "search": "場合の数（順列・組合せ）"
+  },
+  {
+   "id": "seeing-theory-003",
+   "providerId": "seeing-theory",
+   "title": "Probability Distributions – Discrete and Continuous",
+   "url": "https://seeing-theory.brown.edu/probability-distributions/index.html#section2",
+   "type": "interactive",
+   "unitIds": [
+    "binomial",
+    "normal"
+   ],
+   "role": "supplement",
+   "focus": "Discrete で Binomial（二項分布）、Continuous で Normal（正規分布）を選び、パラメータのスライダーを動かして分布の形と累積分布がどう変わるかを見る。二項分布はnを大きくしたときの山の形、正規分布は平均と標準偏差が位置と幅を決めることに注目。",
+   "minutes": 15,
+   "note": "3級の範囲を超える内容を含みます。読みどころの部分だけで十分です。英語のサイトです（図を動かして確かめる用途なら、英語が読めなくても使えます）。",
+   "search": "二項分布"
+  },
+  {
+   "id": "seeing-theory-004",
+   "providerId": "seeing-theory",
+   "title": "Probability Distributions – Central Limit Theorem",
+   "url": "https://seeing-theory.brown.edu/probability-distributions/index.html#section3",
+   "type": "interactive",
+   "unitIds": [
+    "sampling-dist"
+   ],
+   "role": "supplement",
+   "focus": "元の分布の形を決め、標本の大きさと抽出回数を指定して標本平均を積み上げる。標本を大きくすると標本平均の分布が釣鐘型に近づき、散らばりが小さくなることを自分の操作で確かめる。",
+   "minutes": 15,
+   "note": "英語のサイトです（図を動かして確かめる用途なら、英語が読めなくても使えます）。",
+   "search": "標本分布"
+  },
+  {
+   "id": "dss-001",
+   "providerId": "dss",
+   "title": "ビジネスに役立つ統計講座/平均だけで大丈夫？1",
+   "url": "https://www.stat.go.jp/dss/business04.html",
+   "type": "text",
+   "unitIds": [
+    "central"
+   ],
+   "role": "supplement",
+   "focus": "平均値だけでデータを判断する危うさを題材にしたマンガ形式の読み物（連載の1ページ目）。代表値を学んだあとの理解の確認に使う。",
+   "minutes": 10,
+   "search": "代表値（平均値・中央値・最頻値）"
+  },
+  {
+   "id": "dss-002",
+   "providerId": "dss",
+   "title": "あなたの統計力 初級問題 Q3",
+   "url": "https://www.stat.go.jp/dss/getting/begin03.html",
+   "type": "practice",
+   "unitIds": [
+    "data-types"
+   ],
+   "role": "practice",
+   "focus": "調査項目が質的データか量的データかを見分ける4級相当の1問。解説で両者の定義を再確認できる。",
+   "minutes": 3,
+   "search": "データの種類（質的・量的）"
+  },
+  {
+   "id": "data-start-001",
+   "providerId": "data-start",
+   "title": "ゼミナール編（2）3時限目 3-1 データと変数の尺度",
+   "url": "https://www.stat.go.jp/dstart/point/seminar/02/3-1.html",
+   "type": "text",
+   "unitIds": [
+    "data-types",
+    "scales"
+   ],
+   "role": "supplement",
+   "focus": "カテゴリデータと数量データの区別と、名義・順序・間隔・比例の尺度水準を具体例（性別は名義、収入は比例 など）で整理する。なるほど統計学園に尺度水準の専用ページがないため、3級の尺度水準はここで補う。",
+   "minutes": 8,
+   "search": "データの種類（質的・量的）"
+  },
+  {
+   "id": "data-start-002",
+   "providerId": "data-start",
+   "title": "ゼミナール編（2）3時限目 3-2 カテゴリデータの集計 2 クロス集計",
+   "url": "https://www.stat.go.jp/dstart/point/seminar/02/3-2-2.html",
+   "type": "text",
+   "unitIds": [
+    "crosstab"
+   ],
+   "role": "supplement",
+   "focus": "2つのカテゴリ変数を組み合わせたクロス集計表（分割表）の読み方。表側・表頭・周辺度数の用語と、度数を行や列の合計で割った割合で比べる理由を押さえる。",
+   "minutes": 10,
+   "search": "クロス集計表"
+  },
+  {
+   "id": "naruhodo-001",
+   "providerId": "naruhodo",
+   "title": "データの散らばりを見る",
+   "url": "https://www.stat.go.jp/naruhodo/10_tokucho/chirabari.html",
+   "type": "text",
+   "unitIds": [
+    "variance-sd",
+    "cv-standardize"
+   ],
+   "role": "supplement",
+   "focus": "偏差→分散→標準偏差の順に、なぜ2乗して最後に平方根をとるのかを追う。後半の標準化（平均0・標準偏差1）と偏差値（平均50・標準偏差10）の計算は3級の頻出事項。",
+   "minutes": 12,
+   "search": "分散・標準偏差"
+  },
+  {
+   "id": "naruhodo-002",
+   "providerId": "naruhodo",
+   "title": "複数の変数の関係性を見る",
+   "url": "https://www.stat.go.jp/naruhodo/10_tokucho/hukusu.html",
+   "type": "text",
+   "unitIds": [
+    "regression"
+   ],
+   "role": "supplement",
+   "focus": "まず散布図で確認してから相関係数（-1〜1）を読むという手順と、相関係数が0でも無関係とは言い切れない点を、河川の長さと流域面積の例で学ぶ。後半は回帰直線と決定係数。",
+   "minutes": 12,
+   "search": "回帰直線"
+  },
+  {
+   "id": "naruhodo-003",
+   "providerId": "naruhodo",
+   "title": "その他のデータ分析手法",
+   "url": "https://www.stat.go.jp/naruhodo/10_tokucho/sonota.html",
+   "type": "text",
+   "unitIds": [
+    "timeseries-index",
+    "ts-moving-avg"
+   ],
+   "role": "supplement",
+   "focus": "成長率（変化率）の計算と意味、寄与度・寄与率、移動平均（中央・後方・前方）で季節的な変動をならす方法を学ぶ。同じ増加額でも元の値によって率が大きく変わる例に注目。",
+   "minutes": 12,
+   "search": "時系列グラフ・指数・増減率"
+  },
+  {
+   "id": "naruhodo-004",
+   "providerId": "naruhodo",
+   "title": "統計的推定と統計的仮説検定",
+   "url": "https://www.stat.go.jp/naruhodo/11_tokusei/kentei.html",
+   "type": "text",
+   "unitIds": [
+    "interval-est",
+    "hypothesis-test"
+   ],
+   "role": "supplement",
+   "focus": "点推定と区間推定の違い、仮説検定の4手順（仮説の設定→有意水準の決定→検証→結論）を、フライドポテトの重量の例で追う。帰無仮説と対立仮説の立て方に注目。",
+   "minutes": 12,
+   "search": "区間推定"
+  },
+  {
+   "id": "naruhodo-005",
+   "providerId": "naruhodo",
+   "title": "推測統計",
+   "url": "https://www.stat.go.jp/naruhodo/11_tokusei/suisoku.html",
+   "type": "text",
+   "unitIds": [
+    "sampling-basic"
+   ],
+   "role": "supplement",
+   "focus": "標本の情報から母集団の様子を推し量るという推測統計の考え方を確認する。推定・検定に入る前に、母集団と標本の関係を整理し直すためのページ。",
+   "minutes": 6,
+   "search": "標本調査の基礎"
+  },
+  {
+   "id": "naruhodo-006",
+   "providerId": "naruhodo",
+   "title": "１２ 問題の解決",
+   "url": "https://www.stat.go.jp/naruhodo/12_ppdac/index.html",
+   "type": "text",
+   "unitIds": [
+    "ppdac"
+   ],
+   "role": "primary",
+   "focus": "PPDACサイクル（問題→計画→データ→分析→結論）の全体像をつかむ入口ページ。5段階の順番と、サイクルを何度も回してよりよい結論に近づけるという考え方を押さえる。",
+   "minutes": 5,
+   "search": "統計的問題解決（PPDAC）"
+  },
+  {
+   "id": "naruhodo-007",
+   "providerId": "naruhodo",
+   "title": "2.調査の計画",
+   "url": "https://www.stat.go.jp/naruhodo/12_ppdac/plan.html",
+   "type": "text",
+   "unitIds": [
+    "survey-experiment"
+   ],
+   "role": "supplement",
+   "focus": "PPDACのPlan。調査の概要決め、調査票づくり、試験調査、仮説の検討という計画段階の流れを読む。仮説に合わせてデータをゆがめないという注意点も確認する。",
+   "minutes": 8,
+   "search": "標本調査と実験"
+  },
+  {
+   "id": "naruhodo-008",
+   "providerId": "naruhodo",
+   "title": "1.問題の発見・課題の設定",
+   "url": "https://www.stat.go.jp/naruhodo/12_ppdac/problem.html",
+   "type": "text",
+   "unitIds": [
+    "ppdac"
+   ],
+   "role": "supplement",
+   "focus": "PPDACのProblem。漠然とした関心を、データで調べられる具体的な課題に絞り込む手順を、文化祭の企画の例で確認する。",
+   "minutes": 5,
+   "search": "統計的問題解決（PPDAC）"
+  },
+  {
+   "id": "naruhodo-009",
+   "providerId": "naruhodo",
+   "title": "データ・データセットの種類",
+   "url": "https://www.stat.go.jp/naruhodo/4_graph/data.html",
+   "type": "text",
+   "unitIds": [
+    "data-types"
+   ],
+   "role": "primary",
+   "focus": "量的データ（連続・離散）と質的データの違い、時系列データと横断面（クロスセクション）データの違いを具体例で整理する。4級の「データの種類」はまずこのページから。",
+   "minutes": 8,
+   "search": "データの種類（質的・量的）"
+  },
+  {
+   "id": "naruhodo-010",
+   "providerId": "naruhodo",
+   "title": "グラフの種類（初級編）",
+   "url": "https://www.stat.go.jp/naruhodo/4_graph/graph.html",
+   "type": "text",
+   "unitIds": [
+    "graphs-basic"
+   ],
+   "role": "primary",
+   "focus": "初級編で扱うグラフ（絵・棒・折れ線・円・帯・ヒストグラム・箱ひげ図）の一覧。大小比較・変化・割合・分布という目的とグラフの対応を先に頭に入れてから個別ページへ進む。",
+   "minutes": 5,
+   "search": "基本のグラフ"
+  },
+  {
+   "id": "naruhodo-011",
+   "providerId": "naruhodo",
+   "title": "棒グラフ",
+   "url": "https://www.stat.go.jp/naruhodo/4_graph/shokyu/bou-graph.html",
+   "type": "text",
+   "unitIds": [
+    "graphs-basic"
+   ],
+   "role": "supplement",
+   "focus": "棒の高さで量の大小を比べるグラフ。どんな比較に向いているかと、縦軸の読み方を確認する。",
+   "minutes": 5,
+   "search": "基本のグラフ"
+  },
+  {
+   "id": "naruhodo-012",
+   "providerId": "naruhodo",
+   "title": "箱ひげ図",
+   "url": "https://www.stat.go.jp/naruhodo/4_graph/shokyu/hakohige.html",
+   "type": "text",
+   "unitIds": [
+    "box-outlier"
+   ],
+   "role": "supplement",
+   "focus": "第1・第2・第3四分位数から箱ひげ図を描き、散らばりを読む方法を学ぶ。箱の中の線は平均値ではなく中央値であることと、複数のデータを並べて散らばりを比べられる点に注目。",
+   "minutes": 8,
+   "search": "箱ひげ図の比較と外れ値"
+  },
+  {
+   "id": "naruhodo-013",
+   "providerId": "naruhodo",
+   "title": "ヒストグラム",
+   "url": "https://www.stat.go.jp/naruhodo/4_graph/shokyu/histogram.html",
+   "type": "text",
+   "unitIds": [
+    "freq-hist"
+   ],
+   "role": "primary",
+   "focus": "量的データを階級に分け、度数分布表からヒストグラムを作る手順を追う。棒グラフとの違い（面積が度数を表す）と、階級の幅がそろっていないときの扱いが要点。",
+   "minutes": 8,
+   "search": "度数分布表とヒストグラム"
+  },
+  {
+   "id": "naruhodo-014",
+   "providerId": "naruhodo",
+   "title": "データの散らばり（５ 特徴を捉える 初級編）",
+   "url": "https://www.stat.go.jp/naruhodo/5_tokucho/chirabari.html",
+   "type": "text",
+   "unitIds": [
+    "freq-hist",
+    "quartile-box"
+   ],
+   "role": "supplement",
+   "focus": "散らばりのいちばん手軽な指標である範囲（最大値−最小値）と、度数分布表で分布をまとめる方法を学ぶ。代表値のページの次に読む。",
+   "minutes": 8,
+   "search": "度数分布表とヒストグラム"
+  },
+  {
+   "id": "naruhodo-015",
+   "providerId": "naruhodo",
+   "title": "中心的な傾向を捉える",
+   "url": "https://www.stat.go.jp/naruhodo/5_tokucho/chushin.html",
+   "type": "text",
+   "unitIds": [
+    "central"
+   ],
+   "role": "primary",
+   "focus": "平均値・中央値・最頻値の求め方と使い分けを、登校時刻の調査例で学ぶ。外れ値があると平均値が引っ張られる点と、データの個数が偶数のときの中央値の求め方を確認する。",
+   "minutes": 8,
+   "search": "代表値（平均値・中央値・最頻値）"
+  },
+  {
+   "id": "naruhodo-016",
+   "providerId": "naruhodo",
+   "title": "全数調査・標本調査",
+   "url": "https://www.stat.go.jp/naruhodo/7_shurui/zensu.html",
+   "type": "text",
+   "unitIds": [
+    "sampling-basic"
+   ],
+   "role": "primary",
+   "focus": "母集団・全数調査・標本調査の意味と、それぞれの長所と短所（費用や手間と標本誤差）を、高校生の身長調査の例でつかむ。標本を偏りなく選ぶ必要がある理由に注目。",
+   "minutes": 6,
+   "search": "標本調査の基礎"
+  },
+  {
+   "id": "naruhodo-017",
+   "providerId": "naruhodo",
+   "title": "レーダーチャート",
+   "url": "https://www.stat.go.jp/naruhodo/9_graph/jyokyu/redar.html",
+   "type": "text",
+   "unitIds": [
+    "graphs-advanced"
+   ],
+   "role": "supplement",
+   "focus": "複数の項目を構成比に直さずまとめて比べ、バランスや特徴を見るグラフ。多角形の形から何が読み取れるかを確認する。",
+   "minutes": 5,
+   "search": "目的に応じたグラフ"
+  },
+  {
+   "id": "naruhodo-018",
+   "providerId": "naruhodo",
+   "title": "散布図",
+   "url": "https://www.stat.go.jp/naruhodo/9_graph/jyokyu/sanpu.html",
+   "type": "text",
+   "unitIds": [
+    "scatter-corr",
+    "causation"
+   ],
+   "role": "supplement",
+   "focus": "2つの量の関係を点の散らばりで見るグラフの基本。散布図から分かるのは関係があるかどうかまでで、因果関係までは示さないという注意書きを必ず読む。",
+   "minutes": 6,
+   "search": "散布図と相関係数"
+  },
+  {
+   "id": "gakugei-tools-001",
+   "providerId": "gakugei-tools",
+   "title": "データの分析や活用の学習ツール",
+   "url": "https://www2.u-gakugei.ac.jp/~knishi/DS/",
+   "type": "interactive",
+   "unitIds": [
+    "prob-basic"
+   ],
+   "role": "supplement",
+   "focus": "ブラウザで動かせる学習ツール集。コイン投げのシミュレーションで、試行を重ねると相対度数が確率に近づく様子を体験できる。CSVを読み込んでデータを可視化するツールや確率分布のアプリもある。",
+   "minutes": 15,
+   "search": "確率の基礎"
+  },
+  {
+   "id": "toukei-web-070",
+   "providerId": "toukei-web",
+   "title": "統計学の時間（コース目次）",
+   "url": "https://bellcurve.jp/statistics/course/",
+   "type": "reference",
+   "unitIds": [],
+   "role": "supplement",
+   "focus": "Step0 初級編・Step1 基礎編の全章が並ぶ目次ページ。基礎編は2級の範囲まで進むので、3級・4級の学習では本カタログで挙げた章だけを拾い読みするとよい。",
+   "minutes": 5
+  },
+  {
+   "id": "toukei-web-071",
+   "providerId": "toukei-web",
+   "title": "統計用語集",
+   "url": "https://bellcurve.jp/statistics/glossary/",
+   "type": "reference",
+   "unitIds": [],
+   "role": "supplement",
+   "focus": "約600語を五十音・英字の索引から引ける用語集。学習中に意味があいまいな用語が出てきたら、ここで定義を短く確認する使い方が向く。",
+   "minutes": 5
+  },
+  {
+   "id": "naruhodo-019",
+   "providerId": "naruhodo",
+   "title": "サイトマップ",
+   "url": "https://www.stat.go.jp/naruhodo/sitemap.html",
+   "type": "reference",
+   "unitIds": [],
+   "role": "supplement",
+   "focus": "初級編・上級編の全ページを階層で見渡せる。目的の単元ページを探すときの索引として使う。",
+   "minutes": 3
+  },
+  {
+   "id": "dss-003",
+   "providerId": "dss",
+   "title": "あなたの統計力",
+   "url": "https://www.stat.go.jp/dss/getting/ref/index/index.htm",
+   "type": "practice",
+   "unitIds": [],
+   "role": "supplement",
+   "focus": "統計検定の過去問を使った初級（4級相当）・中級（3級相当）・上級（2級相当）の問題と、級別テキストPDFへの入口。単元を学んだあとの力試しに使う。",
+   "minutes": 10
+  },
+  {
+   "id": "dss-004",
+   "providerId": "dss",
+   "title": "データサイエンス・オンライン講座/社会人のためのデータサイエンス入門（講座概要）",
+   "url": "https://www.stat.go.jp/dss/online01.html",
+   "type": "official",
+   "unitIds": [],
+   "role": "supplement",
+   "focus": "統計局による講座概要ページ。開講期間、各週のテーマ、修了条件（得点率60%以上）を確認し、次回の募集時期をチェックするために使う。",
+   "minutes": 5
+  },
+  {
+   "id": "stat-dashboard-001",
+   "providerId": "stat-dashboard",
+   "title": "統計ダッシュボード",
+   "url": "https://dashboard.e-stat.go.jp/",
+   "type": "data",
+   "unitIds": [],
+   "role": "supplement",
+   "focus": "主要な公的統計をグラフで一覧できる。時系列グラフや人口ピラミッドを実データで読む練習に使える（数値のダウンロードも可能）。",
+   "minutes": 10
+  },
+  {
+   "id": "e-stat-001",
+   "providerId": "e-stat",
+   "title": "e-Stat 政府統計の総合窓口",
+   "url": "https://www.e-stat.go.jp/",
+   "type": "data",
+   "unitIds": [],
+   "role": "supplement",
+   "focus": "日本の政府統計を横断的に検索・ダウンロードできる公式ポータル。クロス集計表や時系列表の実物を読む練習素材を探すのに使う。",
+   "minutes": 10
+  },
+  {
+   "id": "ssdse-001",
+   "providerId": "ssdse",
+   "title": "SSDSE（教育用標準データセット）",
+   "url": "https://www.nstac.go.jp/use/literacy/ssdse/",
+   "type": "data",
+   "unitIds": [],
+   "role": "supplement",
+   "focus": "都道府県・市区町村別の公的統計を表形式に整えた教育用データ。欠測がなくそのまま表計算ソフトで開けるので、代表値・箱ひげ図・散布図・相関係数を自分で計算してみる素材に向く。初学者はファイルが小さいSSDSE-E（基本素材）から。",
+   "minutes": 10
+  },
+  {
+   "id": "toukei-kentei-001",
+   "providerId": "toukei-kentei",
+   "title": "統計検定4級（試験案内・出題範囲表）",
+   "url": "https://www.toukei-kentei.jp/grade/grade4/",
+   "type": "official",
+   "unitIds": [],
+   "role": "supplement",
+   "focus": "4級の出題範囲表と試験の形式を確認する。学び終えた単元が範囲表のどこに当たるかを見ておくと、抜けに気づけます。"
+  },
+  {
+   "id": "toukei-kentei-002",
+   "providerId": "toukei-kentei",
+   "title": "統計検定3級（試験案内・出題範囲表）",
+   "url": "https://www.toukei-kentei.jp/grade/grade3/",
+   "type": "official",
+   "unitIds": [],
+   "role": "supplement",
+   "focus": "3級の出題範囲表と試験の形式を確認する。3級の範囲は4級の範囲を含みます。"
+  },
+  {
+   "id": "try-it-001",
+   "providerId": "try-it",
+   "title": "Try IT で「割合」「百分率」を学び直す",
+   "url": "https://www.try-it.jp/",
+   "type": "video",
+   "unitIds": [
+    "math-ratio"
+   ],
+   "role": "supplement",
+   "focus": "サイト内の検索や単元の一覧から「割合」「百分率」の授業を探す。もとにする量・比べる量の見分け方を重点的に。",
+   "search": "割合 百分率"
+  },
+  {
+   "id": "try-it-002",
+   "providerId": "try-it",
+   "title": "Try IT で「平方根」を学び直す",
+   "url": "https://www.try-it.jp/",
+   "type": "video",
+   "unitIds": [
+    "math-sqrt"
+   ],
+   "role": "supplement",
+   "focus": "中学3年の「平方根」の授業を探す。平方根の意味と、おおよその値の見積もりができれば十分です。",
+   "search": "平方根"
+  },
+  {
+   "id": "try-it-003",
+   "providerId": "try-it",
+   "title": "Try IT で「場合の数」を学び直す",
+   "url": "https://www.try-it.jp/",
+   "type": "video",
+   "unitIds": [
+    "math-counting"
+   ],
+   "role": "supplement",
+   "focus": "数学Aの「場合の数」から、樹形図・順列・組合せの授業を探す。",
+   "search": "場合の数 順列 組合せ"
+  },
+  {
+   "id": "manabitimes-001",
+   "providerId": "manabitimes",
+   "title": "高校数学の美しい物語（記事を検索）",
+   "url": "https://manabitimes.jp/math",
+   "type": "text",
+   "unitIds": [
+    "math-sqrt",
+    "math-counting"
+   ],
+   "role": "supplement",
+   "focus": "「シグマ 記号」「順列 組合せ」などで記事を検索する。公式がなぜ成り立つかまで確かめたいときに。",
+   "search": "シグマ 順列 組合せ"
+  },
+  {
+   "id": "toukei-roadmap-001",
+   "providerId": "toukei-roadmap",
+   "title": "統計ロードマップ（4級・3級の演習と3級模試）",
+   "url": "https://toukei-app.com/",
+   "type": "practice",
+   "unitIds": [],
+   "role": "practice",
+   "focus": "当サイトの問題を解き切ったあとの、追加の演習と模試に。",
+   "note": "当サイトでは内容を確認できていない非公式のサイトです。解答に疑問があるときは公式テキストで確かめてください。"
+  },
+  {
+   "id": "ao-toukei-001",
+   "providerId": "ao-toukei",
+   "title": "青の統計学 DS Playground（3級の分野別演習・模試）",
+   "url": "https://app.statisticsschool.com/",
+   "type": "practice",
+   "unitIds": [],
+   "role": "practice",
+   "focus": "3級の分野別の追加演習に。確率分布を動かして確かめるツールもあります。",
+   "note": "当サイトでは内容を確認できていない非公式のサイトです。解答に疑問があるときは公式テキストで確かめてください。"
+  },
+  {
+   "id": "transparently-001",
+   "providerId": "transparently",
+   "title": "Transparently 統計検定3級 学習講座（模擬試験）",
+   "url": "https://www.transparently.jp/stats3/",
+   "type": "mock",
+   "unitIds": [],
+   "role": "practice",
+   "focus": "3級の模擬試験で、初見の問題に対する実力を確かめる。",
+   "note": "当サイトでは内容を確認できていない非公式のサイトです。解答に疑問があるときは公式テキストで確かめてください。"
+  },
+  {
+   "id": "kentei-lab-001",
+   "providerId": "kentei-lab",
+   "title": "ケンテイラボ（3級の分野別問題）",
+   "url": "https://kentei-lab.com/",
+   "type": "practice",
+   "unitIds": [],
+   "role": "practice",
+   "focus": "3級の4択問題を数多く解きたいときに。",
+   "note": "当サイトでは内容を確認できていない非公式のサイトです。解答に疑問があるときは公式テキストで確かめてください。"
+  },
+  {
+   "id": "statistical-jp-001",
+   "providerId": "statistical-jp",
+   "title": "statistical.jp（4級の一問一答）",
+   "url": "https://statistical.jp/",
+   "type": "practice",
+   "unitIds": [],
+   "role": "practice",
+   "focus": "4級の追加演習に。",
+   "note": "当サイトでは内容を確認できていない非公式のサイトです。解答に疑問があるときは公式テキストで確かめてください。"
+  }
+ ]
+}
