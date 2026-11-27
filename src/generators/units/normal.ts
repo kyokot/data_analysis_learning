@@ -122,7 +122,7 @@ export const generators: QuestionGenerator[] = [
   {
     id: 'normal-tail',
     unitId: 'normal',
-    skill: '標準化して上側の確率を求める',
+    skill: '標準化して片側の確率を求める',
     grade: 3,
     difficulty: 2,
     replaces: ['normal-q04'],

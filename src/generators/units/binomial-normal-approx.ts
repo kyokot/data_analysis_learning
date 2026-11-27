@@ -30,13 +30,13 @@ interface Case {
 }
 const CASES: Case[] = [];
 for (const P of [10, 20, 25, 36, 40, 50, 60, 64, 75, 80, 90]) {
-  for (let n = 50; n <= 2000; n++) {
+  for (let n = 50; n <= 1200; n++) {
     if ((n * P) % 100 !== 0) continue;
     const v = (n * P * (100 - P)) / 10000;
     if (!Number.isInteger(v)) continue;
     const s = Math.round(Math.sqrt(v));
     const mean = (n * P) / 100;
-    if (s * s === v && s >= 4 && s <= 20 && mean >= 10 && n - mean >= 10) CASES.push({ n, P, mean, v, s });
+    if (s * s === v && s >= 4 && s <= 16 && mean >= 10 && n - mean >= 10) CASES.push({ n, P, mean, v, s });
   }
 }
 
@@ -119,7 +119,7 @@ export const generators: QuestionGenerator[] = [
       const d = z * s;
       if (!Number.isInteger(d)) throw new Reject();
       const x = mean + d;
-      const label = (t: number) => fixed(t, 2);
+      const label = (t: number) => `$${fixed(t, 2)}$`;
       const cands: Candidate[] = [
         { value: -z, label: label(-z), note: `引き算の順を逆にして$\\dfrac{${num(mean, 2)}-${x}}{${s}}$とした値。${d > 0 ? '平均より大きいので正になる。' : '平均より小さいので負になる。'}` },
         { value: d / v, label: label(d / v), note: `$\\dfrac{${x}-${num(mean, 2)}}{${v}}$で、標準偏差ではなく分散${v}で割った値。` },
@@ -138,7 +138,7 @@ export const generators: QuestionGenerator[] = [
   {
     id: 'binomial-normal-approx-tail',
     unitId: 'binomial-normal-approx',
-    skill: '正規近似で上側の確率を求める',
+    skill: '正規近似で片側の確率を求める',
     grade: 3,
     difficulty: 2,
     replaces: ['binomial-normal-approx-q03'],
