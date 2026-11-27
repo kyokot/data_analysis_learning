@@ -13,6 +13,24 @@
     "crosstab": "2026-11-26",
     "timeseries-index": "2026-11-26",
     "prob-basic": "2026-11-26",
-    "math-counting": "2026-11-26"
+    "math-counting": "2026-11-26",
+    "scales": "2026-11-27",
+    "graphs-advanced": "2026-11-27",
+    "variance-sd": "2026-11-27",
+    "cv-standardize": "2026-11-27",
+    "box-outlier": "2026-11-27",
+    "scatter-corr": "2026-11-27",
+    "regression": "2026-11-27",
+    "causation": "2026-11-27",
+    "survey-experiment": "2026-11-27",
+    "ts-moving-avg": "2026-11-27",
+    "cond-prob": "2026-11-27",
+    "rv-expectation": "2026-11-27",
+    "binomial": "2026-11-27",
+    "normal": "2026-11-27",
+    "binomial-normal-approx": "2026-11-27",
+    "sampling-dist": "2026-11-27",
+    "interval-est": "2026-11-27",
+    "hypothesis-test": "2026-11-27"
   }
 }
