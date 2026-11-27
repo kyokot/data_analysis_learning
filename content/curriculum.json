@@ -1,0 +1,652 @@
+{
+  "domains": [
+    {
+      "id": "math",
+      "title": "数学の基礎"
+    },
+    {
+      "id": "survey",
+      "title": "データの種類・調査"
+    },
+    {
+      "id": "graphs",
+      "title": "グラフと集計"
+    },
+    {
+      "id": "summary",
+      "title": "代表値と散らばり"
+    },
+    {
+      "id": "relation",
+      "title": "相関と回帰"
+    },
+    {
+      "id": "timeseries",
+      "title": "時系列"
+    },
+    {
+      "id": "probability",
+      "title": "確率"
+    },
+    {
+      "id": "distribution",
+      "title": "確率分布"
+    },
+    {
+      "id": "inference",
+      "title": "推測統計"
+    }
+  ],
+  "stages": [
+    {
+      "id": "s0",
+      "title": "数学の補習",
+      "description": "割合・平方根・場合の数。必要になる単元の直前に5〜10分で確認するための補習です。学習ルートには含めず、つまずいたときに戻ります。",
+      "grade": 4,
+      "support": true
+    },
+    {
+      "id": "s1",
+      "title": "統計学入門",
+      "description": "4級の出題範囲。データの種類、グラフ、度数分布、代表値、箱ひげ図、クロス集計、時系列、確率の基礎まで。3級の土台にもなります。",
+      "grade": 4
+    },
+    {
+      "id": "s2",
+      "title": "記述統計",
+      "description": "データの散らばりを数値で表す。分散・標準偏差・変動係数・標準化、箱ひげ図と外れ値。",
+      "grade": 3
+    },
+    {
+      "id": "s3",
+      "title": "データの分析",
+      "description": "2つの変数の関係（相関・回帰）、時系列の読み方、調査と実験の設計。",
+      "grade": 3
+    },
+    {
+      "id": "s4",
+      "title": "確率と確率分布",
+      "description": "条件付き確率、確率変数と期待値、二項分布、正規分布。推測統計の入口です。",
+      "grade": 3
+    },
+    {
+      "id": "s5",
+      "title": "推測統計",
+      "description": "標本から母集団を推し量る。標本分布、区間推定、仮説検定の考え方。",
+      "grade": 3
+    }
+  ],
+  "units": [
+    {
+      "id": "math-ratio",
+      "stageId": "s0",
+      "title": "割合・百分率・比",
+      "grade": 4,
+      "domain": "math",
+      "prerequisites": [],
+      "goals": [
+        "割合・百分率（%）・歩合を相互に変換できる",
+        "「もとにする量」を取り違えずに割合を計算できる",
+        "増減率（何%増えたか・減ったか）を計算できる"
+      ],
+      "minutes": 15,
+      "official": "（前提知識）割合・比・百分率"
+    },
+    {
+      "id": "math-sqrt",
+      "stageId": "s0",
+      "title": "平方根と式の読み方",
+      "grade": 4,
+      "domain": "math",
+      "prerequisites": [],
+      "goals": [
+        "平方根の意味を説明し、おおよその値を見積もれる",
+        "2乗・平方根を含む式を順序どおりに計算できる",
+        "Σ（シグマ）記号で書かれた式を言葉に直せる"
+      ],
+      "minutes": 15,
+      "official": "（前提知識）平方根・式の計算"
+    },
+    {
+      "id": "math-counting",
+      "stageId": "s0",
+      "title": "場合の数（順列・組合せ）",
+      "grade": 4,
+      "domain": "math",
+      "prerequisites": [],
+      "goals": [
+        "樹形図や表を使って場合の数をもれなく数えられる",
+        "順列と組合せを区別して計算できる",
+        "階乗と ${}_n\\mathrm{C}_r$ の値を計算できる"
+      ],
+      "minutes": 20,
+      "official": "（前提知識）場合の数"
+    },
+    {
+      "id": "ppdac",
+      "stageId": "s1",
+      "title": "統計的問題解決（PPDAC）",
+      "grade": 4,
+      "domain": "survey",
+      "prerequisites": [],
+      "goals": [
+        "PPDACサイクルの5段階（問題・計画・データ・分析・結論）を順に説明できる",
+        "具体的な場面の作業がどの段階にあたるかを判断できる"
+      ],
+      "minutes": 25,
+      "official": "統計的問題解決の方法"
+    },
+    {
+      "id": "data-types",
+      "stageId": "s1",
+      "title": "データの種類（質的・量的）",
+      "grade": 4,
+      "domain": "survey",
+      "prerequisites": [],
+      "goals": [
+        "質的データと量的データを区別できる",
+        "量的データを離散・連続に分けられる",
+        "データの種類に合った集計・グラフを選べる"
+      ],
+      "minutes": 25,
+      "official": "データの種類（質的データ・量的データ）"
+    },
+    {
+      "id": "sampling-basic",
+      "stageId": "s1",
+      "title": "標本調査の基礎",
+      "grade": 4,
+      "domain": "survey",
+      "prerequisites": [],
+      "goals": [
+        "母集団・標本・標本の大きさを具体例で指摘できる",
+        "全数調査と標本調査（世論調査など）の使い分けを説明できる",
+        "無作為抽出がなぜ必要か、偏った標本で何が起こるかを説明できる"
+      ],
+      "minutes": 30,
+      "official": "標本調査（母集団と標本・無作為抽出・世論調査）"
+    },
+    {
+      "id": "graphs-basic",
+      "stageId": "s1",
+      "title": "基本のグラフ",
+      "grade": 4,
+      "domain": "graphs",
+      "prerequisites": [
+        "data-types"
+      ],
+      "goals": [
+        "棒・折れ線・円・帯・積み上げ棒・面グラフ・絵グラフから値や割合を読み取れる",
+        "目的（大小比較・変化・構成比）に合ったグラフを選べる",
+        "パレート図・複合グラフの読み方を説明できる",
+        "誤解を招くグラフ（軸の省略など）を見抜ける"
+      ],
+      "minutes": 40,
+      "official": "統計グラフ（ドットプロット・絵グラフ・棒・折れ線・円・帯・面・積み上げ棒・パレート図・複合グラフ）",
+      "refreshers": [
+        "math-ratio"
+      ]
+    },
+    {
+      "id": "freq-hist",
+      "stageId": "s1",
+      "title": "度数分布表とヒストグラム",
+      "grade": 4,
+      "domain": "graphs",
+      "prerequisites": [
+        "data-types"
+      ],
+      "goals": [
+        "度数分布表から度数・相対度数・累積度数・累積相対度数を求められる",
+        "階級・階級値・階級幅の意味を説明できる",
+        "ヒストグラムから分布の形（山が1つか2つか、裾が長い向き、外れ値の有無）を読み取れる",
+        "幹葉図・ドットプロットからデータを読み取れる"
+      ],
+      "minutes": 45,
+      "official": "データの集計（度数分布表・相対度数・累積度数・累積相対度数・階級値／ヒストグラム・幹葉図・分布の形・外れ値）",
+      "refreshers": [
+        "math-ratio"
+      ]
+    },
+    {
+      "id": "central",
+      "stageId": "s1",
+      "title": "代表値（平均値・中央値・最頻値）",
+      "grade": 4,
+      "domain": "summary",
+      "prerequisites": [
+        "freq-hist"
+      ],
+      "goals": [
+        "平均値・中央値・最頻値を計算できる",
+        "度数分布表から平均値・最頻値・中央値の入る階級を求められる",
+        "分布の形や外れ値に応じて適切な代表値を選べる"
+      ],
+      "minutes": 45,
+      "official": "データの要約（平均値・中央値・最頻値・度数分布表からの統計量の求め方）"
+    },
+    {
+      "id": "quartile-box",
+      "stageId": "s1",
+      "title": "範囲・四分位数・箱ひげ図",
+      "grade": 4,
+      "domain": "summary",
+      "prerequisites": [
+        "central"
+      ],
+      "goals": [
+        "範囲・四分位数・四分位範囲を求められる",
+        "五数要約から箱ひげ図を読み書きできる",
+        "箱ひげ図から「全体の約何%がどこにあるか」を読み取れる"
+      ],
+      "minutes": 45,
+      "official": "データの要約（最小値・最大値・範囲・四分位範囲・箱ひげ図）"
+    },
+    {
+      "id": "crosstab",
+      "stageId": "s1",
+      "title": "クロス集計表",
+      "grade": 4,
+      "domain": "graphs",
+      "prerequisites": [
+        "data-types"
+      ],
+      "goals": [
+        "クロス集計表の周辺度数・セルの度数を読み取れる",
+        "行比率・列比率・全体比率を計算し使い分けられる",
+        "2つの質的データの関係を比率で比べられる"
+      ],
+      "minutes": 35,
+      "official": "クロス集計表（2次元の度数分布・行比率・列比率）",
+      "refreshers": [
+        "math-ratio"
+      ]
+    },
+    {
+      "id": "timeseries-index",
+      "stageId": "s1",
+      "title": "時系列グラフ・指数・増減率",
+      "grade": 4,
+      "domain": "timeseries",
+      "prerequisites": [
+        "graphs-basic"
+      ],
+      "goals": [
+        "時系列グラフから傾向と変化の大きさを読み取れる",
+        "基準時点を100とした指数を計算し読み取れる",
+        "前年比・増減率を計算できる",
+        "移動平均の意味を説明し、3期間の移動平均を計算できる"
+      ],
+      "minutes": 40,
+      "official": "時間的・空間的データ（時系列データ・折れ線グラフ・増減率・指数・移動平均）",
+      "refreshers": [
+        "math-ratio"
+      ]
+    },
+    {
+      "id": "prob-basic",
+      "stageId": "s1",
+      "title": "確率の基礎",
+      "grade": 4,
+      "domain": "probability",
+      "prerequisites": [],
+      "goals": [
+        "同様に確からしい場合の確率を求められる",
+        "樹形図や表を使って2回の試行の確率を求められる",
+        "「少なくとも1回」などを余事象で計算できる"
+      ],
+      "minutes": 40,
+      "official": "確率の基礎（確率・樹形図）"
+    },
+    {
+      "id": "scales",
+      "stageId": "s2",
+      "title": "尺度水準",
+      "grade": 3,
+      "domain": "survey",
+      "prerequisites": [
+        "data-types"
+      ],
+      "goals": [
+        "名義・順序・間隔・比例の4つの尺度を区別できる",
+        "尺度ごとに意味を持つ計算（差・比）と使える代表値を判断できる"
+      ],
+      "minutes": 25,
+      "official": "データの種類（量的変数・質的変数・名義尺度・順序尺度・間隔尺度・比例尺度）"
+    },
+    {
+      "id": "graphs-advanced",
+      "stageId": "s2",
+      "title": "目的に応じたグラフ",
+      "grade": 3,
+      "domain": "graphs",
+      "prerequisites": [
+        "graphs-basic"
+      ],
+      "goals": [
+        "レーダーチャート・バブルチャート・ローソク足・モザイク図の用途と読み方を説明できる",
+        "複数系列の積み上げ・複合グラフから値と構成比を読み取れる",
+        "伝えたい内容に最も適したグラフを選べる"
+      ],
+      "minutes": 30,
+      "official": "統計グラフ（1変数: レーダーチャート・バブルチャート・ローソク足など／2変数: モザイク図・散布図・複合グラフ）"
+    },
+    {
+      "id": "variance-sd",
+      "stageId": "s2",
+      "title": "分散・標準偏差",
+      "grade": 3,
+      "domain": "summary",
+      "prerequisites": [
+        "central"
+      ],
+      "goals": [
+        "偏差・分散・標準偏差を定義どおりに計算できる",
+        "標準偏差の大小から散らばりの大小を比べられる",
+        "データに定数を足す・掛けるときの平均と分散の変化を求められる"
+      ],
+      "minutes": 50,
+      "official": "データの散らばり（分散・標準偏差）",
+      "refreshers": [
+        "math-sqrt"
+      ]
+    },
+    {
+      "id": "cv-standardize",
+      "stageId": "s2",
+      "title": "変動係数・標準化",
+      "grade": 3,
+      "domain": "summary",
+      "prerequisites": [
+        "variance-sd"
+      ],
+      "goals": [
+        "変動係数を計算し、単位や平均の異なるデータの散らばりを比べられる",
+        "標準化（z得点）を計算し、集団内での位置を比べられる",
+        "偏差値をz得点から求められる"
+      ],
+      "minutes": 40,
+      "official": "データの散らばり（変動係数・偏差値／標準化）"
+    },
+    {
+      "id": "box-outlier",
+      "stageId": "s2",
+      "title": "箱ひげ図の比較と外れ値",
+      "grade": 3,
+      "domain": "summary",
+      "prerequisites": [
+        "quartile-box",
+        "freq-hist"
+      ],
+      "goals": [
+        "複数の箱ひげ図から分布の位置と散らばりを比べられる",
+        "ヒストグラムと箱ひげ図を対応づけられる",
+        "四分位範囲の1.5倍の基準で外れ値を判定できる"
+      ],
+      "minutes": 40,
+      "official": "データの散らばり（四分位範囲・箱ひげ図・外れ値）"
+    },
+    {
+      "id": "scatter-corr",
+      "stageId": "s3",
+      "title": "散布図と相関係数",
+      "grade": 3,
+      "domain": "relation",
+      "prerequisites": [
+        "variance-sd"
+      ],
+      "goals": [
+        "散布図から相関の正負と強さを読み取れる",
+        "共分散と相関係数を計算できる",
+        "相関係数の性質（−1〜1・単位に依存しない・直線的な関係の強さ）を説明できる"
+      ],
+      "minutes": 50,
+      "official": "相関と回帰（散布図・相関係数）"
+    },
+    {
+      "id": "regression",
+      "stageId": "s3",
+      "title": "回帰直線",
+      "grade": 3,
+      "domain": "relation",
+      "prerequisites": [
+        "scatter-corr"
+      ],
+      "goals": [
+        "回帰直線の傾き（回帰係数）と切片の意味を説明できる",
+        "回帰直線を使って予測値と残差を求められる",
+        "最小二乗法の考え方と、傾き・相関係数・標準偏差の関係を使える"
+      ],
+      "minutes": 45,
+      "official": "相関と回帰（回帰直線・最小二乗法・回帰係数・予測）"
+    },
+    {
+      "id": "causation",
+      "stageId": "s3",
+      "title": "相関と因果・擬相関",
+      "grade": 3,
+      "domain": "relation",
+      "prerequisites": [
+        "scatter-corr"
+      ],
+      "goals": [
+        "相関関係と因果関係を区別できる",
+        "第3の変数による擬相関の例を見抜ける",
+        "層別すると相関が変わる場合があることを説明できる"
+      ],
+      "minutes": 30,
+      "official": "相関と回帰（擬相関・相関と因果）"
+    },
+    {
+      "id": "survey-experiment",
+      "stageId": "s3",
+      "title": "標本調査と実験",
+      "grade": 3,
+      "domain": "survey",
+      "prerequisites": [
+        "sampling-basic"
+      ],
+      "goals": [
+        "全数調査（国勢調査など）と標本調査の特徴を比べ、標本の大きさと精度の関係を説明できる",
+        "乱数表などを使った無作為抽出の手順と、偏った標本が生じる原因を説明できる",
+        "実験研究と観察研究の違い、処理群と対照群の役割を説明できる"
+      ],
+      "minutes": 40,
+      "official": "標本調査（母集団・標本・全数調査・無作為抽出・標本の大きさ・乱数表・国勢調査）／実験（実験研究・観察研究・処理群と対照群）"
+    },
+    {
+      "id": "ts-moving-avg",
+      "stageId": "s3",
+      "title": "時系列データと移動平均",
+      "grade": 3,
+      "domain": "timeseries",
+      "prerequisites": [
+        "timeseries-index"
+      ],
+      "goals": [
+        "移動平均（3項・4項・12か月など）を計算し、変動をならす目的を説明できる",
+        "傾向変動・季節変動・不規則変動を区別できる",
+        "指数（指標）・変化率を使って複数の時系列を比べられる"
+      ],
+      "minutes": 40,
+      "official": "時系列データ（時系列グラフ・指数（指標）・移動平均）"
+    },
+    {
+      "id": "cond-prob",
+      "stageId": "s4",
+      "title": "条件付き確率と独立",
+      "grade": 3,
+      "domain": "probability",
+      "prerequisites": [
+        "prob-basic"
+      ],
+      "goals": [
+        "和事象・積事象の確率を加法定理・乗法定理で求められる",
+        "条件付き確率を表や式から求められる",
+        "2つの事象が独立かどうかを判定できる"
+      ],
+      "minutes": 50,
+      "official": "確率（独立な試行・条件付き確率）"
+    },
+    {
+      "id": "rv-expectation",
+      "stageId": "s4",
+      "title": "確率変数と期待値",
+      "grade": 3,
+      "domain": "distribution",
+      "prerequisites": [
+        "prob-basic",
+        "variance-sd"
+      ],
+      "goals": [
+        "確率分布表から期待値（平均）を計算できる",
+        "確率変数の分散と標準偏差を計算できる",
+        "$aX+b$ の期待値と分散を求められる"
+      ],
+      "minutes": 50,
+      "official": "確率分布（確率変数の平均・分散）"
+    },
+    {
+      "id": "binomial",
+      "stageId": "s4",
+      "title": "二項分布",
+      "grade": 3,
+      "domain": "distribution",
+      "prerequisites": [
+        "cond-prob",
+        "rv-expectation"
+      ],
+      "goals": [
+        "二項分布が当てはまる場面を判断できる",
+        "二項分布の確率を計算できる",
+        "二項分布の期待値 $np$ と分散 $np(1-p)$ を使える"
+      ],
+      "minutes": 50,
+      "official": "確率分布（二項分布）",
+      "refreshers": [
+        "math-counting"
+      ]
+    },
+    {
+      "id": "normal",
+      "stageId": "s4",
+      "title": "正規分布",
+      "grade": 3,
+      "domain": "distribution",
+      "prerequisites": [
+        "rv-expectation",
+        "cv-standardize"
+      ],
+      "goals": [
+        "正規分布の形と平均・標準偏差の役割を説明できる",
+        "標準化して標準正規分布表から確率を求められる",
+        "「平均± 1・2・3標準偏差」に入る割合の目安を使える"
+      ],
+      "minutes": 55,
+      "official": "確率分布（正規分布）"
+    },
+    {
+      "id": "binomial-normal-approx",
+      "stageId": "s4",
+      "title": "二項分布の正規近似",
+      "grade": 3,
+      "domain": "distribution",
+      "prerequisites": [
+        "binomial",
+        "normal"
+      ],
+      "goals": [
+        "試行回数が大きい二項分布を正規分布で近似できる",
+        "近似を使って確率を求められる"
+      ],
+      "minutes": 40,
+      "official": "確率分布（二項分布の正規近似）"
+    },
+    {
+      "id": "sampling-dist",
+      "stageId": "s5",
+      "title": "標本分布",
+      "grade": 3,
+      "domain": "inference",
+      "prerequisites": [
+        "normal",
+        "sampling-basic"
+      ],
+      "goals": [
+        "母集団分布と標本平均の分布を区別できる",
+        "標本平均の期待値と標準偏差（標準誤差 $\\sigma/\\sqrt{n}$）を求められる",
+        "標本比率の分布の平均と標準偏差を求められる"
+      ],
+      "minutes": 50,
+      "official": "統計的な推測（母平均・母比率の標本分布）"
+    },
+    {
+      "id": "interval-est",
+      "stageId": "s5",
+      "title": "区間推定",
+      "grade": 3,
+      "domain": "inference",
+      "prerequisites": [
+        "sampling-dist"
+      ],
+      "goals": [
+        "母平均の95%信頼区間を計算できる",
+        "母比率の95%信頼区間を計算できる",
+        "信頼区間の正しい解釈と、標本の大きさ・信頼度と幅の関係を説明できる"
+      ],
+      "minutes": 55,
+      "official": "統計的な推測（区間推定）"
+    },
+    {
+      "id": "hypothesis-test",
+      "stageId": "s5",
+      "title": "仮説検定の考え方",
+      "grade": 3,
+      "domain": "inference",
+      "prerequisites": [
+        "sampling-dist",
+        "binomial"
+      ],
+      "goals": [
+        "帰無仮説・対立仮説・有意水準・P値の意味を説明できる",
+        "母平均・母比率についての検定の結論を導ける",
+        "「棄却できない」ことの正しい解釈と2種類の誤りを説明できる"
+      ],
+      "minutes": 55,
+      "official": "統計的な推測（仮説検定）"
+    }
+  ],
+  "mocks": [
+    {
+      "grade": 4,
+      "questions": 30,
+      "minutes": 60,
+      "passLine": 60,
+      "safeLine": 80,
+      "domains": {
+        "survey": 5,
+        "graphs": 9,
+        "summary": 8,
+        "timeseries": 3,
+        "probability": 5
+      }
+    },
+    {
+      "grade": 3,
+      "questions": 30,
+      "minutes": 60,
+      "passLine": 65,
+      "safeLine": 80,
+      "domains": {
+        "survey": 3,
+        "graphs": 4,
+        "summary": 6,
+        "relation": 5,
+        "timeseries": 2,
+        "probability": 3,
+        "distribution": 4,
+        "inference": 3
+      }
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "checkedOn": "2026-11-26",
+  "basis": "統計検定公式サイトとCBT運営会社（オデッセイ コミュニケーションズ）の公開情報を、検索結果の要約で確認した内容です。申し込む前に、必ず公式サイトで最新の情報を確認してください。",
+  "grades": [
+    {
+      "grade": 4,
+      "level": "中学校卒業程度（データ・表・グラフ・確率の基本と、具体的な場面での活用）",
+      "format": "CBT方式（全国の試験会場のパソコンで、都合のよい日時に受験）。4〜5肢の選択式",
+      "questions": "30問程度",
+      "minutes": "60分",
+      "passLine": "100点満点で60点以上",
+      "fee": "一般 5,000円／学割 3,500円（税込）",
+      "tools": "電卓を1台持ち込める（四則演算・百分率・平方根の計算ができる普通の電卓）"
+    },
+    {
+      "grade": 3,
+      "level": "高等学校卒業程度（大学基礎課程で求められる統計の活用力）",
+      "format": "CBT方式（全国の試験会場のパソコンで、都合のよい日時に受験）。4〜5肢の選択式",
+      "questions": "30問程度",
+      "minutes": "60分",
+      "passLine": "100点満点で65点以上",
+      "fee": "一般 6,000円／学割 4,000円（税込）",
+      "tools": "電卓を1台持ち込める。統計数値表は会場で配られ、終了後に回収される"
+    }
+  ],
+  "links": [
+    { "title": "統計検定4級（公式の試験案内・出題範囲）", "url": "https://www.toukei-kentei.jp/grade/grade4/" },
+    { "title": "統計検定3級（公式の試験案内・出題範囲）", "url": "https://www.toukei-kentei.jp/grade/grade3/" },
+    { "title": "試験概要（各級の試験時間・合格水準・受験料）", "url": "https://www.toukei-kentei.jp/about/summary" },
+    { "title": "CBT方式試験の受験の流れ", "url": "https://www.toukei-kentei.jp/info/other_grades_apply/" },
+    { "title": "4級の申込（オデッセイ コミュニケーションズ）", "url": "https://cbt.odyssey-com.co.jp/toukei-kentei/kgrade4.html" },
+    { "title": "3級の申込（オデッセイ コミュニケーションズ）", "url": "https://cbt.odyssey-com.co.jp/toukei-kentei/kgrade3.html" },
+    { "title": "公式テキスト・問題集の案内", "url": "https://www.toukei-kentei.jp/preparation/books/" },
+    { "title": "過去問題についての案内", "url": "https://www.toukei-kentei.jp/preparation/kakomon/", "note": "CBT方式の過去問題は公開されていません" },
+    { "title": "受験者数と合格率（過去の受験データ）", "url": "https://www.toukei-kentei.jp/info/past_data" }
+  ],
+  "books": [
+    {
+      "title": "統計検定3級・4級 公式問題集［CBT対応版］",
+      "publisher": "日本統計学会 編／実務教育出版",
+      "price": "2,200円前後",
+      "note": "現在のCBT方式に合わせた公式の問題集。当サイトの模試で安定して8割を取れるようになったら、初見の実力を確かめる最後の仕上げに使うのがおすすめです。"
+    },
+    {
+      "title": "統計検定3級対応 データの分析",
+      "publisher": "日本統計学会 編／東京図書",
+      "price": "2,400円前後",
+      "note": "3級の出題範囲に沿った公式テキスト。定義や記法に迷ったときの基準になります。"
+    }
+  ]
+}
