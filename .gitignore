@@ -4,3 +4,6 @@ dist-artifact/
 *.local
 .DS_Store
 coverage/
+
+# 作業用の一時テスト（リポジトリに入れない）
+tests/zz-*.test.ts
