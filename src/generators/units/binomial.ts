@@ -37,20 +37,19 @@ const PMF_CONTEXTS = [
   { setup: (p: string) => `あるゲームの宝箱は、1回開けるごとに確率${p}でレアアイテムが出る。`, trial: (n: number) => `宝箱を${n}回開ける`, event: (k: number) => `レアアイテムがちょうど${k}回出る`, ps: [[1, 3], [1, 4], [1, 5], [2, 5]] },
   { setup: (p: string) => `あるクイズで、でたらめに答えると1問ごとに確率${p}で正解する。`, trial: (n: number) => `${n}問すべてにでたらめに答える`, event: (k: number) => `ちょうど${k}問正解する`, ps: [[1, 3], [1, 4], [1, 5]] },
   { setup: (p: string) => `ある選手のフリースローは、1本ごとに確率${p}で成功する。`, trial: (n: number) => `${n}本打つ`, event: (k: number) => `ちょうど${k}本成功する`, ps: [[2, 3], [3, 4], [3, 5], [4, 5]] },
-  { setup: (p: string) => `ある花の種は、1粒ごとに確率${p}で発芽する。`, trial: (n: number) => `${n}粒まく`, event: (k: number) => `ちょうど${k}粒発芽する`, ps: [[1, 2], [2, 3], [3, 4], [4, 5]] },
+  { setup: (p: string) => `ある花の種は、1粒ごとに確率${p}で発芽する。`, trial: (n: number) => `${n}粒まく`, event: (k: number) => `ちょうど${k}粒発芽する`, ps: [[1, 2], [2, 3], [3, 4], [4, 5]], indep: '各粒の結果は互いに独立であるとする。' },
   { setup: (p: string) => `1個のさいころを投げると、確率${p}で1の目が出る。`, trial: (n: number) => `さいころを${n}回投げる`, event: (k: number) => `1の目がちょうど${k}回出る`, ps: [[1, 6]] },
 ];
 
 const MAX_N: Record<number, number> = { 2: 6, 3: 6, 4: 5, 5: 4, 6: 4 };
 
 const MV_CONTEXTS = [
-  { lead: (p: string) => `ある果樹園で収穫されるりんごは、1個ごとに独立に確率${p}で規格外になるとする。`, body: (n: number) => `収穫したりんご${n}個のうち、規格外のりんごの個数を$X$とする`, ns: [40, 60, 80, 100, 120, 200] },
-  { lead: (p: string) => `ある花の種は、1粒ごとに独立に確率${p}で発芽するとする。`, body: (n: number) => `この種を${n}粒まいたとき、発芽する粒数を$X$とする`, ns: [20, 40, 50, 60, 100, 150] },
-  { lead: (p: string) => `ある市が行う郵送調査では、依頼した世帯は1世帯ごとに独立に確率${p}で回答するとする。`, body: (n: number) => `${n}世帯に依頼するとき、回答する世帯の数を$X$とする`, ns: [100, 200, 300, 400, 500] },
-  { lead: (p: string) => `ある工場の製品は、1個ごとに独立に確率${p}で検査に不合格となるとする。`, body: (n: number) => `製品${n}個を検査するとき、不合格となる個数を$X$とする`, ns: [60, 100, 120, 200, 300, 400] },
+  { lead: (p: string) => `ある果樹園で収穫されるりんごは、1個ごとに独立に確率${p}で規格外になるとする。`, body: (n: number) => `収穫したりんご${n}個のうち、規格外のりんごの個数を$X$とする`, ns: [40, 60, 80, 100, 120, 200], Ps: [5, 10, 15, 20, 25, 30] },
+  { lead: (p: string) => `ある花の種は、1粒ごとに独立に確率${p}で発芽するとする。`, body: (n: number) => `この種を${n}粒まき、発芽する粒数を$X$とする`, ns: [20, 40, 50, 60, 100, 150], Ps: [40, 60, 70, 75, 80] },
+  { lead: (p: string) => `ある市が行う郵送調査では、依頼した世帯は1世帯ごとに独立に確率${p}で回答するとする。`, body: (n: number) => `${n}世帯に依頼し、回答する世帯の数を$X$とする`, ns: [100, 200, 300, 400, 500], Ps: [20, 25, 30, 35, 40, 60, 70, 75, 80] },
+  { lead: (p: string) => `ある工場の製品は、1個ごとに独立に確率${p}で検査に不合格となるとする。`, body: (n: number) => `製品${n}個を検査し、不合格となる個数を$X$とする`, ns: [60, 100, 120, 200, 300, 400], Ps: [5, 10, 15, 20] },
 ];
 
-const P_LIST = [5, 10, 15, 20, 25, 30, 35, 40, 60, 70, 75, 80];
 
 /** n·p(1−p) が平方数になる (n, p) の組（p は百分率） */
 const SQUARE_CASES: { n: number; P: number; s: number }[] = [];
@@ -125,7 +124,7 @@ export const generators: QuestionGenerator[] = [
       if (k >= 2) wrongs.push(cand(perm(n, k) * seq, den, `$${cS}$を順列の数${perm(n, k)}と数え、$${perm(n, k)}\\times ${pw(pS, k)}\\times ${pw(qS, n - k)}$とした値。`));
       const valid = wrongs.filter((w) => w.value < 1);
       return {
-        stem: `${c.setup(pT)}各回の結果は互いに独立であるとする。${c.trial(n)}とき、${c.event(k)}確率として正しいものを一つ選べ。`,
+        stem: `${c.setup(pT)}${'indep' in c ? c.indep : '各回の結果は互いに独立であるとする。'}${c.trial(n)}とき、${c.event(k)}確率として正しいものを一つ選べ。`,
         ...balancedChoices(rng, cand(num1, den, `正しい。$${cS}\\times ${pw(pS, k)}\\times ${pw(qS, n - k)}=${C}\\times ${frac(seq, den)}$。`), valid),
         explanation: `確率は$${frac(num1, den)}$である。\n起こる回数$X$は二項分布$B\\left(${n},\\ ${pS}\\right)$に従う。\n${n}回のうち起こる${k}回の選び方は$${cS}=${C}$通り。\n特定の並び1通り（起こる${k}回・起こらない${n - k}回）の確率は$${pw(pS, k)}\\times ${pw(qS, n - k)}=${frac(seq, den)}$。\nよって$P(X=${k})=${C}\\times ${frac(seq, den)}=${frac(num1, den)}$。`,
       };
@@ -141,7 +140,7 @@ export const generators: QuestionGenerator[] = [
     build(rng) {
       const c = pick(rng, MV_CONTEXTS);
       const n = pick(rng, c.ns);
-      const P = pick(rng, P_LIST);
+      const P = pick(rng, c.Ps);
       const p = P / 100;
       const E = round((n * P) / 100, 6);
       const V = round((n * P * (100 - P)) / 10000, 6);
