@@ -590,7 +590,17 @@ function Normal({ f, compact }: { f: NormalFigure; compact: boolean }) {
     const pts = Array.from({ length: n + 1 }, (_, i) => from + ((to - from) * i) / n).map((v) => `${x(v).toFixed(1)},${y(v).toFixed(1)}`);
     return close ? `M ${x(from).toFixed(1)},${bottom} L ${pts.join(' L ')} L ${x(to).toFixed(1)},${bottom} Z` : `M ${pts.join(' L ')}`;
   };
-  const marks = f.marks ?? (compact ? [-2, 0, 2] : [-3, -2, -1, 0, 1, 2, 3]).map((k) => f.mean + k * f.sd);
+  const marks = (f.marks ?? (compact ? [-2, 0, 2] : [-3, -2, -1, 0, 1, 2, 3]).map((k) => f.mean + k * f.sd)).filter((m) => m >= lo && m <= hi);
+  // 目盛りのラベルが重なるときは、平均に近いものを優先して残す
+  const labelled = new Set<number>();
+  const placed: { x: number; w: number }[] = [];
+  for (const m of [...marks].sort((a, b) => Math.abs(a - f.mean) - Math.abs(b - f.mean))) {
+    const w = textWidth(fmt(m));
+    if (placed.every((pl) => Math.abs(pl.x - x(m)) >= (pl.w + w) / 2 + 4)) {
+      placed.push({ x: x(m), w });
+      labelled.add(m);
+    }
+  }
   return (
     <Frame title={f.title}>
       <svg viewBox={`0 0 ${box.w} ${box.h}`} role="img" aria-label={`${f.title ?? ''} 正規分布の曲線`}>
@@ -599,17 +609,17 @@ function Normal({ f, compact }: { f: NormalFigure; compact: boolean }) {
         ))}
         <path d={path(lo, hi, false)} fill="none" stroke="var(--chart-ink)" strokeWidth={2} />
         <line x1={box.l} x2={box.w - box.r} y1={bottom} y2={bottom} stroke="var(--chart-axis)" strokeWidth={1} />
-        {marks
-          .filter((m) => m >= lo && m <= hi)
-          .map((m) => (
-            <g key={m}>
-              <line x1={x(m)} x2={x(m)} y1={bottom} y2={bottom + 4} stroke="var(--chart-axis)" strokeWidth={1} />
-              <line x1={x(m)} x2={x(m)} y1={y(m)} y2={bottom} stroke="var(--chart-axis)" strokeWidth={1} strokeDasharray="none" opacity={0.5} />
+        {marks.map((m) => (
+          <g key={m}>
+            <line x1={x(m)} x2={x(m)} y1={bottom} y2={bottom + 4} stroke="var(--chart-axis)" strokeWidth={1} />
+            <line x1={x(m)} x2={x(m)} y1={y(m)} y2={bottom} stroke="var(--chart-axis)" strokeWidth={1} opacity={0.5} />
+            {labelled.has(m) ? (
               <text x={x(m)} y={bottom + 16} textAnchor="middle">
                 {fmt(m)}
               </text>
-            </g>
-          ))}
+            ) : null}
+          </g>
+        ))}
         <XLabel box={box} label={f.xLabel} />
       </svg>
     </Frame>
