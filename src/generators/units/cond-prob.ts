@@ -64,7 +64,7 @@ const TABLE_CONTEXTS: TableCtx[] = [
     rows: ['午前', '午後'],
     cols: ['店内で飲食', '持ち帰り'],
     rowIs: (r) => `${r}に来店した客であった`,
-    colIs: (c) => `${c}の客である`,
+    colIs: (c) => (c === '店内で飲食' ? '店内で飲食した客である' : '持ち帰りにした客である'),
   },
 ];
 
@@ -95,6 +95,8 @@ export const generators: QuestionGenerator[] = [
       const i = int(rng, 0, 1);
       const j = int(rng, 0, 1);
       const n = cells[i]![j]!;
+      // 条件の行の2つのセルが同じだと、列を読み違えても同じ答えになり、技能を確かめられない
+      if (cells[i]![0] === cells[i]![1]) throw new Reject();
       const nA = rowT[i]!;
       const nB = colT[j]!;
       const nAc = cells[i]![1 - j]!;

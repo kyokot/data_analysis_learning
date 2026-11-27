@@ -5,6 +5,10 @@ import { Reject, type QuestionGenerator } from '../types.ts';
 /** 文中に書く数（負の数は「−」） */
 const tx = (s: string) => s.replace(/^-/, '−');
 
+/** 負の数も絶対値で四捨五入する（kit の round は −3.125 → −3.12 のように負の .5 を 0 の側へ丸めるため） */
+const rnd = (v: number, d: number) => Math.sign(v) * round(Math.abs(v), d);
+const fx = (v: number, d: number) => fixed(rnd(v, d), d);
+
 /** sign: 1 = 正の相関になりやすい場面、-1 = 負の相関になりやすい場面 */
 const R_CONTEXTS = [
   { lead: 'ある高校の生徒50人について、1日の家庭学習の時間 $x$（分）と数学のテストの得点 $y$（点）を調べた', xu: '分', yu: '点', sx: [10, 30], sy: [5, 20], sign: 1 },
@@ -52,8 +56,8 @@ export const generators: QuestionGenerator[] = [
       const cov = (sign * k * sx * sy) / 100;
       const covS = tx(fixed(cov, cov % 1 === 0 ? 0 : 1));
       const covM = fixed(cov, cov % 1 === 0 ? 0 : 1);
-      const label = (v: number) => tx(fixed(v, 2));
-      const cand = (v: number, note: string): Candidate => ({ value: round(v, 2), label: label(v), note });
+      const label = (v: number) => tx(fx(v, 2));
+      const cand = (v: number, note: string): Candidate => ({ value: rnd(v, 2), label: label(v), note });
       const wrongs: Candidate[] = [
         cand(cov / sx, `共分散を $x$ の標準偏差${sx}だけで割った値。$y$ の標準偏差${sy}でも割る必要がある。`),
         cand(cov / sy, `共分散を $y$ の標準偏差${sy}だけで割った値。$x$ の標準偏差${sx}でも割る必要がある。`),
@@ -104,7 +108,6 @@ export const generators: QuestionGenerator[] = [
         ...(exact1(S / (n - 1)) ? [cand(S / (n - 1), `偏差の積の合計を${n - 1}（個数−1）で割った値。このサイトの共分散は個数 $n=${n}$ で割る。`)] : []),
         cand(-cov, `符号を逆にした値。偏差は「データ − 平均値」で、偏差の積の符号をそのまま足す。`),
         cand(mxy, `偏差をとらずに、$x$ と $y$ の値そのものの積を平均した値。共分散は偏差（平均値との差）の積を平均する。`),
-        cand(r, `さらに2つの標準偏差の積で割った相関係数（およそ${tx(fixed(r, 2))}）。共分散は標準偏差で割らない。`),
         cand(mx * my, `$x$ の平均値と $y$ の平均値の積。共分散は偏差の積の平均である。`),
       ];
       const pTerms = dx.map((d, i) => `${d < 0 ? `(${d})` : d}\\times${dy[i]! < 0 ? `(${dy[i]})` : dy[i]}`).join('+');

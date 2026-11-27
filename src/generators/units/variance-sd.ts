@@ -151,6 +151,8 @@ export const generators: QuestionGenerator[] = [
       const vx = sx * sx;
       const r2 = (x: number) => Math.round(x * 100) / 100;
       const vy = r2(a * a * vx);
+      // 元の固定問題（q08）と同じく、答えの分散は整数になる組み合わせだけ使う（64.00 や 207.36 のような表示を避ける）
+      if (!Number.isInteger(vy)) throw new Reject();
       const my = r2(a * mx + b);
       const cands = [vy, r2(a * vx), r2(vy + b), r2(a * vx + b), vx];
       const digits = cands.some((x) => !Number.isInteger(r2(x * 10))) ? 2 : cands.some((x) => !Number.isInteger(x)) ? 1 : 0;

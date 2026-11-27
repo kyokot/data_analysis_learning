@@ -35,7 +35,8 @@ export const generators: QuestionGenerator[] = [
         const j = Math.floor(rng() * (i + 1));
         [names[i], names[j]] = [names[j]!, names[i]!];
       }
-      const used = names.slice(0, 4);
+      // 表の行は元の並び（部品A→B→C→D など）にそろえる。平均は行ごとに乱数で決めるので答えの位置は偏らない
+      const used = names.slice(0, 4).sort((a, b) => t.names.indexOf(a) - t.names.indexOf(b));
       const meansPool = [...t.means];
       const means: number[] = [];
       while (means.length < 4) {
@@ -51,6 +52,8 @@ export const generators: QuestionGenerator[] = [
       if (sds.some((s) => !Number.isInteger(s * 10))) throw new Reject();
       const best = pcts.indexOf(Math.max(...pcts));
       const maxSd = sds.indexOf(Math.max(...sds));
+      // 標準偏差の最大が2つ以上あると「標準偏差だけで比べると最も大きい」が一意に決まらない
+      if (sds.filter((v) => v === sds[maxSd]).length > 1) throw new Reject();
       const minCv = pcts.indexOf(Math.min(...pcts));
       // 標準偏差だけで比べると別の答えになるデータだけ使う
       if (maxSd === best) throw new Reject();

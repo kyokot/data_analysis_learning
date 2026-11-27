@@ -166,7 +166,9 @@ export const generators: QuestionGenerator[] = [
         const errs: string[] = [];
         if (o.min !== minOut) errs.push(minText);
         if (o.max !== maxOut) errs.push(maxText);
-        const why = o.min && o.max ? '基準を計算せず、ひげの両端をそのまま外れ値としている。' : !o.min && !o.max ? 'ひげの中にある値は外れ値ではないと考えている。この図のひげは最小値・最大値まで引いてあるので、基準を計算して確かめる必要がある。' : '基準を計算せず、ひげの長さの見た目で判断している。';
+        // 片方だけを外れ値とする誤答: その側のひげが実際に長いときだけ「見た目で判断」と説明する
+        const claimedLonger = o.min ? q1 - min > max - q3 : max - q3 > q1 - min;
+        const why = o.min && o.max ? '基準を計算せず、ひげの両端をそのまま外れ値としている。' : !o.min && !o.max ? 'ひげの中にある値は外れ値ではないと考えている。この図のひげは最小値・最大値まで引いてあるので、基準を計算して確かめる必要がある。' : claimedLonger ? `基準を計算せず、ひげが長い方の${o.min ? '最小値' : '最大値'}だけを外れ値と見ている。` : '最小値・最大値を、それぞれの基準と正しく比べていない。';
         return `${why}${errs.join('。')}。`;
       });
       return {

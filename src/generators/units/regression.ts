@@ -6,6 +6,8 @@ import { Reject, type QuestionGenerator } from '../types.ts';
 const tx = (s: string) => s.replace(/^-/, '−');
 /** 数式の中で、足し算の項として書く（負なら括弧） */
 const par = (v: string) => (v.startsWith('-') ? `(${v})` : v);
+/** 負の数も絶対値で四捨五入する（kit の round は −0.125 → −0.12 のように負の .5 を 0 の側へ丸めるため） */
+const rnd = (v: number, d: number) => Math.sign(v) * round(Math.abs(v), d);
 /** 0 に十分近い（小数の誤差を無視する） */
 const isInt = (v: number, digits: number) => Math.abs(v * 10 ** digits - Math.round(v * 10 ** digits)) < 1e-9;
 
@@ -48,8 +50,8 @@ export const generators: QuestionGenerator[] = [
       const b = (r * sy) / sx;
       // 傾きが小数第2位までで割り切れるものだけ使う
       if (!isInt(b, 2)) throw new Reject();
-      const label = (v: number) => tx(fixed(v, 2));
-      const cand = (v: number, note: string): Candidate => ({ value: round(v, 2), label: label(v), note });
+      const label = (v: number) => tx(fixed(rnd(v, 2), 2));
+      const cand = (v: number, note: string): Candidate => ({ value: rnd(v, 2), label: label(v), note });
       const rS = fixed(r, 2);
       const wrongs: Candidate[] = [
         cand((r * sx) / sy, `$\\dfrac{s_x}{s_y}$ を掛けた値（$${rS}\\times\\dfrac{${sx}}{${sy}}$）。傾きは $y$ の標準偏差を $x$ の標準偏差で割ったものを掛ける。`),
@@ -88,8 +90,8 @@ export const generators: QuestionGenerator[] = [
       const a = my - b * mx;
       const yhat = a + b * x0;
       if (!isInt(yhat, 1) || !isInt(a, 2)) throw new Reject();
-      const label = (v: number) => tx(fixed(v, 1));
-      const cand = (v: number, note: string): Candidate => ({ value: round(v, 1), label: label(v), note });
+      const label = (v: number) => tx(fixed(rnd(v, 1), 1));
+      const cand = (v: number, note: string): Candidate => ({ value: rnd(v, 1), label: label(v), note });
       const rS = fixed(r, 2);
       const bS = num(b, 2);
       const bWrong = (r * sx) / sy;
