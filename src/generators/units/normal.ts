@@ -1,4 +1,5 @@
 /** 正規分布（標準化、上側・下側の確率、平均をはさむ区間の確率）の類題 */
+import type { Rng } from '../../engine/rng.ts';
 import { choicesFrom, distinctInts, fixed, int, num, pick, round, type Candidate } from '../kit.ts';
 import { Reject, type QuestionGenerator } from '../types.ts';
 
@@ -55,6 +56,36 @@ const STD_CONTEXTS = [
 const prob = (v: number) => fixed(v, 4);
 const pc = (v: number, note: string): Candidate => ({ value: round(v, 4), label: prob(v), note });
 
+function shuffle<T>(rng: Rng, xs: T[]): T[] {
+  const a = [...xs];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [a[i], a[j]] = [a[j]!, a[i]!];
+  }
+  return a;
+}
+
+/**
+ * choicesFrom の前に誤答を3個に絞る。正答より小さい誤答と大きい誤答の個数を乱数で決め、
+ * 値の小さい順に並べたときの正答の位置が偏らないようにする。
+ */
+function balancedChoices(rng: Rng, correct: Candidate, wrongs: Candidate[]) {
+  const seen = new Set([correct.label]);
+  const uniq = wrongs.filter((w) => {
+    if (!Number.isFinite(w.value) || seen.has(w.label) || Math.abs(w.value - correct.value) < 1e-9) return false;
+    seen.add(w.label);
+    return true;
+  });
+  const below = shuffle(rng, uniq.filter((w) => w.value < correct.value));
+  const above = shuffle(rng, uniq.filter((w) => w.value > correct.value));
+  const k = 3;
+  const lo = Math.max(0, k - above.length);
+  const hi = Math.min(k, below.length);
+  if (lo > hi) throw new Reject();
+  const b = lo + Math.floor(rng() * (hi - lo + 1));
+  return choicesFrom(correct, [...below.slice(0, b), ...above.slice(0, k - b)], { rng });
+}
+
 export const generators: QuestionGenerator[] = [
   {
     id: 'normal-standardize',
@@ -78,11 +109,12 @@ export const generators: QuestionGenerator[] = [
         { value: dx / v, label: label(dx / v), note: `標準偏差${sigma}ではなく分散${v}で割った値（$${dx}\\div ${v}$）。$N(\\mu,\\sigma^2)$の第2引数は分散である。` },
         { value: dx, label: label(dx), note: `平均との差$${x}-${mu}=${dx}$を答えただけで、標準偏差で割っていない。` },
         { value: x / sigma, label: label(x / sigma), note: `平均を引かずに、$${x}\\div ${sigma}$とした値。標準化は平均を引いてから標準偏差で割る。` },
+        { value: sigma / dx, label: label(sigma / dx), note: `分母と分子を逆にして$\\dfrac{${sigma}}{${x}-${mu}}$とした値。標準化は「平均との差 ÷ 標準偏差」である。` },
       ];
       const wrongs = cands.filter((w) => !nearHalf(w.value, 2));
       return {
         stem: `${c.lead(`$N(${mu},${v})$`)}${c.who(x)}について、$X$を標準化した値$z$として正しいものを一つ選べ。ただし、必要ならば小数第3位を四捨五入した値で答えよ。`,
-        ...choicesFrom({ value: z, label: label(z), note: `正しい。標準偏差は$\\sqrt{${v}}=${sigma}$で、$(${x}-${mu})\\div ${sigma}=${num(z, 2)}$。` }, wrongs, { rng }),
+        ...balancedChoices(rng, { value: z, label: label(z), note: `正しい。標準偏差は$\\sqrt{${v}}=${sigma}$で、$(${x}-${mu})\\div ${sigma}=${num(z, 2)}$。` }, wrongs),
         explanation: `答えは$${num(z, 2)}$である。\n$N(${mu},${v})$の第2引数${v}は分散なので、標準偏差は$\\sqrt{${v}}=${sigma}$。\n標準化は$z=\\dfrac{x-\\mu}{\\sigma}$なので、$z=\\dfrac{${x}-${mu}}{${sigma}}=\\dfrac{${dx}}{${sigma}}=${num(z, 2)}$。\n${x}は、平均より標準偏差${num(Math.abs(z), 2)}個分だけ${z > 0 ? '大きい' : '小さい'}ことを表す。`,
       };
     },
@@ -139,7 +171,7 @@ export const generators: QuestionGenerator[] = [
         : `求める割合は、平均より${above ? '下' : '上'}側の全体0.5と、平均〜${x}${u}の部分を合わせたもの。\n$0.5+${aS}=${prob(0.5 + a)}$`;
       return {
         stem: `${c.lead(`$N(${mu},${sigma}^2)$`)}${c.ask(cond)}として、最も適切なものを一つ選べ。ただし、標準正規分布に従う$Z$について$P(0\\leqq Z\\leqq ${zs})=${aS}$としてよい。`,
-        ...choicesFrom(correct, wrongs, { rng }),
+        ...balancedChoices(rng, correct, wrongs),
         explanation: `答えは${prob(correctV)}である。\n${x}${u}を標準化すると${stdz}。${sym}\n${body}`,
       };
     },
@@ -195,7 +227,7 @@ export const generators: QuestionGenerator[] = [
           rows: shown.map((z) => [zText(z), prob(PHI0[zKey(z)]!)]),
           headerColumn: true,
         },
-        ...choicesFrom(pc(ans, `正しい。$z=-${zText(z1)}$から0までの${s1}と、0から$z=${zText(z2)}$までの${s2}を足す。`), wrongs, { rng }),
+        ...balancedChoices(rng, pc(ans, `正しい。$z=-${zText(z1)}$から0までの${s1}と、0から$z=${zText(z2)}$までの${s2}を足す。`), wrongs),
         explanation: `答えは${prob(ans)}である。\n両端を標準化する。${x1}${u}は$z=\\dfrac{${x1}-${mu}}{${sigma}}=-${zText(z1)}$、${x2}${u}は$z=\\dfrac{${x2}-${mu}}{${sigma}}=${zText(z2)}$。\n求める確率は$P(-${zText(z1)}\\leqq Z\\leqq ${zText(z2)})$。0をはさむので、左側と右側に分けて足す。\n左側は対称性から$P(-${zText(z1)}\\leqq Z\\leqq 0)=P(0\\leqq Z\\leqq ${zText(z1)})=${s1}$。\n右側は$P(0\\leqq Z\\leqq ${zText(z2)})=${s2}$。\n合わせて$${s1}+${s2}=${prob(ans)}$。`,
       };
     },

@@ -219,7 +219,7 @@ export const generators: QuestionGenerator[] = [
           ],
           { rng },
         ),
-        explanation: `答えは$${frac(c, 36)}$。2個の目の出方は全部で$6\\times 6=36$通りで、どれも同様に確からしい。\n（1個目の目, 2個目の目）と表すと、${ev.desc}になるのは ${ordered.map(([a, b]) => `（${a}, ${b}）`).join('')} の${c}通り。\n$$${reduceTex(c, 36)}$$`,
+        explanation: `答えは$${frac(c, 36)}$。${who.two}の出方は全部で$6\\times 6=36$通りで、どれも同様に確からしい。\n（${who.first}, ${who.second}）と表すと、${ev.desc}になるのは ${ordered.map(([a, b]) => `（${a}, ${b}）`).join('')} の${c}通り。\n$$${reduceTex(c, 36)}$$`,
       };
     },
   },

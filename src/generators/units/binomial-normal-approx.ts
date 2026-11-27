@@ -59,6 +59,27 @@ function setup(rng: Rng) {
   return { c, ...k, p, pS: num(p, 2), qS: num(1 - p, 2) };
 }
 
+/**
+ * choicesFrom の前に誤答を3個に絞る。正答より小さい誤答と大きい誤答の個数を乱数で決め、
+ * 値の小さい順に並べたときの正答の位置が偏らないようにする。
+ */
+function balancedChoices(rng: Rng, correct: Candidate, wrongs: Candidate[]) {
+  const seen = new Set([correct.label]);
+  const uniq = wrongs.filter((w) => {
+    if (!Number.isFinite(w.value) || seen.has(w.label) || Math.abs(w.value - correct.value) < 1e-9) return false;
+    seen.add(w.label);
+    return true;
+  });
+  const below = shuffle(rng, uniq.filter((w) => w.value < correct.value));
+  const above = shuffle(rng, uniq.filter((w) => w.value > correct.value));
+  const k = 3;
+  const lo = Math.max(0, k - above.length);
+  const hi = Math.min(k, below.length);
+  if (lo > hi) throw new Reject();
+  const b = lo + Math.floor(rng() * (hi - lo + 1));
+  return choicesFrom(correct, [...below.slice(0, b), ...above.slice(0, k - b)], { rng });
+}
+
 export const generators: QuestionGenerator[] = [
   {
     id: 'binomial-normal-approx-params',
@@ -104,11 +125,12 @@ export const generators: QuestionGenerator[] = [
         { value: d / v, label: label(d / v), note: `$\\dfrac{${x}-${num(mean, 2)}}{${v}}$で、標準偏差ではなく分散${v}で割った値。` },
         { value: d / Math.sqrt(mean), label: label(d / Math.sqrt(mean)), note: `$\\dfrac{${x}-${num(mean, 2)}}{\\sqrt{${num(mean, 2)}}}$で、分散を$np=${num(mean, 2)}$として$(1-p)$を掛け忘れた値。` },
         { value: d, label: label(d), note: `$${x}-${num(mean, 2)}=${d}$で、平均を引いただけで標準偏差で割っていない値。` },
+        { value: s / d, label: label(s / d), note: `分母と分子を逆にして$\\dfrac{${s}}{${x}-${num(mean, 2)}}$とした値。標準化は「平均との差 ÷ 標準偏差」である。` },
       ];
       const wrongs = cands.filter((w) => !nearHalf(w.value, 2));
       return {
         stem: `${c.lead(pS, n)}$X$の分布を正規分布で近似して考える。$X=${x}$を標準化した値として、最も適切なものを一つ選べ。ただし、値は小数第3位を四捨五入してある。`,
-        ...choicesFrom({ value: z, label: label(z), note: `正しい。平均${num(mean, 2)}を引き、標準偏差${s}で割る。` }, wrongs, { rng }),
+        ...balancedChoices(rng, { value: z, label: label(z), note: `正しい。平均${num(mean, 2)}を引き、標準偏差${s}で割る。` }, wrongs),
         explanation: `答えは${label(z)}である。\n$X$は$B(${n},\\ ${pS})$に従う。平均は$np=${n}\\times ${pS}=${num(mean, 2)}$、分散は$np(1-p)=${n}\\times ${pS}\\times ${qS}=${v}$、標準偏差は$\\sqrt{${v}}=${s}$。\n標準化は「平均を引いて標準偏差で割る」ので、$\\dfrac{${x}-${num(mean, 2)}}{${s}}=\\dfrac{${d}}{${s}}=${num(z, 2)}$。`,
       };
     },
@@ -161,7 +183,7 @@ export const generators: QuestionGenerator[] = [
         : `求める側は${tailText}の反対側なので、$1-${P(t)}=${P(1 - t)}$。`;
       return {
         stem: `${c.lead(pS, n)}$X$が${condText}となる確率を、正規分布による近似で求めた。最も近い値を一つ選べ。ただし、標準正規分布に従う$Z$について$P(Z\\geqq ${zs})=${P(t)}$としてよい。`,
-        ...choicesFrom(correct, wrongs, { rng }),
+        ...balancedChoices(rng, correct, wrongs),
         explanation: `答えは${P(correctV)}。\n$X$は$B(${n},\\ ${pS})$に従う。平均は$np=${n}\\times ${pS}=${num(mean, 2)}$、分散は$np(1-p)=${n}\\times ${pS}\\times ${qS}=${v}$、標準偏差は$\\sqrt{${v}}=${s}$。\n$X$は近似的に$N(${num(mean, 2)},${v})$に従うので、${x}を標準化すると$\\dfrac{${x}-${num(mean, 2)}}{${s}}=${zSigned}$。\n${sym}${last}\n（このサイトでは、半整数補正を使わずに近似する。）`,
       };
     },

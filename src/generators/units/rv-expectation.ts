@@ -25,26 +25,6 @@ function shuffle<T>(rng: Rng, xs: T[]): T[] {
   return a;
 }
 
-/**
- * 誤答候補から k 個を選ぶ。正答より小さいものと大きいものの個数を乱数で決め、
- * 値の小さい順に並べたときの正答の位置が偏らないようにする。
- */
-function balanced(rng: Rng, correct: Candidate, wrongs: Candidate[], k = 3): Candidate[] {
-  const seen = new Set([correct.label]);
-  const uniq = wrongs.filter((w) => {
-    if (seen.has(w.label) || Math.abs(w.value - correct.value) < 1e-9) return false;
-    seen.add(w.label);
-    return true;
-  });
-  const below = shuffle(rng, uniq.filter((w) => w.value < correct.value));
-  const above = shuffle(rng, uniq.filter((w) => w.value > correct.value));
-  const lo = Math.max(0, k - above.length);
-  const hi = Math.min(k, below.length);
-  if (lo > hi) throw new Reject();
-  const b = lo + Math.floor(rng() * (hi - lo + 1));
-  return [...below.slice(0, b), ...above.slice(0, k - b)];
-}
-
 interface DistCtx {
   intro: string;
   title: string;
@@ -85,6 +65,27 @@ function makeDist(rng: Rng, c: DistCtx) {
     headerColumn: true,
   };
   return { xs, ps, E, E2, figure };
+}
+
+/**
+ * choicesFrom の前に誤答を3個に絞る。正答より小さい誤答と大きい誤答の個数を乱数で決め、
+ * 値の小さい順に並べたときの正答の位置が偏らないようにする。
+ */
+function balancedChoices(rng: Rng, correct: Candidate, wrongs: Candidate[]) {
+  const seen = new Set([correct.label]);
+  const uniq = wrongs.filter((w) => {
+    if (!Number.isFinite(w.value) || seen.has(w.label) || Math.abs(w.value - correct.value) < 1e-9) return false;
+    seen.add(w.label);
+    return true;
+  });
+  const below = shuffle(rng, uniq.filter((w) => w.value < correct.value));
+  const above = shuffle(rng, uniq.filter((w) => w.value > correct.value));
+  const k = 3;
+  const lo = Math.max(0, k - above.length);
+  const hi = Math.min(k, below.length);
+  if (lo > hi) throw new Reject();
+  const b = lo + Math.floor(rng() * (hi - lo + 1));
+  return choicesFrom(correct, [...below.slice(0, b), ...above.slice(0, k - b)], { rng });
 }
 
 export const generators: QuestionGenerator[] = [
@@ -136,7 +137,7 @@ export const generators: QuestionGenerator[] = [
       return {
         stem: `${c.intro}$X$（${c.unit}）の確率分布は、次の表のとおりである。$X$の期待値として正しいものを一つ選べ。`,
         figure,
-        ...choicesFrom(correct, balanced(rng, correct, wrongs), { rng }),
+        ...balancedChoices(rng, correct, wrongs),
         explanation: `期待値は${num(E, 4)}${c.unit}である。\n期待値は「値×確率」の合計なので、\n$E(X)=${terms}=${prods}=${num(E, 4)}$（${c.unit}）`,
       };
     },
@@ -175,7 +176,7 @@ export const generators: QuestionGenerator[] = [
       return {
         stem: `${c.intro}$X$（${c.unit}）の確率分布は、次の表のとおりである。$X$の期待値は${num(E, 2)}${c.unit}である。$X$の分散として正しいものを一つ選べ。`,
         figure,
-        ...choicesFrom({ value: V, label: label(V), note: `正しい。ずれ（値−${num(E, 2)}）の2乗に確率を掛けて合計すると${num(V, 4)}になる。` }, wrongs, { rng }),
+        ...balancedChoices(rng, { value: V, label: label(V), note: `正しい。ずれ（値−${num(E, 2)}）の2乗に確率を掛けて合計すると${num(V, 4)}になる。` }, wrongs),
         explanation: `分散は${num(V, 4)}である。\n分散は「期待値からのずれの2乗」に確率を掛けて合計する。\n$V(X)=${devTerms}$\n$=${devVals}=${num(V, 4)}$\n別の求め方として、$E(X^2)=${sqTerms}=${num(E2, 4)}$ から $V(X)=E(X^2)-\\{E(X)\\}^2=${num(E2, 4)}-${num(E, 2)}^2=${num(V, 4)}$ としてもよい。`,
       };
     },

@@ -70,6 +70,27 @@ const SD_CONTEXTS = [
   { lead: (p: string) => `ある通販サイトの案内メールは、1通ごとに独立に確率${p}で開封されるとする。`, body: (n: number) => `${n}通送ったとき、開封される数$X$` },
 ];
 
+/**
+ * choicesFrom の前に誤答を3個に絞る。正答より小さい誤答と大きい誤答の個数を乱数で決め、
+ * 値の小さい順に並べたときの正答の位置が偏らないようにする。
+ */
+function balancedChoices(rng: Rng, correct: Candidate, wrongs: Candidate[]) {
+  const seen = new Set([correct.label]);
+  const uniq = wrongs.filter((w) => {
+    if (!Number.isFinite(w.value) || seen.has(w.label) || Math.abs(w.value - correct.value) < 1e-9) return false;
+    seen.add(w.label);
+    return true;
+  });
+  const below = shuffle(rng, uniq.filter((w) => w.value < correct.value));
+  const above = shuffle(rng, uniq.filter((w) => w.value > correct.value));
+  const k = 3;
+  const lo = Math.max(0, k - above.length);
+  const hi = Math.min(k, below.length);
+  if (lo > hi) throw new Reject();
+  const b = lo + Math.floor(rng() * (hi - lo + 1));
+  return choicesFrom(correct, [...below.slice(0, b), ...above.slice(0, k - b)], { rng });
+}
+
 export const generators: QuestionGenerator[] = [
   {
     id: 'binomial-pmf',
@@ -105,7 +126,7 @@ export const generators: QuestionGenerator[] = [
       const valid = wrongs.filter((w) => w.value < 1);
       return {
         stem: `${c.setup(pT)}各回の結果は互いに独立であるとする。${c.trial(n)}とき、${c.event(k)}確率として正しいものを一つ選べ。`,
-        ...choicesFrom(cand(num1, den, `正しい。$${cS}\\times ${pw(pS, k)}\\times ${pw(qS, n - k)}=${C}\\times ${frac(seq, den)}$。`), valid, { rng }),
+        ...balancedChoices(rng, cand(num1, den, `正しい。$${cS}\\times ${pw(pS, k)}\\times ${pw(qS, n - k)}=${C}\\times ${frac(seq, den)}$。`), valid),
         explanation: `確率は$${frac(num1, den)}$である。\n起こる回数$X$は二項分布$B\\left(${n},\\ ${pS}\\right)$に従う。\n${n}回のうち起こる${k}回の選び方は$${cS}=${C}$通り。\n特定の並び1通り（起こる${k}回・起こらない${n - k}回）の確率は$${pw(pS, k)}\\times ${pw(qS, n - k)}=${frac(seq, den)}$。\nよって$P(X=${k})=${C}\\times ${frac(seq, den)}=${frac(num1, den)}$。`,
       };
     },
@@ -166,7 +187,7 @@ export const generators: QuestionGenerator[] = [
       const wrongs = cands.filter((w) => !nearHalf(w.value, 1));
       return {
         stem: `${c.lead(String(p))}${c.body(n)}の標準偏差として正しいものを一つ選べ。ただし、必要ならば小数第2位を四捨五入した値で答えよ。`,
-        ...choicesFrom({ value: s, label: label(s), note: `正しい。分散は$${n}\\times ${num(p, 2)}\\times ${num(1 - p, 2)}=${V}$で、その平方根は${s}。` }, wrongs, { rng }),
+        ...balancedChoices(rng, { value: s, label: label(s), note: `正しい。分散は$${n}\\times ${num(p, 2)}\\times ${num(1 - p, 2)}=${V}$で、その平方根は${s}。` }, wrongs),
         explanation: `標準偏差は${s}である。\n$X$は二項分布$B(${n},\\ ${num(p, 2)})$に従うので、分散は$np(1-p)=${n}\\times ${num(p, 2)}\\times ${num(1 - p, 2)}=${V}$。\n標準偏差は分散の正の平方根なので、$\\sqrt{${V}}=${s}$。`,
       };
     },
