@@ -61,7 +61,7 @@ export const generators: QuestionGenerator[] = [
         .map((x) => `$\\sqrt{${num(x.v)}}=${trunc2(Math.sqrt(x.v))}\\cdots$`)
         .join('、');
       return {
-        stem: `次の表は、${c.intro}である。標準偏差は分散の正の平方根である。${c.what}が${k}${c.unit}より大きく${k + 1}${c.unit}より小さいものとして正しいものを一つ選べ。`,
+        stem: `次の表は、${c.intro}である。標準偏差は分散の正の平方根である。${c.what}が${k}${c.unit}より大きく${k + 1}${c.unit}より小さい${c.head}として正しいものを一つ選べ。`,
         figure: {
           type: 'table',
           title: c.title,
@@ -87,7 +87,10 @@ export const generators: QuestionGenerator[] = [
       const c = pick(rng, SIGMA_CONTEXTS);
       const n = int(rng, 5, 6);
       const xs = Array.from({ length: n }, () => int(rng, c.lo, c.hi));
-      if (new Set(xs).size < 3) throw new Reject();
+      if (new Set(xs).size < n - 1) throw new Reject();
+      // 平均（取り違えの選択肢）が整数になるよう、最後の値を調整する
+      const rem = sum(xs) % n;
+      if (rem) xs[n - 1] = xs[n - 1]! - rem >= c.lo ? xs[n - 1]! - rem : xs[n - 1]! + (n - rem);
       const total = sum(xs);
       if (total % n !== 0) throw new Reject();
       const idxSum = (n * (n + 1)) / 2;

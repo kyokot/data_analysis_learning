@@ -90,7 +90,7 @@ export const generators: QuestionGenerator[] = [
             { value: wPrev, label: label(wPrev), note: `基準を${years[0]}年ではなく前年の${years[t - 1]}年（${prev}${c.unit}）にして、$${v}\\div ${prev}\\times 100$ を計算した値。` },
             { value: wOther, label: label(wOther), note: `${years[t]}年ではなく${years[o]}年の${other}${c.unit}を使って、$${other}\\div ${base}\\times 100$ を計算した値。` },
             { value: wInv, label: label(wInv), note: `割る数と割られる数を逆にして、$${base}\\div ${v}\\times 100$ を計算した値。` },
-            { value: wDiff, label: label(wDiff), note: `差の${v - base}${c.unit}を、割合に直さずにそのまま100に足した値。` },
+            { value: wDiff, label: label(wDiff), note: `値の差 $${v}-${base}=${v - base}$（${c.unit}）を、割合に直さずにそのまま100に足した値。` },
           ],
           { rng },
         ),
@@ -119,7 +119,7 @@ export const generators: QuestionGenerator[] = [
       return {
         stem: `${it.what}は、昨年が${before}${it.unit}、今年が${after}${it.unit}であった。今年の値の、昨年からの増減率として正しいものを一つ選べ。ただし、増加はプラス、減少はマイナスで表し、小数第2位を四捨五入した値で答えよ。`,
         ...choicesFrom(
-          { value: rate, label: signedPct(rate), note: `正しい。変化した量${diff}${it.unit}を、もとにする昨年の${before}${it.unit}で割って100を掛ける。` },
+          { value: rate, label: signedPct(rate), note: `正しい。変化した量 $${after}-${before}=${diff}$（${it.unit}）を、もとにする昨年の${before}${it.unit}で割って100を掛ける。` },
           [
             { value: wAfter, label: signedPct(wAfter), note: `変化した量を、昨年ではなく今年の${after}${it.unit}で割った値。もとにする量は変化の前の昨年である。` },
             { value: -rate, label: signedPct(-rate), note: `割合の大きさは合っているが、${up ? '増えた' : '減った'}のに符号を逆にした値。` },
