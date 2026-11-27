@@ -24,6 +24,11 @@ const Z_VALUES = [1.2, 1.5, 1.7, 1.8, 2.2, 2.4, 2.5, 3];
 
 const r8 = (x: number) => Math.round(x * 1e8) / 1e8;
 const reject = (z: number) => Math.abs(z) > 1.96;
+/** 小数第3位を四捨五入する境目（…5）にごく近い値なら true。負の値では丸めがぶれるので、そうした誤答は使わない */
+const nearHalf2 = (x: number) => {
+  const s = Math.abs(x) * 100;
+  return Math.abs(s - Math.floor(s) - 0.5) < 0.02;
+};
 
 export const generators: QuestionGenerator[] = [
   {
@@ -72,7 +77,7 @@ export const generators: QuestionGenerator[] = [
       }
       return {
         stem: `${c.setup}が平均${mu0}${c.unit}、標準偏差${sigma}${c.unit}になるように作られている。${c.sample}${n}${c.count}を無作為に取り出して${c.what}ところ、標本平均は${num(xbar)}${c.unit}であった。帰無仮説を「母平均は${mu0}${c.unit}である」、対立仮説を「母平均は${mu0}${c.unit}ではない」とし、母標準偏差を${sigma}${c.unit}として有意水準5%で両側検定を行う。検定統計量 $z$ の値と結論の組合せとして正しいものを一つ選べ。ただし、標準正規分布に従う $Z$ について $P(Z\\geqq 1.96)=0.025$ としてよく、$|z|>1.96$ のとき帰無仮説を棄却する。$z$ の値は小数第3位を四捨五入している。`,
-        ...choicesFrom(cand(z, rej, `正しい。$z=(${num(xbar)}-${mu0})\\div(${sigma}/\\sqrt{${n}})=${zl(z)}$ で、$|z|$ は1.96${rej ? 'を超える' : 'を超えない'}。`), wrongs, { rng }),
+        ...choicesFrom(cand(z, rej, `正しい。$z=(${num(xbar)}-${mu0})\\div(${sigma}/\\sqrt{${n}})=${zl(z)}$ で、$|z|$ は1.96${rej ? 'を超える' : 'を超えない'}。`), wrongs.filter((w) => !nearHalf2(w.value)), { rng }),
         explanation: `$z=${zl(z)}$ で、帰無仮説は${rej ? '棄却される' : '棄却されない'}。\n検定統計量は $z=\\dfrac{\\bar{x}-\\mu_0}{\\sigma/\\sqrt{n}}$。\n標本平均の標準偏差は $\\dfrac{${sigma}}{\\sqrt{${n}}}=\\dfrac{${sigma}}{${root}}=${num(se)}$（${c.unit}）。\n$z=\\dfrac{${num(xbar)}-${mu0}}{${num(se)}}=\\dfrac{${num(diff)}}{${num(se)}}=${num(z)}$。\n${
           rej
             ? `$|z|=${num(absz)}>1.96$ なので棄却域に入り、帰無仮説を棄却する。つまり「母平均は${mu0}${c.unit}ではない」と判断する。`
@@ -91,6 +96,8 @@ export const generators: QuestionGenerator[] = [
     build(rng) {
       const c = pick(rng, PROP_CONTEXTS);
       const p0 = pick(rng, CLEAN_P);
+      // 当たり券が大半に入っている、のような不自然な設定は避ける
+      if (c.who === '個' && p0 > 0.5) throw new Reject();
       const root = pick(rng, [10, 20, 25, 30, 40, 50]);
       const n = root * root;
       const q0 = r8(1 - p0);
@@ -129,7 +136,7 @@ export const generators: QuestionGenerator[] = [
             { value: diff / s, label: zl(diff / s), note: `$\\sqrt{n}$ で割るのを忘れ、$\\sqrt{${p0}\\times ${q0}}=${num(s, 4)}$ を分母にした値。` },
             { value: diff / (s / n), label: zl(diff / (s / n)), note: `$\\sqrt{${pq}}$ を $\\sqrt{${n}}$ ではなく${n}で割った $${num(s / n, 8)}$ を分母にした値。` },
             { value: diff / (pq / n), label: zl(diff / (pq / n)), note: `平方根をとり忘れ、分散 $${p0}\\times ${q0}\\div ${n}=${num(pq / n, 8)}$ でそのまま割った値。` },
-          ],
+          ].filter((w) => !nearHalf2(w.value)),
           { rng },
         ),
         explanation: `$z=${zl(z)}$ である。\n検定統計量は $z=\\dfrac{\\hat{p}-p_0}{\\sqrt{p_0(1-p_0)/n}}$。\n標本比率は $\\hat{p}=\\dfrac{${x}}{${n}}=${ph}$。\n帰無仮説 $p=${p0}$ が正しいとしたときの標本比率の標準偏差は $\\sqrt{\\dfrac{${p0}\\times ${q0}}{${n}}}=\\dfrac{${num(s, 4)}}{${root}}=${num(se, 6)}$。\nしたがって $z=\\dfrac{${ph}-${p0}}{${num(se, 6)}}=\\dfrac{${num(diff, 6)}}{${num(se, 6)}}=${num(z)}$。分母には、標本比率${ph}ではなく帰無仮説の値${p0}を使う。`,

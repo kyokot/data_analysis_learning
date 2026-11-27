@@ -103,7 +103,7 @@ tests/                   エンジンのテスト、教材との結合テスト
 - 正答はコードで計算し、誤答は「典型的な取り違え」を同じデータに当てはめて計算する（`kit.ts` の `choicesFrom`）
 - `replaces` に、同じ計算を問う固定の問題（practice）の id を書くと、その問題を間違えたときの出し直しで類題が出る
 - `npx vitest run tests/generators.test.ts` で、全ジェネレーターを300の種で検査する（形・重複・数式・偏り）
-- `GEN_SAMPLE=<単元id> npx vitest run tests/gen-sample.test.ts` で見本を表示して、目で確かめる
+- `GEN_SAMPLE=<単元id> npx vitest run tests/gen-sample.test.ts --reporter=verbose` で見本を表示して、目で確かめる
 
 ### 別の資格に使う
 

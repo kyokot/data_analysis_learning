@@ -57,6 +57,7 @@ export const generators: QuestionGenerator[] = [
             { value: 1.5 * q3, label: label(1.5 * q3), note: `四分位範囲を使わず、第3四分位数そのものを1.5倍した$${q3}\\times 1.5$の値。` },
             { value: q1 + h, label: label(q1 + h), note: `1.5×四分位範囲を第3四分位数ではなく第1四分位数に足した$${q1}+${h}$の値。` },
             { value: med + h, label: label(med + h), note: `1.5×四分位範囲を第3四分位数ではなく中央値に足した$${med}+${h}$の値。` },
+            { value: q3 + 1.5 * q3, label: label(q3 + 1.5 * q3), note: `四分位範囲の代わりに第3四分位数を使い、$${q3}+1.5\\times ${q3}$を計算した値。四分位範囲は第3四分位数と第1四分位数の差である。` },
           ],
           { rng },
         ),

@@ -57,7 +57,8 @@ export const generators: QuestionGenerator[] = [
             { value: 1.64 * se, label: iv(1.64 * se), note: `1.96の代わりに、90%信頼区間で使う約1.64を掛けた区間（$${xb}\\pm 1.64\\times ${num(se)}$）。` },
             { value: (1.96 * sigma) / n, label: iv((1.96 * sigma) / n), note: `$\\sqrt{${n}}=${root}$ ではなく${n}で割って $1.96\\times ${sigma}\\div ${n}$ を半幅とした区間。` },
             { value: half / 2, label: iv(half / 2), note: `$1.96\\times ${num(se)}=${num(half)}$ を区間の幅（上限−下限）と取り違え、その半分の${num(half / 2, 3)}だけを足し引きした区間。` },
-          ],
+            // 両端が四捨五入の境目（…5）に当たる区間は表示の丸めがぶれるので使わない
+          ].filter((w) => !nearHalf(xbar - w.value, 2) && !nearHalf(xbar + w.value, 2)),
           { rng },
         ),
         explanation: `${iv(half)}が正しい。\n母平均の95%信頼区間は $\\bar{x}\\pm 1.96\\times\\dfrac{\\sigma}{\\sqrt{n}}$。\n標準誤差は $\\dfrac{${sigma}}{\\sqrt{${n}}}=\\dfrac{${sigma}}{${root}}=${num(se)}$。\n半幅は $1.96\\times ${num(se)}=${num(half)}$。\n下限は $${xb}-${num(half)}=${num(xbar - half, 2)}$、上限は $${xb}+${num(half)}=${num(xbar + half, 2)}$ となる。`,
@@ -95,7 +96,7 @@ export const generators: QuestionGenerator[] = [
         { value: half / 2, label: iv(half / 2), note: `$1.96\\times ${num(se, 6)}=${num(half, 6)}$ を区間の幅（上限−下限）と取り違え、その半分だけを足し引きした区間。` },
         { value: 2 * half, label: iv(2 * half), note: `区間の幅 $2\\times 1.96\\times ${num(se, 6)}=${num(2 * half, 6)}$ を、半幅と取り違えて${ph}から引いて足した区間。` },
         { value: 2.58 * se, label: iv(2.58 * se), note: `1.96の代わりに、99%信頼区間で使う約2.58を掛けた区間（$${ph}\\pm 2.58\\times ${num(se, 6)}$）。` },
-      ].filter((w) => ph - w.value > 0 && ph + w.value < 1);
+      ].filter((w) => ph - w.value > 0 && ph + w.value < 1 && !nearHalf(ph - w.value, 3) && !nearHalf(ph + w.value, 3));
       return {
         stem: `${c.pop}から無作為に${n}${c.who}を選び、${c.ask}を調べたところ、${x}${c.who}${c.yes}。${c.popName}のうち${c.target}の割合（母比率）の95%信頼区間として正しいものを一つ選べ。ただし、標準正規分布に従う $Z$ について $P(-1.96\\leqq Z\\leqq 1.96)=0.95$ としてよい。また、区間の両端は小数第4位を四捨五入してある。`,
         ...choicesFrom({ value: half, label: iv(half), note: `正しい。標準誤差${num(se, 6)}に1.96を掛けた${num(half, 6)}を、${ph}から引いて足す。` }, wrongs, { rng }),

@@ -210,4 +210,4 @@
 - 丸めが必要な問題は、丸め方の違いで正誤が入れ替わらない数値だけを使う（ぎりぎりの数値は `Reject` で作り直す）。
 - 標準正規分布の値など、解くのに必要な値は問題文に与える。
 - `replaces` には、ジェネレーターと同じ計算・同じ問い方の practice 問題だけを書く。
-- 書いたら `npx vitest run tests/generators.test.ts` を通し、`GEN_SAMPLE=<単元id> npx vitest run tests/gen-sample.test.ts` の見本を、書いた本人とは別の人が解いて確かめる。
+- 書いたら `npx vitest run tests/generators.test.ts` を通し、`GEN_SAMPLE=<単元id> npx vitest run tests/gen-sample.test.ts --reporter=verbose` の見本を、書いた本人とは別の人が解いて確かめる。

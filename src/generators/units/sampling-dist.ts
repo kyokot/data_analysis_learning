@@ -50,7 +50,8 @@ export const generators: QuestionGenerator[] = [
             { value: sigma * root, label: label(sigma * root), note: `$\\sqrt{n}$ で割るところを、掛けてしまった値（$${sigma}\\times ${root}$）。` },
             { value: (sigma * sigma) / n, label: label((sigma * sigma) / n), note: `標準偏差ではなく、標本平均の分散 $\\sigma^2/n=${sigma * sigma}\\div ${n}$ を答えた値。` },
             { value: sigma / 2, label: label(sigma / 2), note: '標本の大きさに関係なく、母標準偏差を2で割った値。標本平均の標準偏差は $\\sigma/\\sqrt{n}$ で求める。' },
-          ],
+            // 小数第3位がちょうど5の値は表示の丸めがぶれるので使わない
+          ].filter((w) => Math.abs(w.value * 100 - Math.floor(w.value * 100) - 0.5) > 0.02),
           { rng },
         ),
         explanation: `標本平均の標準偏差は${num(se)}${c.unit}である。\n母標準偏差を $\\sigma$、標本の大きさを $n$ とすると、標本平均の標準偏差は $\\dfrac{\\sigma}{\\sqrt{n}}$。\n$\\sigma=${sigma}$、$n=${n}$ を代入すると、$\\dfrac{${sigma}}{\\sqrt{${n}}}=\\dfrac{${sigma}}{${root}}=${num(se)}$（${c.unit}）。母平均${mu}${c.unit}は標準偏差の計算には使わない。`,
@@ -67,6 +68,8 @@ export const generators: QuestionGenerator[] = [
     build(rng) {
       const c = pick(rng, PROP_CONTEXTS);
       const p = pick(rng, CLEAN_P);
+      // 手直しが必要な部品が大半を占める、のような不自然な設定は避ける
+      if (c.who === '個' && p > 0.2) throw new Reject();
       const root = pick(rng, [10, 20, 25, 30, 40, 50]);
       const n = root * root;
       const q = round6(1 - p);

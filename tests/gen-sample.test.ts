@@ -1,7 +1,7 @@
 /**
  * 類題の見本を表示する（検査ではなく、目で確かめるための道具）。
  *
- *   GEN_SAMPLE=central npx vitest run tests/gen-sample.test.ts
+ *   GEN_SAMPLE=central npx vitest run tests/gen-sample.test.ts --reporter=verbose
  *     id が "central" で始まるジェネレーターの見本を、種 1〜3 で表示する。GEN_SAMPLE_SEEDS で個数を変えられる。
  */
 import { it } from 'vitest';
