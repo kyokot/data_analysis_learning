@@ -55,7 +55,7 @@ export const generators: QuestionGenerator[] = [
       const label = (x: number) => fixed(x, 1);
       const absList = devs.map(Math.abs).join(',');
       return {
-        stem: `${c.lead(n)}この${n}個のデータの${c.what}の分散として正しいものを一つ選べ。ただし、割り切れない値は小数第2位を四捨五入してある。`,
+        stem: `${c.lead(n)}この${c.what}の分散として正しいものを一つ選べ。ただし、割り切れない値は小数第2位を四捨五入してある。`,
         figure: d.figure,
         ...choicesFrom(
           { value: v, label: label(v), note: `正しい。偏差の2乗の合計${ss}をデータの個数${n}で割った値である。` },
@@ -152,14 +152,15 @@ export const generators: QuestionGenerator[] = [
       const r2 = (x: number) => Math.round(x * 100) / 100;
       const vy = r2(a * a * vx);
       const my = r2(a * mx + b);
-      const cands = [vy, r2(a * vx), r2(vy + b), r2(a * vx + b), vx, my];
+      const cands = [vy, r2(a * vx), r2(vy + b), r2(a * vx + b), vx];
       const digits = cands.some((x) => !Number.isInteger(r2(x * 10))) ? 2 : cands.some((x) => !Number.isInteger(x)) ? 1 : 0;
+      const dec = (x: number) => (Number.isInteger(x) ? 0 : Number.isInteger(r2(x * 10)) ? 1 : 2);
       const label = (x: number) => fixed(x, digits);
       const a2 = r2(a * a);
       const wrongs: Candidate[] = [
         { value: r2(a * vx), label: label(a * vx), note: `分散を$a^2$倍ではなく$a$倍した値（$${a}\\times ${vx}$）。$${a}$倍になるのは標準偏差である。` },
         { value: vx, label: label(vx), note: `分散は変わらないと考えた値。値を$${a}$倍すると散らばりも変わる。` },
-        { value: my, label: label(my), note: `$y$の平均値（$${a}\\times ${mx}${b ? `+${b}` : ''}$）を答えた値。問われているのは分散である。` },
+        ...(dec(my) <= digits ? [{ value: my, label: label(my), note: `$y$の平均値（$${a}\\times ${mx}${b ? `+${b}` : ''}$）を答えた値。問われているのは分散である。` }] : []),
       ];
       if (b) {
         wrongs.push(
