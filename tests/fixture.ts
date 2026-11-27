@@ -1,5 +1,7 @@
 import type { Curriculum, Question, UnitContent } from '../src/content/types.ts';
 import { buildCourse, type Course } from '../src/engine/model.ts';
+import { choicesFrom, int } from '../src/generators/kit.ts';
+import type { QuestionGenerator } from '../src/generators/types.ts';
 
 function questions(unitId: string, grade: 4 | 3, practice: number, exam: number): Question[] {
   return Array.from({ length: practice + exam }, (_, i) => ({
@@ -24,8 +26,36 @@ const lesson = {
   examTips: ['t'],
 };
 
-/** 補習 1・4級 2・3級 2 の小さなコース */
-export function fixtureCourse(): Course {
+/** 足し算の類題（a1-q03 の代わりに出す） */
+export const addGen: QuestionGenerator = {
+  id: 'a1-add',
+  unitId: 'a1',
+  skill: '足し算',
+  grade: 4,
+  difficulty: 1,
+  replaces: ['a1-q03'],
+  build(rng) {
+    const x = int(rng, 1, 50);
+    const y = int(rng, 1, 50);
+    return {
+      stem: `${x}+${y} は？`,
+      ...choicesFrom(
+        { value: x + y, label: String(x + y), note: '正しい。' },
+        [
+          { value: x - y, label: String(x - y), note: '引いた。' },
+          { value: x * y, label: String(x * y), note: '掛けた。' },
+          { value: x + y + 1, label: String(x + y + 1), note: '1 多い。' },
+          { value: x + y - 1, label: String(x + y - 1), note: '1 少ない。' },
+        ],
+        { rng },
+      ),
+      explanation: `${x}+${y}=${x + y} である。説明文を十分な長さにする。`,
+    };
+  },
+};
+
+/** 補習 1・4級 2・3級 2 の小さなコース（withGenerators で a1 に類題を付ける） */
+export function fixtureCourse(opts: { withGenerators?: boolean } = {}): Course {
   const curriculum: Curriculum = {
     domains: [
       { id: 'math', title: '数学' },
@@ -57,5 +87,5 @@ export function fixtureCourse(): Course {
     { unitId: 'b1', lesson, questions: questions('b1', 3, 8, 4) },
     { unitId: 'b2', lesson, questions: questions('b2', 3, 8, 4) },
   ];
-  return buildCourse(curriculum, contents, { providers: [], links: [] });
+  return buildCourse(curriculum, contents, { providers: [], links: [] }, opts.withGenerators ? [addGen] : []);
 }

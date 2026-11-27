@@ -2,6 +2,7 @@
  * 出題する問題の選び方。どれも「まだ見ていない問題を優先」し、乱数は同順位の並べ替えにだけ使う。
  */
 import type { Grade, MockBlueprint, Question } from '../content/types.ts';
+import { GEN_PREFIX, makeQuestion, randomSeed, type QuestionGenerator } from '../generators/types.ts';
 import { RULES, isSupportUnit, type Course, type Progress } from './model.ts';
 import type { DateStr } from './dates.ts';
 import { shuffle, type Rng } from './rng.ts';
@@ -63,20 +64,71 @@ export function pickConfirmQuestions(course: Course, p: Progress, unitId: string
   return ordered.slice(0, RULES.confirmSize);
 }
 
+/** 復習で出す 1 問。reviewKey は、この解答で復習の段階を進めるキー（固定の問題の代わりに類題を出したとき） */
+export interface ReviewItem {
+  unitId: string;
+  question: Question;
+  reviewKey?: string;
+}
+
 export interface ReviewPlan {
   /** 定着チェックを行う単元と、その問題 */
   confirms: { unitId: string; questions: Question[] }[];
-  /** 間違えた問題の出し直し */
-  retries: { unitId: string; question: Question }[];
+  /** 定着した単元のおさらい */
+  maintenance: { unitId: string; items: ReviewItem[] }[];
+  /** 間違えた問題の出し直し（類題があれば類題） */
+  retries: ReviewItem[];
   /** 上限のため今日は出さずに持ち越す数 */
   deferred: number;
 }
 
 export function reviewQuestionCount(plan: ReviewPlan): number {
-  return plan.confirms.reduce((n, c) => n + c.questions.length, 0) + plan.retries.length;
+  return (
+    plan.confirms.reduce((n, c) => n + c.questions.length, 0) +
+    plan.maintenance.reduce((n, m) => n + m.items.length, 0) +
+    plan.retries.length
+  );
 }
 
-/** 今日の復習（定着チェック → 間違えた問題の出し直し）。上限を超える分は持ち越す。 */
+/** ジェネレーターから新しい類題を 1 問作る */
+function freshVariant(gen: QuestionGenerator, rng: Rng): Question {
+  return makeQuestion(gen, randomSeed(rng));
+}
+
+/** 復習の対象キー（固定の問題 id か gen:<ジェネレーターid>）から、出す問題を決める */
+function itemForKey(course: Course, key: string, rng: Rng): ReviewItem | null {
+  if (key.startsWith(GEN_PREFIX)) {
+    const gen = course.generators.get(key.slice(GEN_PREFIX.length));
+    return gen ? { unitId: gen.unitId, question: freshVariant(gen, rng), reviewKey: key } : null;
+  }
+  const entry = course.questions.get(key);
+  if (!entry) return null;
+  const gens = course.replacedBy.get(key);
+  if (gens && gens.length > 0) {
+    // 同じ問題をもう一度出すと答えを覚えてしまうので、同じ技能の類題（数値違い）を出す
+    const gen = gens[Math.floor(rng() * gens.length)]!;
+    return { unitId: entry.unitId, question: freshVariant(gen, rng), reviewKey: key };
+  }
+  return { unitId: entry.unitId, question: entry.question };
+}
+
+/** おさらいの問題: 類題があれば別々のジェネレーターから、なければ練習用の問題を見ていない順に */
+function pickMaintenanceItems(course: Course, p: Progress, unitId: string, rng: Rng): ReviewItem[] {
+  const gens = shuffle(course.generatorsByUnit.get(unitId) ?? [], rng);
+  const items: ReviewItem[] = gens.slice(0, RULES.maintainSize).map((g) => ({ unitId, question: freshVariant(g, rng) }));
+  if (items.length < RULES.maintainSize) {
+    const practice = (course.content.get(unitId)?.questions ?? []).filter((q) => q.pool === 'practice');
+    for (const q of freshnessOrder(p, practice, rng)) {
+      if (items.length >= RULES.maintainSize) break;
+      items.push({ unitId, question: q });
+    }
+  }
+  return items;
+}
+
+/**
+ * 今日の復習（定着チェック → おさらい → 間違えた問題の出し直し）。上限を超える分は持ち越す。
+ */
 export function buildReview(course: Course, p: Progress, today: DateStr, rng: Rng): ReviewPlan {
   const dueConfirms = course.curriculum.units.filter((u) => {
     const up = p.units[u.id];
@@ -88,18 +140,35 @@ export function buildReview(course: Course, p: Progress, today: DateStr, rng: Rn
   }));
   const inConfirm = new Set(confirms.flatMap((c) => c.questions.map((q) => q.id)));
 
+  const dueMaintain = course.curriculum.units
+    .filter((u) => {
+      const up = p.units[u.id];
+      return up?.status === 'mastered' && up.maintain !== undefined && up.maintain.due <= today && course.content.has(u.id);
+    })
+    .sort((a, b) => p.units[a.id]!.maintain!.due.localeCompare(p.units[b.id]!.maintain!.due));
+  const maintenance = dueMaintain
+    .slice(0, RULES.maintainUnitsCap)
+    .map((u) => ({ unitId: u.id, items: pickMaintenanceItems(course, p, u.id, rng).filter((it) => !inConfirm.has(it.question.id)) }))
+    .filter((m) => m.items.length > 0);
+  const used = inConfirm.size + maintenance.reduce((n, m) => n + m.items.length, 0);
+
   const due = Object.entries(p.questions)
-    .filter(([id, s]) => s.review && s.review.due <= today && course.questions.has(id) && !inConfirm.has(id))
+    .filter(([key, s]) => s.review && s.review.due <= today && !inConfirm.has(key))
     .sort((a, b) => a[1].review!.due.localeCompare(b[1].review!.due) || a[0].localeCompare(b[0]));
-  const room = Math.max(0, RULES.reviewCap - inConfirm.size);
-  const retries = due.slice(0, room).map(([id]) => {
-    const { question, unitId } = course.questions.get(id)!;
-    return { unitId, question };
-  });
+  const room = Math.max(0, RULES.reviewCap - used);
+  const retries: ReviewItem[] = [];
+  let skipped = 0;
+  for (const [key] of due) {
+    if (retries.length >= room) break;
+    const item = itemForKey(course, key, rng);
+    if (item) retries.push(item);
+    else skipped++;
+  }
   return {
     confirms,
+    maintenance,
     retries,
-    deferred: due.length - retries.length + (dueConfirms.length - confirms.length),
+    deferred: Math.max(0, due.length - skipped - retries.length) + (dueConfirms.length - confirms.length) + (dueMaintain.length - maintenance.length),
   };
 }
 
@@ -168,7 +237,11 @@ export function buildMock(course: Course, p: Progress, blueprint: MockBlueprint,
   return { questionIds, unseenIds: questionIds.filter((id) => seenCount(p, id) === 0) };
 }
 
-/** 弱点の補強用: 指定した単元の practice から、正答率の低い・見ていない問題を中心に n 問 */
+/**
+ * 補強・練習用のドリル: 指定した単元から n 問。
+ * 類題のある単元は 6 割を類題（毎回新しい数値）にし、残りを練習用の固定問題から
+ * 「直近で間違えた → 見ていない → 正答率の低い」順に出す。
+ */
 export function pickDrillQuestions(course: Course, p: Progress, unitIds: string[], n: number, rng: Rng): Question[] {
   const pool = unitIds.flatMap((id) => (course.content.get(id)?.questions ?? []).filter((q) => q.pool === 'practice'));
   const score = (q: Question) => {
@@ -176,7 +249,22 @@ export function pickDrillQuestions(course: Course, p: Progress, unitIds: string[
     if (!s || s.seen === 0) return 0.5;
     return s.lastCorrect === false ? 0 : 1 + s.correct / s.seen;
   };
-  return shuffle(pool, rng)
-    .sort((a, b) => score(a) - score(b))
-    .slice(0, n);
+  const fixedOrdered = shuffle(pool, rng).sort((a, b) => score(a) - score(b));
+  const gens = unitIds.flatMap((id) => course.generatorsByUnit.get(id) ?? []);
+  const wantVariants = gens.length ? Math.max(1, Math.min(n, Math.ceil(n * 0.6), n - Math.min(fixedOrdered.length, n - Math.ceil(n * 0.6)))) : 0;
+  const variants: Question[] = [];
+  const order = shuffle(gens, rng);
+  for (let i = 0; variants.length < wantVariants && order.length > 0; i++) variants.push(freshVariant(order[i % order.length]!, rng));
+  const fixedPart = fixedOrdered.slice(0, n - variants.length);
+  // 足りなければ類題で埋める
+  for (let i = 0; fixedPart.length + variants.length < n && order.length > 0; i++) variants.push(freshVariant(order[i % order.length]!, rng));
+  // 固定と類題を交互に近い形で混ぜる
+  const out: Question[] = [];
+  const a = [...fixedPart];
+  const b = [...variants];
+  while (a.length || b.length) {
+    if (a.length) out.push(a.shift()!);
+    if (b.length) out.push(b.shift()!);
+  }
+  return out.slice(0, n);
 }

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { course } from '../content/index.ts';
 import type { Grade } from '../content/types.ts';
 import { formatJa } from '../engine/dates.ts';
-import { gradeUnits } from '../engine/model.ts';
+import { gradeUnits, lookup } from '../engine/model.ts';
 import { blueprintFor, isDone, missedUnits, mockPercent } from '../engine/planner.ts';
 import { abandonMock, answerMock, finishMock, flagMock, startMock } from '../engine/progress.ts';
 import { buildMock } from '../engine/select.ts';
@@ -199,7 +199,7 @@ export function MockRun() {
   }
 
   const total = m.questionIds.length;
-  const entry = course.questions.get(m.questionIds[index] ?? '');
+  const entry = lookup(course, m.questionIds[index] ?? '');
   const answeredCount = m.answers.filter((a) => a !== null).length;
   const flagged = m.flags.filter(Boolean).length;
   const remaining = m.endsAt - now;
@@ -318,7 +318,7 @@ export function MockResultPage({ id }: { id: string }) {
   const total = m.questionIds.length;
   const percent = mockPercent(m);
   const rows = m.questionIds.map((qid, i) => {
-    const e = course.questions.get(qid);
+    const e = lookup(course, qid);
     return { i, e, choice: m.answers[i] ?? null, ok: !!e && m.answers[i] === e.question.answer };
   });
   const domains = course.curriculum.domains

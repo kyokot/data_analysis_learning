@@ -13,9 +13,12 @@ import {
   type Answer,
 } from '../src/engine/progress.ts';
 import { seededRng } from '../src/engine/rng.ts';
-import { buildMock, buildReview, pickCheckQuestions, pickConfirmQuestions, reviewQuestionCount } from '../src/engine/select.ts';
+import { buildMock, buildReview, pickCheckQuestions, pickConfirmQuestions, pickDrillQuestions, reviewQuestionCount } from '../src/engine/select.ts';
 import { exportBackup, importBackup, sanitizeProgress } from '../src/store/storage.ts';
 import { fixtureCourse } from './fixture.ts';
+import { completeMaintenance } from '../src/engine/progress.ts';
+import { isVariant, lookup, statKey } from '../src/engine/model.ts';
+import { makeQuestion } from '../src/generators/types.ts';
 
 const D0 = '2026-11-26';
 const rng = () => seededRng(42);
@@ -286,5 +289,84 @@ describe('バックアップ', () => {
     expect(Object.keys(p!.units)).toEqual(['a2']);
     expect(p!.units.a2!.confirmDue).toBeDefined();
     expect(p!.mocks).toHaveLength(0);
+  });
+});
+
+describe('類題', () => {
+  const course = fixtureCourse({ withGenerators: true });
+  const fixedQ = course.content.get('a1')!.questions[2]!; // a1-q03（類題で置き換えられる）
+  it('問題番号から類題を再現でき、記録はジェネレーター単位にまとめる', () => {
+    const q = makeQuestion(course.generators.get('a1-add')!, 123);
+    expect(lookup(course, q.id)?.question).toEqual(q);
+    expect(lookup(course, q.id)?.unitId).toBe('a1');
+    expect(statKey(q.id)).toBe('gen:a1-add');
+    const p = recordAnswer(course, start(), { questionId: q.id, choice: (q.answer + 1) % 4 }, 'drill', D0);
+    expect(p.questions['gen:a1-add']).toMatchObject({ seen: 1, correct: 0, review: { stage: 0 } });
+    expect(Object.keys(p.questions).some((k) => k.includes('~'))).toBe(false);
+  });
+  it('置き換え先のある問題を間違えると、出し直しは同じ技能の類題になり、正解でもとの問題の復習が進む', () => {
+    let p = recordAnswer(course, start(), { questionId: fixedQ.id, choice: null }, 'check', D0);
+    const day1 = addDays(D0, 1);
+    const plan = buildReview(course, p, day1, rng());
+    expect(plan.retries).toHaveLength(1);
+    const item = plan.retries[0]!;
+    expect(isVariant(item.question.id)).toBe(true);
+    expect(item.reviewKey).toBe(fixedQ.id);
+    p = recordAnswer(course, p, { questionId: item.question.id, choice: item.question.answer }, 'review', day1, item.reviewKey);
+    expect(p.questions[fixedQ.id]!.review).toEqual({ stage: 1, due: addDays(day1, 3) });
+  });
+  it('類題を間違えると、ジェネレーター単位で出し直しに入り、次は別の数値の類題が出る', () => {
+    const q = makeQuestion(course.generators.get('a1-add')!, 7);
+    const p = recordAnswer(course, start(), { questionId: q.id, choice: null }, 'drill', D0);
+    const plan = buildReview(course, p, addDays(D0, 1), seededRng(9));
+    expect(plan.retries).toHaveLength(1);
+    expect(plan.retries[0]!.reviewKey).toBe('gen:a1-add');
+    expect(plan.retries[0]!.question.id).not.toBe(q.id);
+  });
+  it('補強ドリルには類題が混ざる', () => {
+    const qs = pickDrillQuestions(course, start(), ['a1'], 10, rng());
+    expect(qs).toHaveLength(10);
+    expect(qs.filter((q) => isVariant(q.id)).length).toBeGreaterThanOrEqual(5);
+    expect(qs.every((q) => q.pool === 'practice')).toBe(true);
+  });
+});
+
+describe('定着後のおさらい', () => {
+  const course = fixtureCourse({ withGenerators: true });
+  function mastered(): Progress {
+    const passed = takeCheck(course, start(), 'a1', D0).progress;
+    const qs = pickConfirmQuestions(course, passed, 'a1', rng());
+    return completeConfirm(course, passed, 'a1', qs.map((q) => ({ questionId: q.id, choice: q.answer })), addDays(D0, 1)).progress;
+  }
+  it('定着すると14日後におさらいが入り、全問正解で次は30日後', () => {
+    const p = mastered();
+    const day1 = addDays(D0, 1);
+    expect(unitProgress(p, 'a1').maintain).toEqual({ stage: 0, due: addDays(day1, 14) });
+    expect(buildReview(course, p, addDays(day1, 13), rng()).maintenance).toHaveLength(0);
+    const due = addDays(day1, 14);
+    const plan = buildReview(course, p, due, rng());
+    expect(plan.maintenance).toHaveLength(1);
+    const items = plan.maintenance[0]!.items;
+    expect(items).toHaveLength(RULES.maintainSize);
+    const ok = completeMaintenance(course, p, 'a1', items.map((it) => ({ questionId: it.question.id, choice: it.question.answer, reviewKey: it.reviewKey })), due);
+    expect(ok.passed).toBe(true);
+    expect(unitProgress(ok.progress, 'a1').maintain).toEqual({ stage: 1, due: addDays(due, 30) });
+    expect(unitProgress(ok.progress, 'a1').status).toBe('mastered');
+  });
+  it('間違えると14日に戻し、間違えた問題は出し直しにも入る（定着の状態は下げない）', () => {
+    const p = mastered();
+    const due = addDays(D0, 15);
+    const items = buildReview(course, p, due, rng()).maintenance[0]!.items;
+    const ng = completeMaintenance(course, p, 'a1', items.map((it, i) => ({ questionId: it.question.id, choice: i === 0 ? null : it.question.answer, reviewKey: it.reviewKey })), due);
+    expect(ng.passed).toBe(false);
+    expect(unitProgress(ng.progress, 'a1')).toMatchObject({ status: 'mastered', maintain: { stage: 0, due: addDays(due, 14) } });
+    expect(buildReview(course, ng.progress, addDays(due, 1), rng()).retries).toHaveLength(1);
+  });
+  it('おさらいが入る前に定着した単元にも、読み込み時に予定を付ける', () => {
+    const p = mastered();
+    const { maintain: _m, ...rest } = p.units.a1!;
+    const old = { ...p, units: { ...p.units, a1: rest } };
+    const restored = sanitizeProgress(JSON.parse(JSON.stringify(old)));
+    expect(restored!.units.a1!.maintain).toEqual({ stage: 0, due: addDays(p.units.a1!.masteredOn!, 14) });
   });
 });

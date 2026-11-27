@@ -1,9 +1,9 @@
 /** 確認テスト・今日の復習・補強ドリル */
 import { useRef, useState } from 'react';
 import { course } from '../content/index.ts';
-import { isSupportUnit, RULES, unitProgress } from '../engine/model.ts';
+import { isSupportUnit, isVariant, lookup, RULES, unitProgress } from '../engine/model.ts';
 import { computeReadiness, latestMock, missedUnits, missingPrerequisites, doneUnitIds } from '../engine/planner.ts';
-import { completeCheck, completeConfirm, isCorrect, recordAnswer, type Answer, type CheckOutcome } from '../engine/progress.ts';
+import { completeCheck, completeConfirm, completeMaintenance, isCorrect, recordAnswer, type Answer, type CheckOutcome } from '../engine/progress.ts';
 import { buildReview, pickCheckQuestions, pickDrillQuestions } from '../engine/select.ts';
 import { getProgress, update } from '../store/store.ts';
 import { rng } from '../ui/common.tsx';
@@ -70,7 +70,7 @@ function CheckRun({ id, onRetry }: { id: string; onRetry: () => void }) {
   const p = getProgress();
   const up = unitProgress(p, id);
   const support = isSupportUnit(course, unit);
-  const missed = outcome.answers.filter((a) => !isCorrect(course, a)).map((a) => course.questions.get(a.questionId)!.question);
+  const missed = outcome.answers.filter((a) => !isCorrect(course, a)).map((a) => lookup(course, a.questionId)!.question);
   const prereq = missingPrerequisites(course, p, unit);
 
   return (
@@ -143,26 +143,35 @@ function CheckRun({ id, onRetry }: { id: string; onRetry: () => void }) {
 
 /* ---------- 今日の復習 ---------- */
 
-type ReviewItem = QuizItem & { confirmUnit?: string };
+type ReviewItemView = QuizItem & { confirmUnit?: string; maintainUnit?: string; reviewKey?: string };
 
 export function ReviewPage() {
   const today = useToday();
   const [plan] = useState(() => buildReview(course, getProgress(), today, rng));
-  const [items] = useState<ReviewItem[]>(() => [
+  const [items] = useState<ReviewItemView[]>(() => [
     ...plan.confirms.flatMap((c) =>
       c.questions.map((q) => ({ question: q, unitId: c.unitId, confirmUnit: c.unitId, label: `定着チェック｜${course.units.get(c.unitId)?.title ?? ''}` })),
     ),
-    ...plan.retries.map((r) => ({ question: r.question, unitId: r.unitId, label: `出し直し｜${course.units.get(r.unitId)?.title ?? ''}` })),
+    ...plan.maintenance.flatMap((m) =>
+      m.items.map((it) => ({ question: it.question, unitId: m.unitId, maintainUnit: m.unitId, reviewKey: it.reviewKey, label: `おさらい｜${course.units.get(m.unitId)?.title ?? ''}` })),
+    ),
+    ...plan.retries.map((r) => ({
+      question: r.question,
+      unitId: r.unitId,
+      reviewKey: r.reviewKey,
+      label: `${isVariant(r.question.id) ? '類題で出し直し' : '出し直し'}｜${course.units.get(r.unitId)?.title ?? ''}`,
+    })),
   ]);
-  const buffers = useRef<Record<string, Answer[]>>({});
+  const buffers = useRef<Record<string, (Answer & { reviewKey?: string })[]>>({});
   const [confirmed, setConfirmed] = useState<{ unitId: string; passed: boolean; correct: number; total: number }[]>([]);
+  const [maintained, setMaintained] = useState<{ unitId: string; passed: boolean; correct: number; total: number }[]>([]);
   const [done, setDone] = useState<Answer[] | null>(null);
 
   if (items.length === 0) {
     return (
       <div className="stack">
         <h1 className="page-title">今日の復習</h1>
-        <p className="notice">いま出せる復習はありません。確認テストに合格した単元の「定着チェック」は翌日以降に、間違えた問題は1日後・3日後・7日後に出ます。</p>
+        <p className="notice">いま出せる復習はありません。確認テストに合格した単元の「定着チェック」は翌日以降に、間違えた問題は1日後・3日後・7日後に（類題があれば数値を変えて）出ます。定着した単元は、14日後・30日後・60日後に「おさらい」として出ます。</p>
         <Link to={{ name: 'home' }} className="btn btn--primary">
           今日の一歩へ
         </Link>
@@ -182,22 +191,24 @@ export function ReviewPage() {
         }
         onAnswer={(i, a) => {
           const it = items[i]!;
-          if (!it.confirmUnit) {
-            update((p) => recordAnswer(course, p, a, 'review', today));
+          if (it.confirmUnit || it.maintainUnit) {
+            const kind = it.confirmUnit ? 'confirm' : 'maintain';
+            const unitId = (it.confirmUnit ?? it.maintainUnit)!;
+            const buf = (buffers.current[`${kind}:${unitId}`] ??= []);
+            buf.push({ ...a, reviewKey: it.reviewKey });
+            const size = items.filter((x) => (kind === 'confirm' ? x.confirmUnit : x.maintainUnit) === unitId).length;
+            if (buf.length === size) {
+              let r: CheckOutcome | undefined;
+              update((p) => {
+                r = kind === 'confirm' ? completeConfirm(course, p, unitId, buf, today) : completeMaintenance(course, p, unitId, buf, today);
+                return r.progress;
+              });
+              const row = r ? { unitId, passed: r.passed, correct: r.correct, total: r.total } : null;
+              if (row) (kind === 'confirm' ? setConfirmed : setMaintained)((prev) => [...prev, row]);
+            }
             return;
           }
-          const unitId = it.confirmUnit;
-          const buf = (buffers.current[unitId] ??= []);
-          buf.push(a);
-          const size = items.filter((x) => x.confirmUnit === unitId).length;
-          if (buf.length === size) {
-            let r: CheckOutcome | undefined;
-            update((p) => {
-              r = completeConfirm(course, p, unitId, buf, today);
-              return r.progress;
-            });
-            if (r) setConfirmed((prev) => [...prev, { unitId, passed: r!.passed, correct: r!.correct, total: r!.total }]);
-          }
+          update((p) => recordAnswer(course, p, a, 'review', today, it.reviewKey));
         }}
         onFinish={(answers) => {
           setDone(answers);
@@ -207,7 +218,7 @@ export function ReviewPage() {
     );
   }
 
-  const retryAnswers = done.filter((_, i) => !items[i]?.confirmUnit);
+  const retryAnswers = done.filter((_, i) => !items[i]?.confirmUnit && !items[i]?.maintainUnit);
   const retryRight = retryAnswers.filter((a) => isCorrect(course, a)).length;
   return (
     <div className="stack stack--lg">
@@ -223,6 +234,24 @@ export function ReviewPage() {
                   <p className="small muted">
                     {c.passed ? '日を空けても解けました。この単元は定着です。' : '今回は届きませんでした。学習中に戻します。教材を見直して、確認テストからやり直しましょう。'}
                   </p>
+                </div>
+                <span className={`chip ${c.passed ? 'chip--good' : 'chip--warn'} num`}>
+                  {c.correct}/{c.total}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {maintained.length > 0 ? (
+        <div className="card stack">
+          <h2 className="section-title">おさらい</h2>
+          <ul className="step-list">
+            {maintained.map((c) => (
+              <li key={c.unitId}>
+                <div className="step-list__body">
+                  <Link to={{ name: 'unit', id: c.unitId }}>{course.units.get(c.unitId)?.title}</Link>
+                  <p className="small muted">{c.passed ? '忘れていませんでした。次のおさらいは、もっと間を空けて出します。' : '少し忘れかけています。間違えた問題は明日また出し、おさらいの間隔も短くしました。'}</p>
                 </div>
                 <span className={`chip ${c.passed ? 'chip--good' : 'chip--warn'} num`}>
                   {c.correct}/{c.total}
@@ -269,8 +298,9 @@ function DrillRun({ id, onAgain }: { id?: string; onAgain: () => void }) {
   const [unitIds] = useState(() => drillUnits(id));
   const [items] = useState<QuizItem[]>(() =>
     pickDrillQuestions(course, getProgress(), unitIds, 10, rng).map((q) => {
-      const unitId = course.questions.get(q.id)!.unitId;
-      return { question: q, unitId, label: course.units.get(unitId)?.title };
+      const unitId = lookup(course, q.id)!.unitId;
+      const title = course.units.get(unitId)?.title ?? '';
+      return { question: q, unitId, label: isVariant(q.id) ? `類題｜${title}` : title };
     }),
   );
   const [done, setDone] = useState<Answer[] | null>(null);

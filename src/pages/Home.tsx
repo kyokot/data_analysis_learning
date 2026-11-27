@@ -21,7 +21,9 @@ function describe(step: Step, p: ReturnType<typeof useProgress>): StepView {
     case 'review': {
       const confirms = step.plan.confirms.map((c) => course.units.get(c.unitId)?.title ?? '').filter(Boolean);
       const parts: string[] = [];
+      const maint = step.plan.maintenance.map((m) => course.units.get(m.unitId)?.title ?? '').filter(Boolean);
       if (confirms.length) parts.push(`定着チェック: ${confirms.join('・')}`);
+      if (maint.length) parts.push(`おさらい: ${maint.join('・')}`);
       if (step.plan.retries.length) parts.push(`間違えた問題の出し直し ${step.plan.retries.length}問`);
       return {
         eyebrow: '復習',

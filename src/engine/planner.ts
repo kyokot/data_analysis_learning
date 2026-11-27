@@ -9,7 +9,7 @@
  */
 import type { Grade, MockBlueprint, Unit } from '../content/types.ts';
 import { addDays, diffDays, type DateStr } from './dates.ts';
-import { RULES, gradeUnits, routeUnits, unitProgress, type Course, type MockResult, type Progress } from './model.ts';
+import { RULES, gradeUnits, lookup, routeUnits, unitProgress, type Course, type MockResult, type Progress } from './model.ts';
 import type { Rng } from './rng.ts';
 import { buildReview, reviewQuestionCount, type ReviewPlan } from './select.ts';
 
@@ -42,7 +42,7 @@ export function latestMock(p: Progress, grade: Grade): MockResult | undefined {
 export function missedUnits(course: Course, m: MockResult): string[] {
   const missed = new Set<string>();
   m.questionIds.forEach((id, i) => {
-    const entry = course.questions.get(id);
+    const entry = lookup(course, id);
     if (entry && m.answers[i] !== entry.question.answer) missed.add(entry.unitId);
   });
   return course.curriculum.units.filter((u) => missed.has(u.id)).map((u) => u.id);

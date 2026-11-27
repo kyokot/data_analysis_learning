@@ -97,7 +97,7 @@ export function Feedback({ q, choice, headingRef }: { q: Question; choice: numbe
         </ol>
       </details>
       <p className="small muted">
-        問題番号 <span className="num">{q.id}</span>・{q.skill}　
+        {q.id.startsWith('gen:') ? '類題（数値を自動で作った問題）' : '問題番号'} <span className="num">{q.id}</span>・{q.skill}　
         <Ext href={reportUrl('問題', q.id)}>誤りを報告</Ext>
       </p>
     </section>

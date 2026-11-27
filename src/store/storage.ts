@@ -2,8 +2,8 @@
  * 進み具合の保存と、バックアップ（書き出し・読み込み）。
  * 保存先はこの端末のブラウザ（localStorage）だけ。使えない環境ではメモリ上で動かす。
  */
-import { isValidDateStr, toDateStr } from '../engine/dates.ts';
-import { emptyProgress, type Progress, type UnitProgress, type UnitStatus } from '../engine/model.ts';
+import { addDays, isValidDateStr, toDateStr } from '../engine/dates.ts';
+import { RULES, emptyProgress, type Progress, type UnitProgress, type UnitStatus } from '../engine/model.ts';
 
 const KEY = 'toukei-michishirube.progress.v1';
 
@@ -35,12 +35,16 @@ export function sanitizeProgress(raw: unknown): Progress | null {
       if (isValidDateStr(v.passedOn)) u.passedOn = v.passedOn;
       if (isValidDateStr(v.confirmDue)) u.confirmDue = v.confirmDue;
       if (isValidDateStr(v.masteredOn)) u.masteredOn = v.masteredOn;
+      const mt = v.maintain;
+      if (isObj(mt) && typeof mt.stage === 'number' && isValidDateStr(mt.due)) u.maintain = { stage: Math.max(0, Math.floor(mt.stage)), due: mt.due };
       const lc = v.lastCheck;
       if (isObj(lc) && isValidDateStr(lc.date) && typeof lc.correct === 'number' && typeof lc.total === 'number' && Array.isArray(lc.questionIds)) {
         u.lastCheck = { date: lc.date, correct: lc.correct, total: lc.total, questionIds: lc.questionIds.filter((x): x is string => typeof x === 'string') };
       }
       // 合格済みなのに定着チェックの日付が無いと、永久に定着しない。今日出せるようにする
       if (u.status === 'passed' && !u.confirmDue) u.confirmDue = toDateStr(new Date());
+      // おさらいが入る前に定着した単元にも、おさらいの予定を付ける
+      if (u.status === 'mastered' && !u.maintain) u.maintain = { stage: 0, due: addDays(u.masteredOn ?? toDateStr(new Date()), RULES.maintainIntervals[0]) };
       base.units[id] = u;
     }
   }

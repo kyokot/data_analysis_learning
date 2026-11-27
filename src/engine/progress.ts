@@ -6,6 +6,8 @@ import { addDays, type DateStr } from './dates.ts';
 import {
   RULES,
   isSupportUnit,
+  lookup,
+  statKey,
   unitProgress,
   type ActiveMock,
   type Course,
@@ -19,7 +21,7 @@ import {
 import type { MockPaper } from './select.ts';
 
 /** 解答の文脈。review のときだけ、正解で復習の段階が進む */
-export type AnswerContext = 'check' | 'confirm' | 'review' | 'mock' | 'drill';
+export type AnswerContext = 'check' | 'confirm' | 'review' | 'maintain' | 'mock' | 'drill';
 
 export interface Answer {
   questionId: string;
@@ -32,16 +34,31 @@ function withUnit(p: Progress, unitId: string, patch: Partial<UnitProgress>): Pr
 }
 
 export function isCorrect(course: Course, a: Answer): boolean {
-  const entry = course.questions.get(a.questionId);
+  const entry = lookup(course, a.questionId);
   return !!entry && a.choice !== null && a.choice === entry.question.answer;
 }
 
-/** 1 問の解答を記録する。間違い・「わからない」は翌日の復習に回す。 */
-export function recordAnswer(course: Course, p: Progress, a: Answer, context: AnswerContext, today: DateStr): Progress {
-  if (!course.questions.has(a.questionId)) return p;
+/**
+ * 1 問の解答を記録する。間違い・「わからない」は翌日の復習に回す。
+ * 記録のキーは statKey（類題はジェネレーター単位）。reviewKey を渡すと、復習の段階はそのキーで管理する
+ * （固定の問題の出し直しで類題を出したとき、もとの問題の復習を進めるため）。
+ */
+export function recordAnswer(course: Course, p: Progress, a: Answer, context: AnswerContext, today: DateStr, reviewKey?: string): Progress {
+  if (!lookup(course, a.questionId)) return p;
   const correct = isCorrect(course, a);
-  const prev: QuestionStat = p.questions[a.questionId] ?? { seen: 0, correct: 0 };
-  let review = prev.review;
+  const key = statKey(a.questionId);
+  const rKey = reviewKey ?? key;
+  const prev: QuestionStat = p.questions[key] ?? { seen: 0, correct: 0 };
+  const stat: QuestionStat = {
+    seen: prev.seen + 1,
+    correct: prev.correct + (correct ? 1 : 0),
+    lastDate: today,
+    lastCorrect: correct,
+    ...(prev.review ? { review: prev.review } : {}),
+  };
+  const questions = { ...p.questions, [key]: stat };
+  const target: QuestionStat = questions[rKey] ?? { seen: 0, correct: 0 };
+  let review = target.review;
   if (!correct) {
     review = { stage: 0, due: addDays(today, RULES.reviewIntervals[0]) };
   } else if (context === 'review' && review) {
@@ -49,23 +66,18 @@ export function recordAnswer(course: Course, p: Progress, a: Answer, context: An
     const interval = RULES.reviewIntervals[next];
     review = interval === undefined ? undefined : { stage: next, due: addDays(today, interval) };
   }
-  const stat: QuestionStat = {
-    seen: prev.seen + 1,
-    correct: prev.correct + (correct ? 1 : 0),
-    lastDate: today,
-    lastCorrect: correct,
-    ...(review ? { review } : {}),
-  };
+  const { review: _old, ...rest } = target;
+  questions[rKey] = review ? { ...rest, review } : rest;
   const day = p.days[today] ?? { answered: 0, correct: 0 };
   return {
     ...p,
-    questions: { ...p.questions, [a.questionId]: stat },
+    questions,
     days: { ...p.days, [today]: { answered: day.answered + 1, correct: day.correct + (correct ? 1 : 0) } },
   };
 }
 
-export function recordAnswers(course: Course, p: Progress, answers: Answer[], context: AnswerContext, today: DateStr): Progress {
-  return answers.reduce((acc, a) => recordAnswer(course, acc, a, context, today), p);
+export function recordAnswers(course: Course, p: Progress, answers: (Answer & { reviewKey?: string })[], context: AnswerContext, today: DateStr): Progress {
+  return answers.reduce((acc, a) => recordAnswer(course, acc, a, context, today, a.reviewKey), p);
 }
 
 export interface CheckOutcome {
@@ -122,8 +134,34 @@ export function completeConfirm(course: Course, p: Progress, unitId: string, ans
   const prev = unitProgress(next, unitId);
   if (prev.status !== 'passed') return { progress: next, correct, total, passed };
   next = passed
-    ? withUnit(next, unitId, { status: 'mastered', masteredOn: today, confirmDue: undefined })
+    ? withUnit(next, unitId, {
+        status: 'mastered',
+        masteredOn: today,
+        confirmDue: undefined,
+        maintain: { stage: 0, due: addDays(today, RULES.maintainIntervals[0]) },
+      })
     : withUnit(next, unitId, { status: 'learning', confirmDue: undefined });
+  return { progress: next, correct, total, passed };
+}
+
+/**
+ * 定着後のおさらいの結果を反映する。全問正解なら次の間隔へ、1 問でも間違えたら最初の間隔に戻す。
+ * 間違えた問題は、通常の出し直しにも入る（recordAnswer）。単元の状態（定着）は下げない。
+ */
+export function completeMaintenance(
+  course: Course,
+  p: Progress,
+  unitId: string,
+  answers: (Answer & { reviewKey?: string })[],
+  today: DateStr,
+): CheckOutcome {
+  let next = recordAnswers(course, p, answers, 'maintain', today);
+  const correct = answers.filter((a) => isCorrect(course, a)).length;
+  const total = answers.length;
+  const passed = total > 0 && correct === total;
+  const prev = unitProgress(next, unitId);
+  const stage = passed ? Math.min((prev.maintain?.stage ?? 0) + 1, RULES.maintainIntervals.length - 1) : 0;
+  next = withUnit(next, unitId, { maintain: { stage, due: addDays(today, RULES.maintainIntervals[stage]!) } });
   return { progress: next, correct, total, passed };
 }
 

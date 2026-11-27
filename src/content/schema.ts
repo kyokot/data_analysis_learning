@@ -219,6 +219,9 @@ const question = z.strictObject({
   choiceNotes: z.array(text).min(4).max(5),
 });
 
+/** 1 問のスキーマ（類題ジェネレーターの出力の検査にも使う） */
+export const questionSchema = question;
+
 export const unitContentSchema = z.strictObject({
   unitId: text,
   lesson,

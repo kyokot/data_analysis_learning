@@ -4,6 +4,7 @@ import examGuideJson from '../../content/exam-guide.json';
 import resourcesJson from '../../content/resources.json';
 import verificationJson from '../../content/verification.json';
 import { buildCourse } from '../engine/model.ts';
+import { allGenerators } from '../generators/index.ts';
 import type { Curriculum, ResourceCatalog, UnitContent } from './types.ts';
 
 const modules = import.meta.glob<UnitContent>('../../content/units/*.json', { eager: true, import: 'default' });
@@ -12,6 +13,7 @@ export const course = buildCourse(
   curriculumJson as unknown as Curriculum,
   Object.values(modules),
   resourcesJson as unknown as ResourceCatalog,
+  allGenerators,
 );
 
 export interface ExamGuide {

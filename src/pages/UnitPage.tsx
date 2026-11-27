@@ -78,6 +78,7 @@ export function UnitPage({ id }: { id: string }) {
   const refreshers = pendingRefreshers(course, p, unit);
   const L = content?.lesson;
   const practiceCount = content?.questions.filter((q) => q.pool === 'practice').length ?? 0;
+  const gens = course.generatorsByUnit.get(id) ?? [];
 
   return (
     <div className="stack stack--lg">
@@ -270,7 +271,7 @@ export function UnitPage({ id }: { id: string }) {
           </h2>
           {content ? (
             <p>
-              <Link to={{ name: 'drill', id }}>この単元の問題を続けて解く</Link>
+              <Link to={{ name: 'drill', id }}>{gens.length ? 'この単元の問題を続けて解く（類題は数値が毎回変わる）' : 'この単元の問題を続けて解く'}</Link>
               <span className="small muted">（合否には関係しない練習）</span>
             </p>
           ) : null}

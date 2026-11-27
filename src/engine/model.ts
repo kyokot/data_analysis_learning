@@ -3,6 +3,7 @@
  * エンジンは React にも localStorage にも依存しない純粋な関数だけで書く。
  */
 import type { Curriculum, Grade, Question, ResourceCatalog, Unit, UnitContent } from '../content/types.ts';
+import { GEN_PREFIX, makeQuestion, parseVariantId, type QuestionGenerator } from '../generators/types.ts';
 import type { DateStr } from './dates.ts';
 
 /* ---------- 教材データ ---------- */
@@ -11,11 +12,18 @@ export interface Course {
   curriculum: Curriculum;
   units: Map<string, Unit>;
   content: Map<string, UnitContent>;
+  /** 固定の問題（content/units の問題）。類題は含まない */
   questions: Map<string, { question: Question; unitId: string }>;
   resources: ResourceCatalog;
+  /** 類題ジェネレーター（id → ジェネレーター） */
+  generators: Map<string, QuestionGenerator>;
+  /** 単元 id → その単元の類題ジェネレーター */
+  generatorsByUnit: Map<string, QuestionGenerator[]>;
+  /** 固定の問題 id → その問題の代わりに出せる類題ジェネレーター */
+  replacedBy: Map<string, QuestionGenerator[]>;
 }
 
-export function buildCourse(curriculum: Curriculum, contents: UnitContent[], resources: ResourceCatalog): Course {
+export function buildCourse(curriculum: Curriculum, contents: UnitContent[], resources: ResourceCatalog, gens: QuestionGenerator[] = []): Course {
   const units = new Map(curriculum.units.map((u) => [u.id, u]));
   const content = new Map<string, UnitContent>();
   const questions = new Map<string, { question: Question; unitId: string }>();
@@ -24,7 +32,55 @@ export function buildCourse(curriculum: Curriculum, contents: UnitContent[], res
     content.set(c.unitId, c);
     for (const q of c.questions) questions.set(q.id, { question: q, unitId: c.unitId });
   }
-  return { curriculum, units, content, questions, resources };
+  const generators = new Map<string, QuestionGenerator>();
+  const generatorsByUnit = new Map<string, QuestionGenerator[]>();
+  const replacedBy = new Map<string, QuestionGenerator[]>();
+  for (const g of gens) {
+    if (!units.has(g.unitId)) continue;
+    generators.set(g.id, g);
+    generatorsByUnit.set(g.unitId, [...(generatorsByUnit.get(g.unitId) ?? []), g]);
+    for (const r of g.replaces) {
+      if (questions.has(r)) replacedBy.set(r, [...(replacedBy.get(r) ?? []), g]);
+    }
+  }
+  return { curriculum, units, content, questions, resources, generators, generatorsByUnit, replacedBy };
+}
+
+const variantCache = new Map<string, { question: Question; unitId: string } | null>();
+
+/** 問題 id から問題を引く。類題（gen:…~seed）は種から作り直す。見つからなければ undefined */
+export function lookup(course: Course, id: string): { question: Question; unitId: string } | undefined {
+  const fixed = course.questions.get(id);
+  if (fixed) return fixed;
+  const v = parseVariantId(id);
+  if (!v) return undefined;
+  if (!variantCache.has(id)) {
+    const g = course.generators.get(v.genId);
+    let entry: { question: Question; unitId: string } | null = null;
+    if (g) {
+      try {
+        entry = { question: makeQuestion(g, v.seed), unitId: g.unitId };
+      } catch {
+        entry = null;
+      }
+    }
+    if (variantCache.size > 500) variantCache.clear();
+    variantCache.set(id, entry);
+  }
+  return variantCache.get(id) ?? undefined;
+}
+
+export function isVariant(id: string): boolean {
+  return id.startsWith(GEN_PREFIX) && id.includes('~');
+}
+
+/**
+ * 解答の記録に使うキー。固定の問題はその id、類題はジェネレーター単位（gen:<id>）にまとめる
+ * （類題は種ごとに別の id になるので、種ごとに記録すると際限なく増える）。
+ */
+export function statKey(id: string): string {
+  const v = parseVariantId(id);
+  return v ? `${GEN_PREFIX}${v.genId}` : id;
 }
 
 /** 補習（数学）の単元かどうか */
@@ -76,6 +132,8 @@ export interface UnitProgress {
   masteredOn?: DateStr;
   /** 開いた外部教材のリンク id */
   visited: string[];
+  /** 定着後のおさらい（間隔をあけて出す）。stage は RULES.maintainIntervals の位置 */
+  maintain?: { stage: number; due: DateStr };
 }
 
 export interface QuestionStat {
@@ -173,4 +231,9 @@ export const RULES = {
   confirmUnitsCap: 2,
   /** 弱点とみなす正答率（直近の解答） */
   weakAccuracy: 0.6,
+  /** 定着した単元のおさらいの間隔（日）。最後の間隔をくり返す */
+  maintainIntervals: [14, 30, 60],
+  /** おさらい 1 単元あたりの問題数と、1 回の復習で扱う単元数の上限 */
+  maintainSize: 2,
+  maintainUnitsCap: 2,
 } as const;

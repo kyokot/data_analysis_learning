@@ -42,7 +42,7 @@ function checkTex(tex: string, display: boolean): string | null {
   }
 }
 
-function checkRich(where: string, value: string | undefined, issues: Issue[]) {
+export function checkRich(where: string, value: string | undefined, issues: Issue[]) {
   if (!value) return;
   try {
     for (const m of extractMath(value)) {
@@ -128,7 +128,7 @@ function checkSingleFigure(where: string, f: SingleFigure, issues: Issue[]) {
   }
 }
 
-function checkFigure(where: string, f: Figure | undefined, issues: Issue[]) {
+export function checkFigure(where: string, f: Figure | undefined, issues: Issue[]) {
   if (!f) return;
   if (f.type === 'panels') f.panels.forEach((p) => checkSingleFigure(`${where} › ${p.label}`, p.figure, issues));
   else checkSingleFigure(where, f, issues);
