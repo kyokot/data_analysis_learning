@@ -79,8 +79,8 @@ export const generators: QuestionGenerator[] = [
       const core = distinctInts(rng, n - k, c.lo, c.hi);
       const extra: number[] = [];
       for (let i = 0; i < k; i++) {
-        const up = rng() < 0.7;
-        const v = up ? c.hi + int(rng, Math.round(width * 0.3), Math.round(width * 1.3)) : c.lo - int(rng, Math.round(width * 0.3), c.lo - 1);
+        const up = c.lo < 20 || rng() < 0.7;
+        const v = up ? c.hi + int(rng, Math.round(width * 0.3), Math.round(width * 1.3)) : c.lo - int(rng, Math.round(width * 0.4), c.lo - 2);
         extra.push(v);
       }
       const xs = [...core, ...extra].sort((a, b) => a - b);
@@ -96,7 +96,8 @@ export const generators: QuestionGenerator[] = [
       const correct = outside(lo, hi);
       if (correct.length > 2) throw new Reject();
       const u = c.unit;
-      const f = (v: number) => num(v, 2);
+      const ft = (v: number) => num(v, 2);
+      const f = (v: number) => ft(v).replace("-", "−");
       const say = (set: number[]) =>
         set.length === 0 ? '外れ値はない' : set.length === 1 ? `外れ値は${set[0]}${u}だけである` : `外れ値は${set.slice(0, -1).map((x) => `${x}${u}`).join('、')}と${set[set.length - 1]}${u}である`;
       const half = Math.floor(n / 2);
@@ -119,7 +120,7 @@ export const generators: QuestionGenerator[] = [
       return {
         stem: `${c.lead(n)}\n${xs.join('、')}\n${RULE}外れ値についての記述として正しいものを一つ選べ。`,
         ...shuffledChoices(rng, { label: say(correct), note: `正しい。基準は${f(lo)}${u}と${f(hi)}${u}で、${correct.length === 0 ? 'この外にある値はない' : `この外にあるのは${correct.map((x) => `${x}${u}`).join('、')}`}。` }, wrongs),
-        explanation: `${say(correct)}。\n${medLine}\n第1四分位数は下半分の中央値で${half2(lower)}、第3四分位数は上半分の中央値で${half2(upperHalf)}。\n四分位範囲は$${f(q3)}-${f(q1)}=${f(iqr)}$、その1.5倍は$${f(h)}$。\n下側の基準は$${f(q1)}-${f(h)}=${f(lo)}$、上側の基準は$${f(q3)}+${f(h)}=${f(hi)}$。\n${concl}`,
+        explanation: `${say(correct)}。\n${medLine}\n第1四分位数は下半分の中央値で${half2(lower)}、第3四分位数は上半分の中央値で${half2(upperHalf)}。\n四分位範囲は$${ft(q3)}-${ft(q1)}=${ft(iqr)}$、その1.5倍は$${ft(h)}$。\n下側の基準は$${ft(q1)}-${ft(h)}=${ft(lo)}$、上側の基準は$${ft(q3)}+${ft(h)}=${ft(hi)}$。\n${concl}`,
       };
     },
   },
@@ -146,9 +147,11 @@ export const generators: QuestionGenerator[] = [
       const min = minOut ? lo - int(rng, 1, 2) * 5 : q1 - int(rng, 1, (q1 - lo) / 5 - 1) * 5;
       const max = maxOut ? hi + int(rng, 1, 2) * 5 : q3 + int(rng, 1, (hi - q3) / 5 - 1) * 5;
       if (min < 0) throw new Reject();
-      const axisMin = Math.floor(min / 20) * 20;
-      const axisMax = axisMin + 100;
-      if (max > axisMax) throw new Reject();
+      // 軸の幅を 60・80・100 にすると目盛りの刻みが 20（補助目盛り 5）になり、5 の倍数の値がちょうど目盛りに乗る
+      const axisMin = Math.max(0, Math.floor((min - 5) / 20) * 20);
+      const span = [60, 80, 100].find((w) => max + 5 <= axisMin + w);
+      if (span === undefined) throw new Reject();
+      const axisMax = axisMin + span;
       const u = c.unit;
       const minText = `最小値${min}${u}は下側の基準${lo}${u}より${minOut ? '小さいので外れ値である' : '小さくないので外れ値ではない'}`;
       const maxText = `最大値${max}${u}は上側の基準${hi}${u}より${maxOut ? '大きいので外れ値である' : '大きくないので外れ値ではない'}`;
@@ -163,7 +166,7 @@ export const generators: QuestionGenerator[] = [
         const errs: string[] = [];
         if (o.min !== minOut) errs.push(minText);
         if (o.max !== maxOut) errs.push(maxText);
-        const why = o.min && o.max ? '基準を計算せず、ひげの両端をそのまま外れ値としている。' : !o.min && !o.max ? 'ひげの中にある値は外れ値ではないと考えている。この図のひげは最小値・最大値まで引いてあるので、基準を計算して確かめる必要がある。' : 'ひげの長さの見た目で判断している。';
+        const why = o.min && o.max ? '基準を計算せず、ひげの両端をそのまま外れ値としている。' : !o.min && !o.max ? 'ひげの中にある値は外れ値ではないと考えている。この図のひげは最小値・最大値まで引いてあるので、基準を計算して確かめる必要がある。' : '基準を計算せず、ひげの長さの見た目で判断している。';
         return `${why}${errs.join('。')}。`;
       });
       return {
