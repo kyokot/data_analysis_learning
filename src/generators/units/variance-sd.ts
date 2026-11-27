@@ -170,7 +170,7 @@ export const generators: QuestionGenerator[] = [
       }
       return {
         stem: `${s.lead}${s.y}の分散として正しいものを一つ選べ。`,
-        ...choicesFrom({ value: vy, label: label(vy), note: `正しい。分散は$${a}^2=${num2(a2)}$倍になり${b ? `、${b}を足しても変わらない` : ''}。` }, wrongs, { rng }),
+        ...choicesFrom({ value: vy, label: label(vy), note: `正しい。分散は$${a}^2=${num2(a2)}$倍に${b ? `なり、${b}を足しても変わらない` : 'なる'}。` }, wrongs, { rng }),
         explanation: `${s.y}の分散は${label(vy)}である。$y=ax+b$と変換すると、分散は$a^2$倍になり、足した$b$は分散に影響しない。\n$${a}^2\\times ${vx}=${num2(a2)}\\times ${vx}=${num2(vy)}$。\n標準偏差で考えると、$\\sqrt{${vx}}=${sx}$が$${a}$倍の$${num2(a * sx)}$になり、$${num2(a * sx)}^2=${num2(vy)}$。`,
       };
     },

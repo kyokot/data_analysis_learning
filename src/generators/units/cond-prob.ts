@@ -69,10 +69,10 @@ const TABLE_CONTEXTS: TableCtx[] = [
 ];
 
 const INDEP_CONTEXTS = [
-  { lead: 'ある町で、明日の朝にバスが遅れる確率は{a}、電車が遅れる確率は{b}であり、バスの遅れと電車の遅れは互いに独立であるとする。', both: 'バスと電車がどちらも遅れる', none: 'バスも電車もどちらも遅れない', A: 'バスが遅れる', B: '電車が遅れる' },
-  { lead: 'Aさんがフリースローを1本成功させる確率は{a}、Bさんが成功させる確率は{b}である。2人がそれぞれ1本ずつ投げ、2人の結果は互いに独立であるとする。', both: '2人とも成功する', none: '2人とも失敗する', A: 'Aさんが成功する', B: 'Bさんが成功する' },
-  { lead: 'ある工場の2台の機械P、Qが、1日のうちに故障する確率はそれぞれ{a}、{b}であり、2台の故障は互いに独立であるとする。', both: 'ある日に2台とも故障する', none: 'ある日に2台とも故障しない', A: 'Pが故障する', B: 'Qが故障する' },
-  { lead: '2つの商店街で同時にくじ引きを行う。商店街Xのくじが当たる確率は{a}、商店街Yのくじが当たる確率は{b}である。それぞれ1回ずつ引き、結果は互いに独立であるとする。', both: '両方とも当たる', none: '両方ともはずれる', A: 'Xのくじが当たる', B: 'Yのくじが当たる' },
+  { lead: 'ある町で、明日の朝にバスが遅れる確率は{a}、電車が遅れる確率は{b}であり、バスの遅れと電車の遅れは互いに独立であるとする。', range: [1, 4], both: 'バスと電車がどちらも遅れる', none: 'バスも電車もどちらも遅れない', A: 'バスが遅れる', B: '電車が遅れる' },
+  { lead: 'Aさんがフリースローを1本成功させる確率は{a}、Bさんが成功させる確率は{b}である。2人がそれぞれ1本ずつ投げ、2人の結果は互いに独立であるとする。', range: [5, 9], both: '2人とも成功する', none: '2人とも失敗する', A: 'Aさんが成功する', B: 'Bさんが成功する' },
+  { lead: 'ある工場の2台の機械P、Qが、1日のうちに故障する確率はそれぞれ{a}、{b}であり、2台の故障は互いに独立であるとする。', range: [1, 3], both: 'ある日に2台とも故障する', none: 'ある日に2台とも故障しない', A: 'Pが故障する', B: 'Qが故障する' },
+  { lead: '2つの商店街で同時にくじ引きを行う。商店街Xのくじが当たる確率は{a}、商店街Yのくじが当たる確率は{b}である。それぞれ1回ずつ引き、結果は互いに独立であるとする。', range: [1, 5], both: '両方とも当たる', none: '両方ともはずれる', A: 'Xのくじが当たる', B: 'Yのくじが当たる' },
 ];
 
 export const generators: QuestionGenerator[] = [
@@ -103,14 +103,14 @@ export const generators: QuestionGenerator[] = [
       const fl = (p: number, q: number) => `$${frac(p, q)}$`;
       const cand = (p: number, q: number, note: string): Candidate => ({ value: p / q, label: fl(p, q), note });
       const wrongs: Candidate[] = [
-        cand(n, N, `全体の${N}で割った値（$\\dfrac{${n}}{${N}}$）。これは「${r}で、かつ${c}」の確率で、条件付き確率ではない。`),
-        cand(n, nB, `${c}の列の計${nB}で割った値（$\\dfrac{${n}}{${nB}}$）。条件と結果を逆にした確率である。`),
-        cand(nB, N, `全体のうち${c}の割合（$\\dfrac{${nB}}{${N}}$）。「${r}であった」という条件を使っていない。`),
-        cand(nAc, nA, `${r}のうち、${ctx.cols[1 - j]}の割合（$\\dfrac{${nAc}}{${nA}}$）。読む列を取り違えている。`),
-        cand(nA, N, `全体のうち${r}の割合（$\\dfrac{${nA}}{${N}}$）。求めるのは${r}の中での割合である。`),
+        cand(n, N, `全体の${N}で割った値（$\\dfrac{${n}}{${N}}$）。これは「${r}」かつ「${c}」の確率で、条件付き確率ではない。`),
+        cand(n, nB, `「${c}」の列の計${nB}で割った値（$\\dfrac{${n}}{${nB}}$）。条件と結果を逆にした確率である。`),
+        cand(nB, N, `全体のうち「${c}」の割合（$\\dfrac{${nB}}{${N}}$）。「${r}であった」という条件を使っていない。`),
+        cand(nAc, nA, `「${r}」のうち「${ctx.cols[1 - j]}」の割合（$\\dfrac{${nAc}}{${nA}}$）。読む列を取り違えている。`),
+        cand(nA, N, `全体のうち「${r}」の割合（$\\dfrac{${nA}}{${N}}$）。求めるのは「${r}」の中での「${c}」の割合である。`),
       ];
       return {
-        stem: `${ctx.lead(N)}選ばれた${ctx.who}が${ctx.rowIs(r)}とき、それが${ctx.colIs(c)}条件付き確率として正しいものを一つ選べ。`,
+        stem: `${ctx.lead(N)}選ばれた${ctx.who}が${ctx.rowIs(r)}とき、その${ctx.who}が${ctx.colIs(c)}条件付き確率として正しいものを一つ選べ。`,
         figure: {
           type: 'table',
           title: ctx.title,
@@ -122,8 +122,8 @@ export const generators: QuestionGenerator[] = [
           ],
           headerColumn: true,
         },
-        ...choicesFrom(cand(n, nA, `正しい。分母を${r}の計${nA}に絞り、そのうち${c}の${n}で割る。`), wrongs, { rng }),
-        explanation: `答えは $${frac(n, nA)}$ である。「${ctx.rowIs(r)}とき」なので、分母は${r}の計${nA}に絞る。そのうち${c}は${n}だから、\n$$P(\\text{${c}}\\mid \\text{${r}})=\\dfrac{${n}}{${nA}}=${frac(n, nA)}$$`,
+        ...choicesFrom(cand(n, nA, `正しい。分母を「${r}」の計${nA}に絞り、そのうち「${c}」の${n}を分子にする。`), wrongs, { rng }),
+        explanation: `答えは $${frac(n, nA)}$ である。「${ctx.rowIs(r)}とき」なので、分母は「${r}」の計${nA}に絞る。そのうち「${c}」は${n}だから、\n$$P(\\text{${c}}\\mid \\text{${r}})=\\dfrac{${n}}{${nA}}=${frac(n, nA)}$$`,
       };
     },
   },
@@ -136,8 +136,8 @@ export const generators: QuestionGenerator[] = [
     replaces: [],
     build(rng) {
       const ctx = pick(rng, INDEP_CONTEXTS);
-      const a = int(rng, 1, 9) / 10;
-      const b = int(rng, 1, 9) / 10;
+      const a = int(rng, ctx.range[0]!, ctx.range[1]!) / 10;
+      const b = int(rng, ctx.range[0]!, ctx.range[1]!) / 10;
       if (a === b) throw new Reject();
       const askBoth = rng() < 0.6;
       const aS = fixed(a, 1);
@@ -170,7 +170,7 @@ export const generators: QuestionGenerator[] = [
         stem: `${lead}${ask}確率として正しいものを一つ選べ。`,
         ...choicesFrom(
           cand(correct, askBoth ? `正しい。独立なので確率の積 $${aS}\\times ${bS}$ になる。` : `正しい。それぞれ起こらない確率 $${acS}$、$${bcS}$ の積になる。`),
-          wrongs.filter((w) => w.value >= 0),
+          wrongs.filter((w) => w.value >= 0 && w.value <= 1),
           { rng },
         ),
         explanation: askBoth

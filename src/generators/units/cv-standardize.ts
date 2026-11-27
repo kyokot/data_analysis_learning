@@ -110,7 +110,7 @@ export const generators: QuestionGenerator[] = [
           ],
           { rng },
         ),
-        explanation: `z得点は${fixed(z, 2)}である。標準化は、値から平均を引いて標準偏差で割る。\n$$z=\\dfrac{${x}-${m}}{${s}}=\\dfrac{${diff}}{${s}}=${z}$$\n平均より標準偏差の${Math.abs(z)}倍だけ${above ? '上' : '下'}にいる。`,
+        explanation: `z得点は$${fixed(z, 2)}$である。標準化は、値から平均を引いて標準偏差で割る。\n$$z=\\dfrac{${x}-${m}}{${s}}=\\dfrac{${diff}}{${s}}=${z}$$\n平均より標準偏差の${Math.abs(z)}倍だけ${above ? '上' : '下'}にいる。`,
       };
     },
   },

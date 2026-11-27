@@ -40,11 +40,12 @@ function diceEvent(rng: () => number): DiceEvent {
   return { text: `出た目の和が${m}の倍数になる`, test: (x) => x % m === 0, desc: `和が${m}の倍数` };
 }
 
+/** 場面と、その場面での「2つの目」の呼び方（1個を2回投げるときは「2回」で数える） */
 const DICE_WHO = [
-  'AさんとBさんが、さいころを1個ずつ同時に投げる',
-  '大小2個のさいころを同時に投げる',
-  '1個のさいころを2回続けて投げる',
-  'すごろく遊びで、赤と青の2個のさいころを同時に投げる',
+  { text: 'AさんとBさんが、さいころを1個ずつ同時に投げる', two: '2個の目', first: 'Aさんの目', second: 'Bさんの目', distinct: 'AさんとBさんのさいころは区別して数える' },
+  { text: '大小2個のさいころを同時に投げる', two: '2個の目', first: '大の目', second: '小の目', distinct: '大小2個のさいころは区別して数える' },
+  { text: '1個のさいころを2回続けて投げる', two: '2回の目', first: '1回目の目', second: '2回目の目', distinct: '1回目と2回目は区別して数える' },
+  { text: 'すごろく遊びで、赤と青の2個のさいころを同時に投げる', two: '2個の目', first: '赤の目', second: '青の目', distinct: '赤と青の2個のさいころは区別して数える' },
 ];
 
 type Repeat = { trial: string; ev: string; neg: string; cnt: string; at: string; a: number; b: number; n: number; cond: string; why: string };
@@ -144,6 +145,8 @@ export const generators: QuestionGenerator[] = [
       const m = int(rng, 3, 7);
       if (n % m === 0) throw new Reject();
       const k = Math.floor(n / m);
+      // 倍数が1個だけだと「m自身を数えない」誤りが0個（確率0）になって不自然なので作り直す
+      if (k < 2) throw new Reject();
       const list = Array.from({ length: k }, (_, i) => (i + 1) * m);
       const not = rng() < 0.5;
       const head = `${c.intro(n)}とき、${c.obj}が${m}の倍数${not ? 'でない' : 'である'}確率として正しいものを一つ選べ。ただし、${c.each}も同様に確からしいとする。`;
@@ -205,11 +208,11 @@ export const generators: QuestionGenerator[] = [
       // 入れかえの例には、この事柄に当てはまる「目が違う組」を使う
       const ex = unordered.find(([a, b]) => a !== b)!;
       return {
-        stem: `${who}とき、${ev.text}確率として正しいものを一つ選べ。ただし、さいころのどの目が出ることも同様に確からしいとする。`,
+        stem: `${who.text}とき、${ev.text}確率として正しいものを一つ選べ。ただし、さいころのどの目が出ることも同様に確からしいとする。`,
         ...choicesFrom(
-          fc(c, 36, `正しい。2個の目の出方36通りのうち、${ev.desc}になるのは${c}通り。`),
+          fc(c, 36, `正しい。${who.two}の出方36通りのうち、${ev.desc}になるのは${c}通り。`),
           [
-            fc(u, 36, `（${ex[0]}, ${ex[1]}）と（${ex[1]}, ${ex[0]}）のように、2個の目の入れかえを1通りとして数えた値（${u}通り）。2個のさいころは区別して数える。`),
+            fc(u, 36, `（${ex[0]}, ${ex[1]}）と（${ex[1]}, ${ex[0]}）のように、${who.two}の入れかえを1通りとして数えた値（${u}通り）。${who.distinct}。`),
             fc(u, 21, '目の組を、入れかえを区別せずに全部で21通りとし、それらが同様に確からしいとみなした値。実際は（1, 1）は1通り、（1, 2）は（2, 1）と合わせて2通りで、起こりやすさが違う。'),
             fc(sums, 11, '目の和（2〜12）の11通りが同様に確からしいとみなした値。和が7になる出方は6通り、2になる出方は1通りのように、和によって起こりやすさが違う。'),
             fc(36 - c, 36, `${ev.desc}に**ならない**確率（余事象の確率）を答えたもの。`),

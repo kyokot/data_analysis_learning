@@ -43,7 +43,7 @@ export const generators: QuestionGenerator[] = [
       const c = pick(rng, STAT_CONTEXTS);
       const sx = int(rng, c.sx[0]!, c.sx[1]!);
       const sy = int(rng, c.sy[0]!, c.sy[1]!);
-      if (sx === sy) throw new Reject();
+      if (sx === sy || sx < 2) throw new Reject();
       const r = c.sign * int(rng, 6, 18) * 0.05;
       const b = (r * sy) / sx;
       // 傾きが小数第2位までで割り切れるものだけ使う
@@ -56,7 +56,7 @@ export const generators: QuestionGenerator[] = [
         cand(sy / sx, `相関係数を掛け忘れた値（$\\dfrac{${sy}}{${sx}}$）。`),
         cand(r, `相関係数そのもの。傾きは相関係数に $\\dfrac{s_y}{s_x}$ を掛けたものである。`),
         cand(r * sy, `相関係数に $y$ の標準偏差を掛けただけで、$x$ の標準偏差${sx}で割っていない値。`),
-        cand(r / (sx * sy), `相関係数を2つの標準偏差の積で割った値。これは傾きではない。`),
+        ...(Math.abs(r / (sx * sy)) < 0.005 ? [] : [cand(r / (sx * sy), `相関係数を2つの標準偏差の積で割った値。これは傾きではない。`)]),
       ];
       return {
         stem: `${c.lead}ところ、$x$ の標準偏差は${sx}${c.xu}、$y$ の標準偏差は${sy}${c.yu}、$x$ と $y$ の相関係数は${tx(rS)}であった。$x$ から $y$ を予測する回帰直線 $y=a+bx$ の傾き $b$ として正しいものを一つ選べ。ただし、選択肢は割り切れないとき小数第3位を四捨五入した値である。`,
@@ -92,19 +92,18 @@ export const generators: QuestionGenerator[] = [
       const cand = (v: number, note: string): Candidate => ({ value: round(v, 1), label: label(v), note });
       const rS = fixed(r, 2);
       const bS = num(b, 2);
-      const aWrong = mx - b * my;
       const bWrong = (r * sx) / sy;
       const wrongs: Candidate[] = [
         cand(my + bWrong * d, `傾きを $r\\times\\dfrac{s_x}{s_y}=${num(bWrong, 3)}$ と、標準偏差の比を逆にして計算した値。`),
         cand(my + (sy / sx) * d, `傾きに相関係数を掛け忘れた値（傾きを $\\dfrac{${sy}}{${sx}}$ とした）。`),
-        cand(aWrong + b * x0, `切片を $\\bar{x}-b\\bar{y}=${num(aWrong, 2)}$ と、平均値を取り違えて求めた値。切片は $\\bar{y}-b\\bar{x}$ である。`),
+        cand(mx + b * d, `$y$ の平均値${my}ではなく $x$ の平均値${mx}を基準にして、$${mx}+${par(bS)}\\times ${par(String(d))}$ とした値。回帰直線が通るのは点 $(\\bar{x},\\bar{y})$ である。`),
         cand(my + b * x0, `切片を $y$ の平均値${my}のままにして、$${my}+${par(bS)}\\times ${x0}$ とした値。回帰直線が通るのは点 $(\\bar{x},\\bar{y})$ である。`),
         cand(my - b * d, `平均値からのずれの向きを逆にした値（$${my}-${par(bS)}\\times ${par(String(d))}$）。`),
       ];
       return {
         stem: `${c.lead}ところ、次のことがわかった。\n$x$ の平均値は${mx}${c.xu}、標準偏差は${sx}${c.xu}\n$y$ の平均値は${my}${c.yu}、標準偏差は${sy}${c.yu}\n$x$ と $y$ の相関係数は${tx(rS)}\n$x$ から $y$ を予測する回帰直線を使うと、${c.xn}が${x0}${c.xu}のときの${c.yn}の予測値（${c.yu}）はいくらか。正しいものを一つ選べ。ただし、選択肢は割り切れないとき小数第2位を四捨五入した値である。`,
         ...choicesFrom(cand(yhat, `正しい。傾き ${tx(bS)}、切片 ${tx(num(a, 2))} の回帰直線に $x=${x0}$ を代入する。`), wrongs, { rng }),
-        explanation: `予測値は${label(yhat)}${c.yu}である。\n傾きは $b=r\\times\\dfrac{s_y}{s_x}=${rS}\\times\\dfrac{${sy}}{${sx}}=${bS}$。\n回帰直線は点 $(\\bar{x},\\bar{y})=(${mx},${my})$ を通るので、切片は $a=\\bar{y}-b\\bar{x}=${my}-${par(bS)}\\times ${mx}=${num(a, 2)}$。\n回帰直線は $${lineTex(a, b)}$ となり、$x=${x0}$ のとき $y=${num(a, 2)}+${par(bS)}\\times ${x0}=${num(yhat, 1)}$。\n（$x$ が平均より ${par(String(d))}${c.xu} ずれているので、$${my}+${par(bS)}\\times ${par(String(d))}=${num(yhat, 1)}$ と考えてもよい。）`,
+        explanation: `予測値は${label(yhat)}${c.yu}である。\n傾きは $b=r\\times\\dfrac{s_y}{s_x}=${rS}\\times\\dfrac{${sy}}{${sx}}=${bS}$。\n回帰直線は点 $(\\bar{x},\\bar{y})=(${mx},${my})$ を通るので、切片は $a=\\bar{y}-b\\bar{x}=${my}-${par(bS)}\\times ${mx}=${num(a, 2)}$。\n回帰直線は $${lineTex(a, b)}$ となり、$x=${x0}$ のとき $y=${num(a, 2)}+${par(bS)}\\times ${x0}=${num(yhat, 1)}$。\n（$x$ が平均より${Math.abs(d)}${c.xu}${d > 0 ? '大きい' : '小さい'}ので、$${my}+${par(bS)}\\times ${par(String(d))}=${num(yhat, 1)}$ と考えてもよい。）`,
       };
     },
   },

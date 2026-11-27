@@ -90,7 +90,10 @@ export const generators: QuestionGenerator[] = [
             { value: wPrev, label: label(wPrev), note: `基準を${years[0]}年ではなく前年の${years[t - 1]}年（${prev}${c.unit}）にして、$${v}\\div ${prev}\\times 100$ を計算した値。` },
             { value: wOther, label: label(wOther), note: `${years[t]}年ではなく${years[o]}年の${other}${c.unit}を使って、$${other}\\div ${base}\\times 100$ を計算した値。` },
             { value: wInv, label: label(wInv), note: `割る数と割られる数を逆にして、$${base}\\div ${v}\\times 100$ を計算した値。` },
-            { value: wDiff, label: label(wDiff), note: `値の差 $${v}-${base}=${v - base}$（${c.unit}）を、割合に直さずにそのまま100に足した値。` },
+            // 差をそのまま100に足す誤りは、差が数十程度の場面でだけ選択肢にする（大きな値では指数として不自然な数や負の数になる）
+            ...(Math.abs(v - base) <= 60
+              ? [{ value: wDiff, label: label(wDiff), note: `値の差 $${v}-${base}=${v - base}$（${c.unit}）を、割合に直さずにそのまま100に足した値。` }]
+              : []),
           ],
           { rng },
         ),

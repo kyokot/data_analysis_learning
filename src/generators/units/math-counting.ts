@@ -56,7 +56,7 @@ export const generators: QuestionGenerator[] = [
       const terms = Array.from({ length: n }, (_, i) => n - i);
       const wrongs: Candidate[] = [
         { value: terms.reduce((a, b) => a + b, 0), label: label(terms.reduce((a, b) => a + b, 0)), note: `$${terms.join('+')}$と、かけ算にすべきところを足し算にした値。` },
-        { value: n * n, label: label(n * n), note: `$${n}\\times ${n}$と、並べる数どうしをかけた値。並べ方の数は$${n}\\times ${n - 1}\\times \\cdots\\times 1$と1ずつ減らしてかける。` },
+        { value: n * n, label: label(n * n), note: `$${n}\\times ${n}$と、${n}を2回かけただけの値。並べ方の数は$${n}\\times ${n - 1}\\times \\cdots\\times 1$と1ずつ減らしてかける。` },
         { value: n ** n, label: label(n ** n), note: `$${n}$を${n}回かけた値。同じものを何度でも選べるとして数えている。一度並べたものは除くので、${n}、${n - 1}、…と減っていく。` },
         { value: fact(n - 1), label: label(fact(n - 1)), note: `$${n - 1}!$を計算した値。最後の1つも数に入れて、$${n}!$を計算する。` },
         { value: n * (n - 1), label: label(n * (n - 1)), note: `$${n}\\times ${n - 1}$と、最初の2つの位置だけで計算をやめた値。最後の位置まで続けてかける。` },
@@ -64,7 +64,7 @@ export const generators: QuestionGenerator[] = [
       return {
         stem: `${ctx.text(n, pick(rng, ctx.qs))}正しいものを一つ選べ。`,
         ...choicesFrom({ value: ans, label: label(ans), note: `正しい。$${n}!=${terms.join('\\times ')}=${ans}$。` }, wrongs, { rng }),
-        explanation: `${ans}通りである。${n}つのものを1列に並べる並べ方は$${n}!$通り。\n1番目は${n}通り、2番目は残りから${n - 1}通り、…、最後は1通りなので、積の法則から$${n}!=${terms.join('\\times ')}=${ans}$（通り）。`,
+        explanation: `${ans}通りである。${n}個のものを1列に並べる並べ方は$${n}!$通り。\n1番目は${n}通り、2番目は残りから${n - 1}通り、…、最後は1通りなので、積の法則から$${n}!=${terms.join('\\times ')}=${ans}$（通り）。`,
       };
     },
   },
@@ -93,7 +93,7 @@ export const generators: QuestionGenerator[] = [
       return {
         stem: `${ctx.text(n, pick(rng, ctx.qs))}正しいものを一つ選べ。`,
         ...choicesFrom({ value: ans, label: label(ans), note: `正しい。$${P}=${prodDown(n, r)}=${ans}$。` }, wrongs, { rng }),
-        explanation: `${ans}通りである。${n}つのものから${r}つを選んで順番（役）をつけて並べるので順列で数え、$${P}$通り。\n$${P}=${prodDown(n, r)}=${ans}$（通り）。`,
+        explanation: `${ans}通りである。${n}個のものから${r}個を選んで順番（役）をつけて並べるので順列で数え、$${P}$通り。\n$${P}=${prodDown(n, r)}=${ans}$（通り）。`,
       };
     },
   },
@@ -103,7 +103,9 @@ export const generators: QuestionGenerator[] = [
     skill: '組合せの計算（順番を考えずに選ぶ）',
     grade: 4,
     difficulty: 2,
-    replaces: ['math-counting-q05'],
+    // 固定問題 q05（成功・失敗の記録のしかた＝何回目かの選び方）は文脈の読み替えが主眼で、
+    // この類題の大半（そのまま「n人からr人を選ぶ」）とは技能が違うので置き換えない。
+    replaces: [],
     build(rng) {
       const n = int(rng, 5, 10);
       const r = int(rng, 2, Math.min(4, n - 2));
@@ -123,7 +125,7 @@ export const generators: QuestionGenerator[] = [
       return {
         stem: `${pick(rng, CHOOSE)(n, r)}正しいものを一つ選べ。`,
         ...choicesFrom({ value: ans, label: label(ans), note: `正しい。$${C}=\\dfrac{${prodDown(n, r)}}{${rDown}}=${ans}$。` }, wrongs, { rng }),
-        explanation: `${ans}通りである。${n}つのものから${r}つを選ぶだけで順番は区別しないので、組合せ$${C}$で数える。\n$${C}=\\dfrac{${P}}{${r}!}=\\dfrac{${prodDown(n, r)}}{${rDown}}=\\dfrac{${p}}{${rf}}=${ans}$（通り）。`,
+        explanation: `${ans}通りである。${n}個のものから${r}個を選ぶだけで順番は区別しないので、組合せ$${C}$で数える。\n$${C}=\\dfrac{${P}}{${r}!}=\\dfrac{${prodDown(n, r)}}{${rDown}}=\\dfrac{${p}}{${rf}}=${ans}$（通り）。`,
       };
     },
   },

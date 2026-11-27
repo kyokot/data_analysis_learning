@@ -146,7 +146,7 @@ export const generators: QuestionGenerator[] = [
       // 外れ値でない端は基準より5以上内側、外れ値の端は基準より5〜10外側（すべて5の倍数）
       const min = minOut ? lo - int(rng, 1, 2) * 5 : q1 - int(rng, 1, (q1 - lo) / 5 - 1) * 5;
       const max = maxOut ? hi + int(rng, 1, 2) * 5 : q3 + int(rng, 1, (hi - q3) / 5 - 1) * 5;
-      if (min < 0) throw new Reject();
+      if (min <= 0 || lo <= 0) throw new Reject();
       // 軸の幅を 60・80・100 にすると目盛りの刻みが 20（補助目盛り 5）になり、5 の倍数の値がちょうど目盛りに乗る
       const axisMin = Math.max(0, Math.floor((min - 5) / 20) * 20);
       const span = [60, 80, 100].find((w) => max + 5 <= axisMin + w);
